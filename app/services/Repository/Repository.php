@@ -11,4 +11,9 @@ abstract class Repository extends \Doctrine\ORM\EntityRepository
 		$this->getEntityManager()->flush();
 	}
 
+	public function flush()
+	{
+		$this->getEntityManager()->flush();
+	}
+
 }

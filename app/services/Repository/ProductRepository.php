@@ -12,4 +12,13 @@ class ProductRepository extends \ShoPHP\Repository
 		$this->createEntity($product);
 	}
 
+	/**
+	 * @param integer $id
+	 * @return Product|null
+	 */
+	public function getById($id)
+	{
+		return $this->find($id);
+	}
+
 }

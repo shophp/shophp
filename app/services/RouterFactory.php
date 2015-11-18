@@ -27,10 +27,7 @@ class RouterFactory extends \Nette\Object
 	{
 		$router = new RouteList();
 		foreach ($this->routes as $mask => $parameters) {
-			if (!array_key_exists('defaults', $parameters)) {
-				throw new \InvalidArgumentException(sprintf('Missing "%s" route defaults parameter.', $mask));
-			}
-			$router[] = new Route($mask, $parameters['defaults']);
+			$router[] = new Route($mask, array_key_exists('defaults', $parameters) ? $parameters['defaults'] : []);
 		}
 		return $router;
 	}

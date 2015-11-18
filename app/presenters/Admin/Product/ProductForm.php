@@ -4,10 +4,13 @@ namespace ShoPHP\Admin\Product;
 
 use Nette\Forms\Controls\TextInput;
 
-class CreateForm extends \Nette\Application\UI\Form
+class ProductForm extends \Nette\Application\UI\Form
 {
 
-	public function __construct()
+	/**
+	 * @param string $submitLabel
+	 */
+	public function __construct($submitLabel)
 	{
 		parent::__construct();
 
@@ -35,7 +38,7 @@ class CreateForm extends \Nette\Application\UI\Form
 				return $input->getValue() >= 0 && $input->getValue() < 100;
 			}, $discountErrorMessage);
 
-		$this->addSubmit('create', 'Create');
+		$this->addSubmit('send', $submitLabel);
 	}
 
 }
