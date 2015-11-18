@@ -1,0 +1,10 @@
+php:
+	date.timezone: Europe/Prague
+
+application:
+	errorPresenter: Home:Error
+	mapping:
+		*: ShoPHP\*\*Presenter
+
+session:
+	expiration: 14 days

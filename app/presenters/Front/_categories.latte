@@ -1,0 +1,8 @@
+<ul n:block="category">
+	<li n:foreach="$categories as $category" n:class="$currentCategory !== null && $currentCategory->isThisOrSubcategoryOf($category) ? selected">
+		<a n:href=":Front:Product:Category: path => $category->path">{_$category->name}</a>
+		{if $category->hasSubcategories()}
+			{include #category categories => $category->subcategories}
+		{/if}
+	</li>
+</ul>

@@ -1,0 +1,8 @@
+parameters:
+
+	doctrine:
+		connection:
+			host: localhost
+			dbname: database_name
+			user: login
+			password: password

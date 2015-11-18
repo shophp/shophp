@@ -1,0 +1,11 @@
+parameters:
+
+	projectName: Simple PHP e-shop
+
+	doctrine:
+		paths:
+			- %appDir%/model
+		connection:
+			driver: pdo_mysql
+			charset: utf8
+			collation: utf8_czech_ci

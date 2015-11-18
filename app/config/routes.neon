@@ -1,0 +1,22 @@
+services:
+	routerFactory:
+		class: ShoPHP\RouterFactory
+		arguments:
+			routes: %routes%
+
+	router:
+		factory: @routerFactory::createRouter
+
+parameters:
+	routes:
+		/:
+			defaults: "Front:Home:Homepage:default"
+
+		/terms-of-trade:
+			defaults: "Front:Home:Terms:default"
+
+		/about-us:
+			defaults: "Front:Home:About:default"
+
+		"/category/<path [a-z0-9/-]+>":
+			defaults: "Front:Product:Category:default"

@@ -1,0 +1,29 @@
+services:
+
+	-
+		class: ShoPHP\BaseDataService
+		arguments:
+			projectName: %projectName%
+
+	-
+		factory: Doctrine\ORM\EntityManager::create
+		arguments:
+			conn: %doctrine.connection%
+
+	-
+		factory: Doctrine\ORM\Tools\Setup::createAnnotationMetadataConfiguration
+		arguments:
+			paths: %doctrine.paths%
+			isDevMode: %debugMode%
+
+	-
+		class: ShoPHP\Translator
+
+	repositoryFactory:
+		class: ShoPHP\Repository\RepositoryFactory
+
+	-
+		factory: @repositoryFactory::getCategoryRepository
+
+	-
+		factory: @repositoryFactory::getProductRepository
