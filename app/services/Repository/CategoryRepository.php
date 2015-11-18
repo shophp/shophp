@@ -4,7 +4,7 @@ namespace ShoPHP\Repository;
 
 use ShoPHP\Category;
 
-class CategoryRepository extends \Doctrine\ORM\EntityRepository
+class CategoryRepository extends \ShoPHP\Repository
 {
 
 	/**

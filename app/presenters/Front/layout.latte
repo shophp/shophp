@@ -20,6 +20,8 @@
 			</nav>
 		</aside>
 
+		<div n:foreach="$flashes as $flash" n:class="flash, $flash->type">{$flash->message}</div>
+
 		<article>
 			{block content}{/block}
 		</article>

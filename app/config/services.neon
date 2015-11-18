@@ -27,3 +27,6 @@ services:
 
 	-
 		factory: @repositoryFactory::getProductRepository
+
+	-
+		implement: ShoPHP\Admin\Product\CreateFormFactory

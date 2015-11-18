@@ -2,7 +2,14 @@
 
 namespace ShoPHP\Repository;
 
-class ProductRepository extends \Doctrine\ORM\EntityRepository
+use ShoPHP\Product;
+
+class ProductRepository extends \ShoPHP\Repository
 {
+
+	public function create(Product $product)
+	{
+		$this->createEntity($product);
+	}
 
 }

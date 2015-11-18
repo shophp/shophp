@@ -20,3 +20,6 @@ parameters:
 
 		"/category/<path [a-z0-9/-]+>":
 			defaults: "Front:Product:Category:default"
+
+		"/admin/<presenter>/<action>":
+			defaults: "Admin:Product:Create:default"
