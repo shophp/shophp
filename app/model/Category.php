@@ -6,7 +6,10 @@ use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * @Entity(repositoryClass="ShoPHP\Repository\CategoryRepository")
- * @Table(name="categories")
+ * @Table(
+ *     name="categories",
+ *     uniqueConstraints={@UniqueConstraint(name="categories_path", columns={"path"})}
+ * )
  */
 class Category extends \Nette\Object
 {
@@ -33,7 +36,12 @@ class Category extends \Nette\Object
 	protected $path;
 
 	/**
-	 * @OneToMany(targetEntity="Product", mappedBy="category")
+	 * @ManyToMany(targetEntity="Product", inversedBy="features")
+	 * @JoinTable(
+	 *     name="categories_products",
+	 *     joinColumns={@JoinColumn(name="category_id", referencedColumnName="id")},
+	 *     inverseJoinColumns={@JoinColumn(name="product_id", referencedColumnName="id")}
+	 * )
 	 * @var Product[]
 	 */
 	protected $products;
@@ -88,6 +96,11 @@ class Category extends \Nette\Object
 	public function getProducts()
 	{
 		return $this->products;
+	}
+
+	public function hasProducts()
+	{
+		return count($this->products) > 0;
 	}
 
 	public function assignToSubcategory(self $category)

@@ -2,4 +2,14 @@
 
 {block content}
 
-Products...
+{if $currentCategory->hasProducts()}
+	<ul>
+		<li n:foreach="$currentCategory->products as $product">
+			{$product->name}<br>
+			{$product->price} $
+		</li>
+	</ul>
+
+{else}
+	No products...
+{/if}

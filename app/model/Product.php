@@ -1,6 +1,7 @@
 <?php
 
 namespace ShoPHP;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * @Entity
@@ -25,10 +26,15 @@ class Product extends \Nette\Object
 	protected $discountPercent;
 
 	/**
-	 * @ManyToOne(targetEntity="Category", inversedBy="products")
-	 * @var Category
+	 * @ManyToMany(targetEntity="Category", mappedBy="products")
+	 * @var Category[]
 	 */
-	protected $category;
+	protected $categories;
+
+	public function __construct()
+	{
+		$this->categories = new ArrayCollection();
+	}
 
 	public function getId()
 	{
@@ -89,8 +95,7 @@ class Product extends \Nette\Object
 
 	public function assignToCategory(Category $category)
 	{
-		$category->assignToProduct($this);
-		$this->category = $category;
+		$this->categories[] = $category;
 	}
 }
 
