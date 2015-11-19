@@ -25,7 +25,7 @@ class Category extends \Nette\Object
 
 	/**
 	 * @OneToMany(targetEntity="Category", mappedBy="parent")
-	 * @var self[]
+	 * @var Categories|self[]
 	 */
 	protected $subcategories;
 
@@ -36,19 +36,14 @@ class Category extends \Nette\Object
 	protected $path;
 
 	/**
-	 * @ManyToMany(targetEntity="Product", inversedBy="features")
-	 * @JoinTable(
-	 *     name="categories_products",
-	 *     joinColumns={@JoinColumn(name="category_id", referencedColumnName="id")},
-	 *     inverseJoinColumns={@JoinColumn(name="product_id", referencedColumnName="id")}
-	 * )
+	 * @ManyToMany(targetEntity="Product", mappedBy="categories")
 	 * @var Product[]
 	 */
 	protected $products;
 
 	public function __construct()
 	{
-		$this->subcategories = new ArrayCollection();
+		$this->subcategories = new Categories();
 		$this->products = new ArrayCollection();
 	}
 
@@ -82,7 +77,12 @@ class Category extends \Nette\Object
 		return $this->subcategories;
 	}
 
-	public function isThisOrSubcategoryOf(self $category)
+	public function isSubcategoryOf(self $category)
+	{
+		return $this->getParent()->isSelfOrSubcategoryOf($category);
+	}
+
+	public function isSelfOrSubcategoryOf(self $category)
 	{
 		if ($this === $category) {
 			return true;
@@ -90,7 +90,7 @@ class Category extends \Nette\Object
 		if ($this->getParent() === null) {
 			return false;
 		}
-		return $this->getParent()->isThisOrSubcategoryOf($category);
+		return $this->getParent()->isSelfOrSubcategoryOf($category);
 	}
 
 	public function getProducts()
@@ -101,16 +101,6 @@ class Category extends \Nette\Object
 	public function hasProducts()
 	{
 		return count($this->products) > 0;
-	}
-
-	public function assignToSubcategory(self $category)
-	{
-		$this->subcategories[] = $category;
-	}
-
-	public function assignToProduct(Product $product)
-	{
-		$this->products[] = $product;
 	}
 
 }

@@ -8,6 +8,15 @@ class CategoryRepository extends \ShoPHP\Repository
 {
 
 	/**
+	 * @param integer $id
+	 * @return Category|null
+	 */
+	public function getById($id)
+	{
+		return $this->find($id);
+	}
+
+	/**
 	 * @return Category[]
 	 */
 	public function getRoot()

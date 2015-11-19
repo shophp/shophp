@@ -3,17 +3,49 @@
 namespace ShoPHP\Admin\Product;
 
 use Nette\Forms\Controls\TextInput;
+use ShoPHP\Categories;
+use ShoPHP\Category;
+use ShoPHP\Repository\CategoryRepository;
 
 class ProductForm extends \Nette\Application\UI\Form
 {
 
+	/** @var CategoryRepository */
+	private $categoryRepository;
+
 	/**
 	 * @param string $submitLabel
 	 */
-	public function __construct($submitLabel)
+	public function __construct($submitLabel, CategoryRepository $categoryRepository)
 	{
 		parent::__construct();
+		$this->categoryRepository = $categoryRepository;
+		$this->createFields($submitLabel);
+	}
 
+	/**
+	 * @return Categories|Category[]
+	 */
+	public function getCategories()
+	{
+		$categoryIds = $this->getHttpData(self::DATA_TEXT, 'category[]');
+		$categories = new Categories();
+		foreach ($categoryIds as $categoryId) {
+			$category = $this->categoryRepository->getById($categoryId);
+			if ($category === null) {
+				$this->addError(sprintf('Category %d does not exist.', $categoryId));
+			} else {
+				$categories[] = $category;
+			}
+		}
+		return $categories;
+	}
+
+	/**
+	 * @param string $submitLabel
+	 */
+	private function createFields($submitLabel)
+	{
 		$this->addText('name', 'Name')
 			->setRequired();
 

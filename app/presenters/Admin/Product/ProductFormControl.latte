@@ -1,0 +1,46 @@
+{form productForm}
+
+	<div class="errors" n:if="$form->hasErrors()" n:foreach="$form->errors as $error">
+		{$error}
+	</div>
+
+	<table>
+		<tr>
+			<th>{label name /}</th>
+			<td>{input name}</td>
+		</tr>
+		<tr>
+			<th>{_'Category'}</th>
+			<td>
+				<ul n:block="category">
+					<li n:foreach="$categories as $category">
+						<label>
+							<input type=checkbox name="category[]" value={$category->id}>
+							{_$category->name}
+						</label>
+						{if $category->hasSubcategories()}
+							{include #category categories => $category->subcategories}
+						{/if}
+					</li>
+				</ul>
+			</td>
+		</tr>
+		<tr>
+			<th>{label description /}</th>
+			<td>{input description}</td>
+		</tr>
+		<tr>
+			<th>{label price /}</th>
+			<td>{input price}</td>
+		</tr>
+		<tr>
+			<th>{label discount /}</th>
+			<td>{input discount}</td>
+		</tr>
+		<tr>
+			<th></th>
+			<td>{input send}</td>
+		</tr>
+	</table>
+
+{/form}

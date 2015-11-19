@@ -26,8 +26,13 @@ class Product extends \Nette\Object
 	protected $discountPercent;
 
 	/**
-	 * @ManyToMany(targetEntity="Category", mappedBy="products")
-	 * @var Category[]
+	 * @ManyToMany(targetEntity="Category", inversedBy="products")
+	 * @JoinTable(
+	 *     name="products_categories",
+	 *     joinColumns={@JoinColumn(name="product", referencedColumnName="id")},
+	 *     inverseJoinColumns={@JoinColumn(name="category", referencedColumnName="id")}
+	 * )
+	 * @var Categories
 	 */
 	protected $categories;
 
@@ -39,7 +44,7 @@ class Product extends \Nette\Object
 	{
 		$this->setName($name);
 		$this->setPrice($price);
-		$this->categories = new ArrayCollection();
+		$this->categories = new Categories();
 	}
 
 	public function getId()
@@ -107,9 +112,25 @@ class Product extends \Nette\Object
 		$this->discountPercent = $discountPercent;
 	}
 
-	public function assignToCategory(Category $category)
+	public function setCategories(Categories $categories)
 	{
-		$this->categories[] = $category;
+		$this->categories = new Categories();
+		$categories = iterator_to_array($categories);
+		/** @var Category[] $categories */
+		do {
+			/** @var Category $category */
+			$category = array_shift($categories);
+			if ($category === null) {
+				break;
+			}
+			foreach ($categories as $potentialSubcategory) {
+				if ($potentialSubcategory->isSelfOrSubcategoryOf($category)) {
+					continue 2;
+				}
+			}
+			$this->categories[] = $category;
+
+		} while (true);
 	}
 }
 

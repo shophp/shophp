@@ -8,16 +8,16 @@ use ShoPHP\Repository\ProductRepository;
 class CreatePresenter extends \ShoPHP\Admin\BasePresenter
 {
 
-	/** @var ProductFormFactory */
-	private $productFormFactory;
+	/** @var ProductFormControlFactory */
+	private $productFormControlFactory;
 
 	/** @var ProductRepository */
 	private $productRepository;
 
-	public function __construct(ProductFormFactory $productFormFactory, ProductRepository $productRepository)
+	public function __construct(ProductFormControlFactory $productFormControlFactory, ProductRepository $productRepository)
 	{
 		parent::__construct();
-		$this->productFormFactory = $productFormFactory;
+		$this->productFormControlFactory = $productFormControlFactory;
 		$this->productRepository = $productRepository;
 	}
 
@@ -25,13 +25,14 @@ class CreatePresenter extends \ShoPHP\Admin\BasePresenter
 	{
 	}
 
-	protected function createComponentProductForm()
+	protected function createComponentProductFormControl()
 	{
-		$form = $this->productFormFactory->create('Create');
+		$control = $this->productFormControlFactory->create('Create');
+		$form = $control->getForm();
 		$form->onSuccess[] = function(ProductForm $form) {
 			$this->createProduct($form);
 		};
-		return $form;
+		return $control;
 	}
 
 	private function createProduct(ProductForm $form)
@@ -40,10 +41,13 @@ class CreatePresenter extends \ShoPHP\Admin\BasePresenter
 		$product = new Product($values->name, $values->price);
 		$product->setDescription($values->description);
 		$product->setDiscountPercent($values->discount);
+		$product->setCategories($form->getCategories());
 		$this->productRepository->create($product);
 
-		$this->flashMessage(sprintf('Product %s has been created.', $product->getName()));
-		$this->redirect('Edit:', ['id' => $product->getId()]);
+		if (!$form->hasErrors()) {
+			$this->flashMessage(sprintf('Product %s has been created.', $product->getName()));
+			$this->redirect('Edit:', ['id' => $product->getId()]);
+		}
 	}
 
 }

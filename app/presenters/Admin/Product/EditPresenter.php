@@ -9,8 +9,8 @@ use ShoPHP\Repository\ProductRepository;
 class EditPresenter extends \ShoPHP\Admin\BasePresenter
 {
 
-	/** @var ProductFormFactory */
-	private $productFormFactory;
+	/** @var ProductFormControlFactory */
+	private $productFormControlFactory;
 
 	/** @var ProductRepository */
 	private $productRepository;
@@ -18,10 +18,10 @@ class EditPresenter extends \ShoPHP\Admin\BasePresenter
 	/** @var Product */
 	private $product;
 
-	public function __construct(ProductFormFactory $productFormFactory, ProductRepository $productRepository)
+	public function __construct(ProductFormControlFactory $productFormControlFactory, ProductRepository $productRepository)
 	{
 		parent::__construct();
-		$this->productFormFactory = $productFormFactory;
+		$this->productFormControlFactory = $productFormControlFactory;
 		$this->productRepository = $productRepository;
 	}
 
@@ -49,13 +49,14 @@ class EditPresenter extends \ShoPHP\Admin\BasePresenter
 		$this->template->product = $this->product;
 	}
 
-	protected function createComponentProductForm()
+	protected function createComponentProductFormControl()
 	{
-		$form = $this->productFormFactory->create('Update');
+		$control = $this->productFormControlFactory->create('Update');
+		$form = $control->getForm();
 		$form->onSuccess[] = function(ProductForm $form) {
 			$this->updateProduct($form);
 		};
-		return $form;
+		return $control;
 	}
 
 	/**
@@ -63,7 +64,7 @@ class EditPresenter extends \ShoPHP\Admin\BasePresenter
 	 */
 	private function getEditForm()
 	{
-		return $this->getComponent('productForm');
+		return $this->getComponent('productFormControl')->getForm();
 	}
 
 	private function updateProduct(ProductForm $form)
@@ -73,10 +74,14 @@ class EditPresenter extends \ShoPHP\Admin\BasePresenter
 		$this->product->setPrice($values->price);
 		$this->product->setDescription($values->description);
 		$this->product->setDiscountPercent($values->discount);
-		$this->productRepository->flush();
+		$this->product->setCategories($form->getCategories());
 
-		$this->flashMessage(sprintf('Product %s has been updated.', $this->product->getName()));
-		$this->redirect('this');
+		if (!$form->hasErrors()) {
+			$this->productRepository->flush();
+
+			$this->flashMessage(sprintf('Product %s has been updated.', $this->product->getName()));
+			$this->redirect('this');
+		}
 	}
 
 }
