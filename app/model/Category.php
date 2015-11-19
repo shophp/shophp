@@ -62,6 +62,11 @@ class Category extends \Nette\Object
 		return $this->path;
 	}
 
+	public function hasParent()
+	{
+		return $this->getParent() !== null;
+	}
+
 	public function getParent()
 	{
 		return $this->parent;
@@ -87,7 +92,7 @@ class Category extends \Nette\Object
 		if ($this === $category) {
 			return true;
 		}
-		if ($this->getParent() === null) {
+		if (!$this->hasParent()) {
 			return false;
 		}
 		return $this->getParent()->isSelfOrSubcategoryOf($category);

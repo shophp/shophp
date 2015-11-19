@@ -15,7 +15,7 @@
 				<ul n:block="category">
 					<li n:foreach="$categories as $category">
 						<label>
-							<input type=checkbox name="category[]" value={$category->id}>
+							<input type=checkbox name="category[]" n:attr="checked => isset($checkedCategoryIds[$category->id])" value={$category->id}>
 							{_$category->name}
 						</label>
 						{if $category->hasSubcategories()}

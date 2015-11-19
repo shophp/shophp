@@ -42,6 +42,7 @@ class EditPresenter extends \ShoPHP\Admin\BasePresenter
 			'price' => $this->product->getPrice(),
 			'discount' => $this->product->getDiscountPercent(),
 		]);
+		$form->setDefaultCategories($this->product->getCategories());
 	}
 
 	public function renderDefault()

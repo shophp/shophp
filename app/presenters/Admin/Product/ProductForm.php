@@ -23,6 +23,11 @@ class ProductForm extends \Nette\Application\UI\Form
 		$this->createFields($submitLabel);
 	}
 
+	public function setDefaultCategories(Categories $categories)
+	{
+		$this->getParent()->setCategories($categories);
+	}
+
 	/**
 	 * @return Categories|Category[]
 	 */

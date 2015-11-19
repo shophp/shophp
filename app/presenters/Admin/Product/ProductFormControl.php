@@ -3,6 +3,8 @@
 namespace ShoPHP\Admin\Product;
 
 use Nette\Localization\ITranslator;
+use ShoPHP\Categories;
+use ShoPHP\Category;
 use ShoPHP\Repository\CategoryRepository;
 
 class ProductFormControl extends \ShoPHP\BaseControl
@@ -31,6 +33,18 @@ class ProductFormControl extends \ShoPHP\BaseControl
 	public function getForm()
 	{
 		return $this->getComponent('productForm');
+	}
+
+	/**
+	 * @param Categories|Category[] $categories
+	 */
+	public function setCategories(Categories $categories)
+	{
+		$checkedCategoryIds = [];
+		foreach ($categories as $category) {
+			$checkedCategoryIds[$category->getId()] = true;
+		}
+		$this->template->checkedCategoryIds = $checkedCategoryIds;
 	}
 
 	protected function createComponentProductForm()

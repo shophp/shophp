@@ -32,7 +32,7 @@ class Product extends \Nette\Object
 	 *     joinColumns={@JoinColumn(name="product", referencedColumnName="id")},
 	 *     inverseJoinColumns={@JoinColumn(name="category", referencedColumnName="id")}
 	 * )
-	 * @var Categories
+	 * @var Categories|Category[]
 	 */
 	protected $categories;
 
@@ -112,25 +112,34 @@ class Product extends \Nette\Object
 		$this->discountPercent = $discountPercent;
 	}
 
+	public function getCategories()
+	{
+		if (!($this->categories instanceof Categories)) {
+			$this->categories = new Categories(iterator_to_array($this->categories));
+		}
+		return $this->categories;
+	}
+
+	/**
+	 * @param Categories|Category[] $categories
+	 */
 	public function setCategories(Categories $categories)
 	{
-		$this->categories = new Categories();
-		$categories = iterator_to_array($categories);
-		/** @var Category[] $categories */
-		do {
-			/** @var Category $category */
-			$category = array_shift($categories);
-			if ($category === null) {
-				break;
+		foreach ($categories as $category) {
+			while ($category->hasParent()) {
+				$category = $category->getParent();
+				$categories[] = $category;
 			}
-			foreach ($categories as $potentialSubcategory) {
-				if ($potentialSubcategory->isSelfOrSubcategoryOf($category)) {
-					continue 2;
-				}
+		}
+		$this->categories = new Categories();
+		$idsAdded = [];
+		foreach ($categories as $category) {
+			if (isset($idsAdded[$category->getId()])) {
+				continue;
 			}
 			$this->categories[] = $category;
-
-		} while (true);
+			$idsAdded[$category->getId()] = true;
+		}
 	}
 }
 

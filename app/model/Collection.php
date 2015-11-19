@@ -8,13 +8,17 @@ abstract class Collection extends \Doctrine\Common\Collections\ArrayCollection
 	/** @var string */
 	private $entityClass;
 
-	public function __construct()
+	public function __construct(array $entities = [])
 	{
-		parent::__construct();
 		$this->entityClass = (string) $this->getEntityClass();
 		if (!class_exists($this->entityClass)) {
 			throw new CollectionException(sprintf('Class %s does not exist.', $this->entityClass));
 		}
+		foreach ($entities as $entity) {
+			$this->checkInstanceOf($entity);
+		}
+
+		parent::__construct($entities);
 	}
 
 	/**
@@ -24,18 +28,21 @@ abstract class Collection extends \Doctrine\Common\Collections\ArrayCollection
 
 	public function add($entity)
 	{
-		if (!($entity instanceof $this->entityClass)) {
-			throw new CollectionException(sprintf('Entity added to collection must be instance of %s.', $this->entityClass));
-		}
+		$this->checkInstanceOf($entity);
 		return parent::add($entity);
 	}
 
 	public function set($key, $entity)
 	{
-		if (!($entity instanceof $this->entityClass)) {
-			throw new CollectionException(sprintf('Entity set to collection must be instance of %s.', $this->entityClass));
-		}
+		$this->checkInstanceOf($entity);
 		parent::set($key, $entity);
+	}
+
+	private function checkInstanceOf($entity)
+	{
+		if (!($entity instanceof $this->entityClass)) {
+			throw new CollectionException(sprintf('Entity must be instance of %s.', $this->entityClass));
+		}
 	}
 
 }
