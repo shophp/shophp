@@ -58,9 +58,6 @@ class EditPresenter extends \ShoPHP\Admin\BasePresenter
 			$parentCategory = null;
 		} else {
 			$parentCategory = $this->categoryRepository->getById($values->parentCategory);
-			if ($parentCategory === null) {
-				$form->addError(sprintf('Parent category %d does not exist.', $parentCategory));
-			}
 		}
 		$this->category->setParent($parentCategory);
 

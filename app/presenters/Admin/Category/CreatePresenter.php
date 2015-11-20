@@ -41,11 +41,7 @@ class CreatePresenter extends \ShoPHP\Admin\BasePresenter
 		$category = new Category($values->name);
 		if ($values->parentCategory !== CategoriesForm::ROOT_CATEGORY_KEY) {
 			$parentCategory = $this->categoryRepository->getById($values->parentCategory);
-			if ($parentCategory === null) {
-				$form->addError(sprintf('Parent category %d does not exist.', $parentCategory));
-			} else {
-				$category->setParent($parentCategory);
-			}
+			$category->setParent($parentCategory);
 		}
 		if ($this->categoryRepository->hasDuplicity($category)) {
 			$form->addError(sprintf('Category with name %s already exists.', $category->getName()));
