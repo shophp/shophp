@@ -3,8 +3,8 @@
 namespace ShoPHP\Admin\Product;
 
 use Nette\Forms\Controls\TextInput;
-use ShoPHP\Categories;
 use ShoPHP\Category;
+use ShoPHP\Product;
 use ShoPHP\Repository\CategoryRepository;
 
 class ProductForm extends \Nette\Application\UI\Form
@@ -13,69 +13,65 @@ class ProductForm extends \Nette\Application\UI\Form
 	/** @var CategoryRepository */
 	private $categoryRepository;
 
-	/**
-	 * @param string $submitLabel
-	 */
-	public function __construct($submitLabel, CategoryRepository $categoryRepository)
+	public function __construct(CategoryRepository $categoryRepository, Product $editedProduct = null)
 	{
 		parent::__construct();
 		$this->categoryRepository = $categoryRepository;
-		$this->createFields($submitLabel);
+		$this->createFields($editedProduct);
 	}
 
-	public function setDefaultCategories(Categories $categories)
+	private function createFields(Product $editedProduct = null)
 	{
-		$this->getParent()->setCategories($categories);
-	}
-
-	/**
-	 * @return Categories|Category[]
-	 */
-	public function getCategories()
-	{
-		$categoryIds = $this->getHttpData(self::DATA_LINE, 'category[]');
-		$categories = new Categories();
-		foreach ($categoryIds as $categoryId) {
-			$category = $this->categoryRepository->getById($categoryId);
-			if ($category === null) {
-				$this->addError(sprintf('Category %d does not exist.', $categoryId));
-			} else {
-				$categories[] = $category;
-			}
+		$nameControl = $this->addText('name', 'Name');
+		$nameControl->setRequired();
+		if ($editedProduct !== null) {
+			$nameControl->setDefaultValue($editedProduct->getName());
 		}
-		return $categories;
-	}
 
-	/**
-	 * @param string $submitLabel
-	 */
-	private function createFields($submitLabel)
-	{
-		$this->addText('name', 'Name')
-			->setRequired();
-
-		$this->addTextArea('description', 'Description');
+		$descriptionControl = $this->addTextArea('description', 'Description');
+		if ($editedProduct !== null) {
+			$descriptionControl->setDefaultValue($editedProduct->getDescription());
+		}
 
 		$priceErrorMessage = 'Price must be positive number.';
-		$this->addText('price', 'Price')
-			->setType('number')
+		$priceControl = $this->addText('price', 'Price');
+		$priceControl->setType('number')
 			->setAttribute('step', 'any')
 			->setRequired()
 			->addRule(self::FLOAT, $priceErrorMessage)
 			->addRule(function (TextInput $input) {
 				return $input->getValue() > 0;
 			}, $priceErrorMessage);
+		if ($editedProduct !== null) {
+			$priceControl->setDefaultValue($editedProduct->getPrice());
+		}
 
 		$discountErrorMessage = 'Discount must be number between 0 and 100.';
-		$this->addText('discount', 'Discount')
-			->setType('number')
+		$discountControl = $this->addText('discount', 'Discount');
+		$discountControl->setType('number')
 			->setDefaultValue(0)
 			->addRule(self::INTEGER, $discountErrorMessage)
 			->addRule(function (TextInput $input) {
 				return $input->getValue() >= 0 && $input->getValue() < 100;
 			}, $discountErrorMessage);
+		if ($editedProduct !== null) {
+			$discountControl->setDefaultValue($editedProduct->getDiscountPercent());
+		}
 
-		$this->addSubmit('send', $submitLabel);
+		$categoryIds = iterator_to_array($this->categoryRepository->getAll());
+		$categoryIds = array_map(function (Category $category) {
+			return $category->getId();
+		}, $categoryIds);
+		$categoriesControl = $this->addCheckboxList('categories', 'Categories', array_flip($categoryIds));
+		if ($editedProduct !== null) {
+			$checkedIds = iterator_to_array($editedProduct->getCategories());
+			$checkedIds = array_map(function (Category $category) {
+				return $category->getId();
+			}, $checkedIds);
+			$categoriesControl->setDefaultValue($checkedIds);
+		}
+
+		$this->addSubmit('send', $editedProduct !== null ? 'Update' : 'Create');
 	}
 
 }

@@ -3,6 +3,7 @@
 namespace ShoPHP\Admin\Product;
 
 use ShoPHP\Product;
+use ShoPHP\Repository\CategoryRepository;
 use ShoPHP\Repository\ProductRepository;
 
 class CreatePresenter extends \ShoPHP\Admin\BasePresenter
@@ -14,11 +15,19 @@ class CreatePresenter extends \ShoPHP\Admin\BasePresenter
 	/** @var ProductRepository */
 	private $productRepository;
 
-	public function __construct(ProductFormControlFactory $productFormControlFactory, ProductRepository $productRepository)
+	/** @var CategoryRepository */
+	private $categoryRepository;
+
+	public function __construct(
+		ProductFormControlFactory $productFormControlFactory,
+		ProductRepository $productRepository,
+		CategoryRepository $categoryRepository
+	)
 	{
 		parent::__construct();
 		$this->productFormControlFactory = $productFormControlFactory;
 		$this->productRepository = $productRepository;
+		$this->categoryRepository = $categoryRepository;
 	}
 
 	public function actionDefault()
@@ -27,7 +36,7 @@ class CreatePresenter extends \ShoPHP\Admin\BasePresenter
 
 	protected function createComponentProductFormControl()
 	{
-		$control = $this->productFormControlFactory->create('Create');
+		$control = $this->productFormControlFactory->create();
 		$form = $control->getForm();
 		$form->onSuccess[] = function(ProductForm $form) {
 			$this->createProduct($form);
@@ -41,7 +50,7 @@ class CreatePresenter extends \ShoPHP\Admin\BasePresenter
 		$product = new Product($values->name, $values->price);
 		$product->setDescription($values->description);
 		$product->setDiscountPercent($values->discount);
-		$product->setCategories($form->getCategories());
+		$product->setCategories($this->categoryRepository->getByIds($values->categories));
 
 		if (!$form->hasErrors()) {
 			$this->productRepository->create($product);

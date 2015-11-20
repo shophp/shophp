@@ -2,13 +2,15 @@
 
 namespace ShoPHP\Admin\Product;
 
+use ShoPHP\Product;
+
 interface ProductFormControlFactory
 {
 
 	/**
-	 * @param string $submitLabel
+	 * @param Product|null $editedProduct
 	 * @return ProductFormControl
 	 */
-	function create($submitLabel);
+	function create(Product $editedProduct = null);
 
 }

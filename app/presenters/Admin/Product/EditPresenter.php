@@ -4,6 +4,7 @@ namespace ShoPHP\Admin\Product;
 
 use Nette\Application\BadRequestException;
 use ShoPHP\Product;
+use ShoPHP\Repository\CategoryRepository;
 use ShoPHP\Repository\ProductRepository;
 
 class EditPresenter extends \ShoPHP\Admin\BasePresenter
@@ -15,14 +16,22 @@ class EditPresenter extends \ShoPHP\Admin\BasePresenter
 	/** @var ProductRepository */
 	private $productRepository;
 
+	/** @var CategoryRepository */
+	private $categoryRepository;
+
 	/** @var Product */
 	private $product;
 
-	public function __construct(ProductFormControlFactory $productFormControlFactory, ProductRepository $productRepository)
+	public function __construct(
+		ProductFormControlFactory $productFormControlFactory,
+		ProductRepository $productRepository,
+		CategoryRepository $categoryRepository
+	)
 	{
 		parent::__construct();
 		$this->productFormControlFactory = $productFormControlFactory;
 		$this->productRepository = $productRepository;
+		$this->categoryRepository = $categoryRepository;
 	}
 
 	/**
@@ -36,15 +45,6 @@ class EditPresenter extends \ShoPHP\Admin\BasePresenter
 		if ($this->product === null) {
 			throw new BadRequestException(sprintf('Product %d not found.', $id));
 		}
-
-		$form = $this->getEditForm();
-		$form->setDefaults([
-			'name' => $this->product->getName(),
-			'description' => $this->product->getDescription(),
-			'price' => $this->product->getPrice(),
-			'discount' => $this->product->getDiscountPercent(),
-		]);
-		$form->setDefaultCategories($this->product->getCategories());
 	}
 
 	public function renderDefault()
@@ -54,20 +54,12 @@ class EditPresenter extends \ShoPHP\Admin\BasePresenter
 
 	protected function createComponentProductFormControl()
 	{
-		$control = $this->productFormControlFactory->create('Update');
+		$control = $this->productFormControlFactory->create($this->product);
 		$form = $control->getForm();
 		$form->onSuccess[] = function(ProductForm $form) {
 			$this->updateProduct($form);
 		};
 		return $control;
-	}
-
-	/**
-	 * @return ProductForm
-	 */
-	private function getEditForm()
-	{
-		return $this->getComponent('productFormControl')->getForm();
 	}
 
 	private function updateProduct(ProductForm $form)
@@ -77,7 +69,7 @@ class EditPresenter extends \ShoPHP\Admin\BasePresenter
 		$this->product->setPrice($values->price);
 		$this->product->setDescription($values->description);
 		$this->product->setDiscountPercent($values->discount);
-		$this->product->setCategories($form->getCategories());
+		$this->product->setCategories($this->categoryRepository->getByIds($values->categories));
 
 		if (!$form->hasErrors()) {
 			$this->productRepository->flush();

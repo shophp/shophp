@@ -3,15 +3,11 @@
 namespace ShoPHP\Admin\Product;
 
 use Nette\Localization\ITranslator;
-use ShoPHP\Categories;
-use ShoPHP\Category;
+use ShoPHP\Product;
 use ShoPHP\Repository\CategoryRepository;
 
 class ProductFormControl extends \ShoPHP\BaseControl
 {
-
-	/** @var string */
-	private $submitLabel;
 
 	/** @var CategoryRepository */
 	private $categoryRepository;
@@ -19,12 +15,20 @@ class ProductFormControl extends \ShoPHP\BaseControl
 	/** @var ProductFormFactory */
 	private $productFormFactory;
 
-	public function __construct($submitLabel, CategoryRepository $categoryRepository, ProductFormFactory $productFormFactory, ITranslator $translator)
+	/** @var Product|null */
+	private $editedProduct;
+
+	public function __construct(
+		CategoryRepository $categoryRepository,
+		ProductFormFactory $productFormFactory,
+		ITranslator $translator,
+		Product $editedProduct = null
+	)
 	{
 		parent::__construct($translator);
-		$this->submitLabel = $submitLabel;
 		$this->categoryRepository = $categoryRepository;
 		$this->productFormFactory = $productFormFactory;
+		$this->editedProduct = $editedProduct;
 	}
 
 	/**
@@ -35,21 +39,9 @@ class ProductFormControl extends \ShoPHP\BaseControl
 		return $this->getComponent('productForm');
 	}
 
-	/**
-	 * @param Categories|Category[] $categories
-	 */
-	public function setCategories(Categories $categories)
-	{
-		$checkedCategoryIds = [];
-		foreach ($categories as $category) {
-			$checkedCategoryIds[$category->getId()] = true;
-		}
-		$this->template->checkedCategoryIds = $checkedCategoryIds;
-	}
-
 	protected function createComponentProductForm()
 	{
-		return $this->productFormFactory->create($this->submitLabel);
+		return $this->productFormFactory->create($this->editedProduct);
 	}
 
 	public function render()

@@ -2,6 +2,7 @@
 
 namespace ShoPHP\Repository;
 
+use ShoPHP\Categories;
 use ShoPHP\Category;
 
 class CategoryRepository extends \ShoPHP\Repository
@@ -22,11 +23,23 @@ class CategoryRepository extends \ShoPHP\Repository
 	}
 
 	/**
-	 * @return Category[]
+	 * @param int[] $ids
+	 * @return Categories|Category[]
+	 */
+	public function getByIds(array $ids)
+	{
+		$categories = $this->findBy([
+			'id' => $ids,
+		]);
+		return new Categories($categories);
+	}
+
+	/**
+	 * @return Categories|Category[]
 	 */
 	public function getAll()
 	{
-		return $this->findAll();
+		return new Categories($this->findAll());
 	}
 
 	/**
