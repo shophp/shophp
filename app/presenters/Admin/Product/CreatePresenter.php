@@ -42,9 +42,9 @@ class CreatePresenter extends \ShoPHP\Admin\BasePresenter
 		$product->setDescription($values->description);
 		$product->setDiscountPercent($values->discount);
 		$product->setCategories($form->getCategories());
-		$this->productRepository->create($product);
 
 		if (!$form->hasErrors()) {
+			$this->productRepository->create($product);
 			$this->flashMessage(sprintf('Product %s has been created.', $product->getName()));
 			$this->redirect('Edit:', ['id' => $product->getId()]);
 		}
