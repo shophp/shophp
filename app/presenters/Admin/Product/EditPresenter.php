@@ -30,7 +30,9 @@ class EditPresenter extends \ShoPHP\Admin\BasePresenter
 	 */
 	public function actionDefault($id)
 	{
-		$this->product = $this->productRepository->getById($id);
+		if ($id !== null) {
+			$this->product = $this->productRepository->getById($id);
+		}
 		if ($this->product === null) {
 			throw new BadRequestException(sprintf('Product %d not found.', $id));
 		}

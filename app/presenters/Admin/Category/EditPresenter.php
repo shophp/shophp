@@ -27,7 +27,9 @@ class EditPresenter extends \ShoPHP\Admin\BasePresenter
 
 	public function actionDefault($id)
 	{
-		$this->category = $this->categoryRepository->getById($id);
+		if ($id !== null) {
+			$this->category = $this->categoryRepository->getById($id);
+		}
 		if ($this->category === null) {
 			throw new BadRequestException(sprintf('Category %d not found.', $id));
 		}
