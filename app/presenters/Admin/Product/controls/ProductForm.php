@@ -33,7 +33,7 @@ class ProductForm extends \Nette\Application\UI\Form
 	 */
 	public function getCategories()
 	{
-		$categoryIds = $this->getHttpData(self::DATA_TEXT, 'category[]');
+		$categoryIds = $this->getHttpData(self::DATA_LINE, 'category[]');
 		$categories = new Categories();
 		foreach ($categoryIds as $categoryId) {
 			$category = $this->categoryRepository->getById($categoryId);
