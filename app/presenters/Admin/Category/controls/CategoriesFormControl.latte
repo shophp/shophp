@@ -1,0 +1,39 @@
+{form categoriesForm}
+
+	<div class="errors" n:if="$form->hasErrors()" n:foreach="$form->errors as $error">
+		{$error}
+	</div>
+
+	<table>
+		<tr>
+			<th>{label parentCategory /}</th>
+			<td>
+				{var $isRoot = true}
+				<ul n:block="category">
+					<li n:if="$isRoot">
+						<label n:name="parentCategory:$rootCategoryKey">
+							<input n:name="parentCategory:$rootCategoryKey"> ({_'root'})
+						</label>
+					</li>
+					<li n:foreach="$categories as $category">
+						<label n:name="parentCategory:$category->id">
+							<input n:name="parentCategory:$category->id"> {_$category->name}
+						</label>
+						{if $category->hasSubcategories()}
+							{include #category categories => $category->subcategories, isRoot => false}
+						{/if}
+					</li>
+				</ul>
+			</td>
+		</tr>
+		<tr>
+			<th>{label name /}</th>
+			<td>{input name}</td>
+		</tr>
+		<tr>
+			<th></th>
+			<td>{input send}</td>
+		</tr>
+	</table>
+
+{/form}

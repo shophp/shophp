@@ -7,6 +7,11 @@ use ShoPHP\Category;
 class CategoryRepository extends \ShoPHP\Repository
 {
 
+	public function create(Category $category)
+	{
+		$this->createEntity($category);
+	}
+
 	/**
 	 * @param integer $id
 	 * @return Category|null
@@ -14,6 +19,14 @@ class CategoryRepository extends \ShoPHP\Repository
 	public function getById($id)
 	{
 		return $this->find($id);
+	}
+
+	/**
+	 * @return Category[]
+	 */
+	public function getAll()
+	{
+		return $this->findAll();
 	}
 
 	/**

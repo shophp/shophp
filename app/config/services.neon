@@ -33,3 +33,9 @@ services:
 
 	-
 		implement: ShoPHP\Admin\Product\ProductFormControlFactory
+
+	-
+		implement: ShoPHP\Admin\Category\CategoriesFormFactory
+
+	-
+		implement: ShoPHP\Admin\Category\CategoriesFormControlFactory
