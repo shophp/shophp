@@ -84,12 +84,14 @@ class Category extends \Nette\Object
 		return $this->parent;
 	}
 
-	public function setParent(self $category)
+	public function setParent(self $category = null)
 	{
 		if ($this->hasParent()) {
 			$this->resetPath();
 		}
-		$this->path = sprintf('%s/%s', $category->getPath(), $this->getPath());
+		if ($category !== null) {
+			$this->path = sprintf('%s/%s', $category->getPath(), $this->getPath());
+		}
 		$this->parent = $category;
 	}
 

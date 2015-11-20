@@ -8,21 +8,27 @@
 		<tr>
 			<th>{label parentCategory /}</th>
 			<td>
-				{var $isRoot = true}
-				<ul n:block="category">
-					<li n:if="$isRoot">
+				<ul>
+					<li>
 						<label n:name="parentCategory:$rootCategoryKey">
 							<input n:name="parentCategory:$rootCategoryKey"> ({_'root'})
 						</label>
 					</li>
-					<li n:foreach="$categories as $category">
-						<label n:name="parentCategory:$category->id">
-							<input n:name="parentCategory:$category->id"> {_$category->name}
-						</label>
-						{if $category->hasSubcategories()}
-							{include #category categories => $category->subcategories, isRoot => false}
-						{/if}
-					</li>
+					<ul n:block="category">
+						<li n:foreach="$categories as $category" n:class="$category === $currentCategory ? selected">
+							{ifset $form[parentCategory]->items[$category->id]}
+								<label n:name="parentCategory:$category->id">
+									<input n:name="parentCategory:$category->id"> {_$category->name}
+								</label>
+							{else}
+								{_$category->name}
+							{/ifset}
+
+							{if $category->hasSubcategories()}
+								{include #category categories => $category->subcategories}
+							{/if}
+						</li>
+					</ul>
 				</ul>
 			</td>
 		</tr>

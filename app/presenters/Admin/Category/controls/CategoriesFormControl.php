@@ -3,7 +3,6 @@
 namespace ShoPHP\Admin\Category;
 
 use Nette\Localization\ITranslator;
-use ShoPHP\Categories;
 use ShoPHP\Category;
 use ShoPHP\Repository\CategoryRepository;
 
@@ -25,6 +24,11 @@ class CategoriesFormControl extends \ShoPHP\BaseControl
 		$this->submitLabel = $submitLabel;
 		$this->categoryRepository = $categoryRepository;
 		$this->categoriesFormFactory = $categoriesFormFactory;
+	}
+
+	public function setCurrentCategory(Category $category)
+	{
+		$this->template->currentCategory = $category;
 	}
 
 	/**
