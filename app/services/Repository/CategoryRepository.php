@@ -50,4 +50,12 @@ class CategoryRepository extends \ShoPHP\Repository
 		]);
 	}
 
+	public function hasDuplicity(Category $category)
+	{
+		$duplicate = $this->findOneBy([
+			'path' => $category->getPath(),
+		]);
+		return $duplicate !== null;
+	}
+
 }

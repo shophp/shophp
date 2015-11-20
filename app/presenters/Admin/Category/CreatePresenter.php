@@ -47,9 +47,12 @@ class CreatePresenter extends \ShoPHP\Admin\BasePresenter
 				$category->setParent($parentCategory);
 			}
 		}
-		$this->categoryRepository->create($category);
+		if ($this->categoryRepository->hasDuplicity($category)) {
+			$form->addError(sprintf('Category with name %s already exists.', $category->getName()));
+		}
 
 		if (!$form->hasErrors()) {
+			$this->categoryRepository->create($category);
 			$this->flashMessage(sprintf('Category %s has been created.', $category->getName()));
 			$this->redirect('this');
 		}
