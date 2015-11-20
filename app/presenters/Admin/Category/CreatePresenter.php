@@ -27,7 +27,7 @@ class CreatePresenter extends \ShoPHP\Admin\BasePresenter
 
 	protected function createComponentCategoriesFormControl()
 	{
-		$control = $this->categoriesFormControlFactory->create('Create');
+		$control = $this->categoriesFormControlFactory->create();
 		$form = $control->getForm();
 		$form->onSuccess[] = function(CategoriesForm $form) {
 			$this->createCategory($form);

@@ -2,13 +2,15 @@
 
 namespace ShoPHP\Admin\Category;
 
+use ShoPHP\Category;
+
 interface CategoriesFormControlFactory
 {
 
 	/**
-	 * @param string $submitLabel
+	 * @param Category $editedCategory
 	 * @return CategoriesFormControl
 	 */
-	function create($submitLabel);
+	function create(Category $editedCategory = null);
 
 }

@@ -31,9 +31,6 @@ class EditPresenter extends \ShoPHP\Admin\BasePresenter
 		if ($this->category === null) {
 			throw new BadRequestException(sprintf('Category %d not found.', $id));
 		}
-
-		$form = $this->getEditForm();
-		$form->setDefaultsFromCategory($this->category);
 	}
 
 	public function renderDefault()
@@ -43,7 +40,7 @@ class EditPresenter extends \ShoPHP\Admin\BasePresenter
 
 	protected function createComponentCategoriesFormControl()
 	{
-		$control = $this->categoriesFormControlFactory->create('Update');
+		$control = $this->categoriesFormControlFactory->create($this->category);
 		$form = $control->getForm();
 		$form->onSuccess[] = function(CategoriesForm $form) {
 			$this->updateCategory($form);
@@ -73,14 +70,6 @@ class EditPresenter extends \ShoPHP\Admin\BasePresenter
 			$this->flashMessage(sprintf('Category %s has been updated.', $this->category->getName()));
 			$this->redirect('this');
 		}
-	}
-
-	/**
-	 * @return CategoriesForm
-	 */
-	private function getEditForm()
-	{
-		return $this->getComponent('categoriesFormControl')->getForm();
 	}
 
 }

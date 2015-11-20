@@ -15,7 +15,7 @@
 						</label>
 					</li>
 					<ul n:block="category">
-						<li n:foreach="$categories as $category" n:class="$category === $currentCategory ? selected">
+						<li n:foreach="$categories as $category" n:class="$category === $editedCategory ? selected">
 							{ifset $form[parentCategory]->items[$category->id]}
 								<label n:name="parentCategory:$category->id">
 									<input n:name="parentCategory:$category->id"> {_$category->name}

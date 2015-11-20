@@ -14,62 +14,41 @@ class CategoriesForm extends \Nette\Application\UI\Form
 	/** @var CategoryRepository */
 	private $categoryRepository;
 
-	/**
-	 * @param string $submitLabel
-	 */
-	public function __construct($submitLabel, CategoryRepository $categoryRepository)
+	public function __construct(CategoryRepository $categoryRepository, Category $editedCategory = null)
 	{
 		parent::__construct();
 		$this->categoryRepository = $categoryRepository;
-		$this->createFields($submitLabel);
+		$this->createFields($editedCategory);
 	}
 
-	public function setDefaultsFromCategory(Category $category)
+	private function createFields(Category $editedCategory = null)
 	{
-		$defaults = [
-			'name' => $category->getName(),
-		];
-		if ($category->hasParent()) {
-			$defaults['parentCategory'] = $category->getParent()->getId();
+		$nameControl = $this->addText('name', 'Name');
+		$nameControl->setRequired();
+		if ($editedCategory !== null) {
+			$nameControl->setDefaultValue($editedCategory->getName());
 		}
-
-		$parentCategoryItems = $this->getParentCategoryControl()->getItems();
-		unset($parentCategoryItems[$category->getId()]);
-		$eraseSubcategories = function (Category $category) use (& $eraseSubcategories, & $parentCategoryItems) {
-			if ($category->hasSubcategories()) {
-				foreach ($category->getSubcategories() as $subcategory) {
-					unset($parentCategoryItems[$subcategory->getId()]);
-					$eraseSubcategories($subcategory);
-				}
-			}
-		};
-		$eraseSubcategories($category);
-		$this->getParentCategoryControl()->setItems($parentCategoryItems);
-
-		$this->getParent()->setCurrentCategory($category);
-
-		$this->setDefaults($defaults);
-	}
-
-	/**
-	 * @param string $submitLabel
-	 */
-	private function createFields($submitLabel)
-	{
-		$this->addText('name', 'Name')
-			->setRequired();
 
 		$parentCategoryItems = [
 			self::ROOT_CATEGORY_KEY => '',
 		];
 		foreach ($this->categoryRepository->getAll() as $category) {
+			if ($editedCategory !== null) {
+				if ($category->isSelfOrSubcategoryOf($editedCategory)) {
+					continue;
+				}
+			}
 			$parentCategoryItems[$category->getId()] = '';
 		}
-		$this->addRadioList('parentCategory', 'Parent category', $parentCategoryItems)
-			->setRequired()
-			->setDefaultValue(self::ROOT_CATEGORY_KEY);
+		$parentCategoryControl = $this->addRadioList('parentCategory', 'Parent category', $parentCategoryItems);
+		$parentCategoryControl->setRequired();
+		$parentCategoryControl->setDefaultValue(
+			$editedCategory !== null && $editedCategory->hasParent()
+				? $editedCategory->getParent()->getId()
+				: self::ROOT_CATEGORY_KEY
+		);
 
-		$this->addSubmit('send', $submitLabel);
+		$this->addSubmit('send', $editedCategory === null ? 'Create' : 'Update');
 	}
 
 	/**

@@ -9,8 +9,8 @@ use ShoPHP\Repository\CategoryRepository;
 class CategoriesFormControl extends \ShoPHP\BaseControl
 {
 
-	/** @var string */
-	private $submitLabel;
+	/** @var Category|null */
+	private $editedCategory;
 
 	/** @var CategoryRepository */
 	private $categoryRepository;
@@ -18,17 +18,17 @@ class CategoriesFormControl extends \ShoPHP\BaseControl
 	/** @var CategoriesFormFactory */
 	private $categoriesFormFactory;
 
-	public function __construct($submitLabel, CategoryRepository $categoryRepository, CategoriesFormFactory $categoriesFormFactory, ITranslator $translator)
+	public function __construct(
+		CategoryRepository $categoryRepository,
+		CategoriesFormFactory $categoriesFormFactory,
+		ITranslator $translator,
+		Category $editedCategory = null
+	)
 	{
 		parent::__construct($translator);
-		$this->submitLabel = $submitLabel;
 		$this->categoryRepository = $categoryRepository;
 		$this->categoriesFormFactory = $categoriesFormFactory;
-	}
-
-	public function setCurrentCategory(Category $category)
-	{
-		$this->template->currentCategory = $category;
+		$this->editedCategory = $editedCategory;
 	}
 
 	/**
@@ -41,12 +41,13 @@ class CategoriesFormControl extends \ShoPHP\BaseControl
 
 	protected function createComponentCategoriesForm()
 	{
-		return $this->categoriesFormFactory->create($this->submitLabel);
+		return $this->categoriesFormFactory->create($this->editedCategory);
 	}
 
 	public function render()
 	{
 		$this->template->categories = $this->categoryRepository->getRoot();
+		$this->template->editedCategory = $this->editedCategory;
 		$this->template->rootCategoryKey = CategoriesForm::ROOT_CATEGORY_KEY;
 		$this->template->setFile(__DIR__ . '/CategoriesFormControl.latte');
 		$this->template->render();
