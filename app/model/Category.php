@@ -45,7 +45,6 @@ class Category extends \Nette\Object
 	public function __construct($name)
 	{
 		$this->setName($name);
-		$this->resetPath();
 		$this->subcategories = new Categories();
 		$this->products = new ArrayCollection();
 	}
@@ -67,6 +66,7 @@ class Category extends \Nette\Object
 			throw new EntityInvalidArgumentException('Name cannot be empty.');
 		}
 		$this->name = $name;
+		$this->resetPath();
 	}
 
 	public function getPath()
@@ -86,13 +86,8 @@ class Category extends \Nette\Object
 
 	public function setParent(self $category = null)
 	{
-		if ($this->hasParent()) {
-			$this->resetPath();
-		}
-		if ($category !== null) {
-			$this->path = sprintf('%s/%s', $category->getPath(), $this->getPath());
-		}
 		$this->parent = $category;
+		$this->resetPath();
 	}
 
 	public function hasSubcategories()
@@ -134,6 +129,10 @@ class Category extends \Nette\Object
 	private function resetPath()
 	{
 		$this->path = Strings::webalize($this->getName());
+
+		if ($this->hasParent()) {
+			$this->path = sprintf('%s/%s', $this->getParent()->getPath(), $this->path);
+		}
 	}
 
 }
