@@ -21,4 +21,15 @@ class ProductRepository extends \ShoPHP\Repository
 		return $this->find($id);
 	}
 
+	/**
+	 * @param string $path
+	 * @return Product[]
+	 */
+	public function findByPath($path)
+	{
+		return $this->findBy([
+			'path' => $path,
+		]);
+	}
+
 }

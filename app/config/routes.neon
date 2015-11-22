@@ -18,6 +18,9 @@ parameters:
 		"/category/<path [a-z0-9/-]+>":
 			defaults: "Front:Product:Category:default"
 
+		"/product/<path [a-z0-9/-]+>":
+			defaults: "Front:Product:Product:default"
+
 		"/admin/<presenter>/<action>[/<id [0-9]+>]":
 			defaults:
 				module: Admin

@@ -5,7 +5,10 @@
 {if $currentCategory->hasProducts()}
 	<ul>
 		<li n:foreach="$currentCategory->products as $product">
-			{$product->name}<br>
+			<a n:href=":Front:Product:Product: path => $product->getPath($currentCategory)">
+				{$product->name}
+			</a>
+			<br>
 			{$product->price} $
 		</li>
 	</ul>

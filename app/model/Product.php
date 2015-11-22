@@ -1,7 +1,8 @@
 <?php
 
 namespace ShoPHP;
-use Doctrine\Common\Collections\ArrayCollection;
+
+use Nette\Utils\Strings;
 
 /**
  * @Entity(repositoryClass="ShoPHP\Repository\ProductRepository")
@@ -17,6 +18,9 @@ class Product extends \Nette\Object
 	protected $name;
 
 	/** @Column(type="string") * */
+	protected $path;
+
+	/** @Column(type="string") * */
 	protected $description;
 
 	/** @Column(type="float") * */
@@ -29,7 +33,7 @@ class Product extends \Nette\Object
 	 * @ManyToMany(targetEntity="Category", inversedBy="products")
 	 * @JoinTable(
 	 *     name="products_categories",
-	 *     joinColumns={@JoinColumn(name="product", referencedColumnName="id")},
+	 *     joinColumns={@JoinColumn(name="product", referencedColumnName="id", onDelete="CASCADE")},
 	 *     inverseJoinColumns={@JoinColumn(name="category", referencedColumnName="id")}
 	 * )
 	 * @var Categories|Category[]
@@ -67,6 +71,38 @@ class Product extends \Nette\Object
 			throw new EntityInvalidArgumentException('Name cannot be empty.');
 		}
 		$this->name = $name;
+		$this->path = Strings::webalize($name);
+	}
+
+	public function getPath(Category $fromCategory = null)
+	{
+		$categories = $this->getCategories();
+		if (count($categories) === 0) {
+			if ($fromCategory !== null) {
+				throw new EntityInvalidArgumentException(sprintf('Product %s does not belong into any category.', $this->getName()));
+			}
+			return $this->path;
+		}
+
+		$category = null;
+		foreach ($categories as $categoryCandidate) {
+			if ($fromCategory === null) {
+				$category = $categoryCandidate;
+				break;
+			} elseif ($categoryCandidate === $fromCategory) {
+				$category = $categoryCandidate;
+				break;
+			}
+		}
+		if ($category === null) {
+			throw new EntityInvalidArgumentException(sprintf(
+				'Product %s does not belong into category %s.',
+				$this->getName(),
+				$fromCategory->getName()
+			));
+		}
+
+		return sprintf('%s/%s', $category->getPath(), $this->path);
 	}
 
 	public function getDescription()
