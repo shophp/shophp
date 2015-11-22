@@ -54,7 +54,7 @@ class ProductPresenter extends \ShoPHP\Front\BasePresenter
 
 	public function renderDefault()
 	{
-		$this->template->product = $this->product;
+		$this->template->currentProduct = $this->product;
 	}
 
 }
