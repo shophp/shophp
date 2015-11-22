@@ -37,7 +37,7 @@ class ProductService extends \ShoPHP\EntityService
 	 * @param string $path
 	 * @return Product[]
 	 */
-	public function findByPath($path)
+	public function getByPath($path)
 	{
 		return $this->repository->findBy([
 			'path' => $path,

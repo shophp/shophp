@@ -35,7 +35,7 @@ class ProductPresenter extends \ShoPHP\Front\BasePresenter
 		if ($pathsSeparatorPosition !== false) {
 			$categoryPath = substr($path, 0, $pathsSeparatorPosition);
 			$productPath = substr($path, $pathsSeparatorPosition + 1);
-			$productCandidates = $this->productService->findByPath($productPath);
+			$productCandidates = $this->productService->getByPath($productPath);
 			foreach ($productCandidates as $productCandidate) {
 				foreach ($productCandidate->getCategories() as $category) {
 					if ($category->getPath() === $categoryPath) {

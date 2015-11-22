@@ -67,7 +67,7 @@ class CategoryService extends \ShoPHP\EntityService
 	 * @param string $path
 	 * @return Category
 	 */
-	public function findByPath($path)
+	public function getByPath($path)
 	{
 		return $this->repository->findOneBy([
 			'path' => $path,

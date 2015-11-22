@@ -22,7 +22,7 @@ class CategoryPresenter extends \ShoPHP\Front\BasePresenter
 	 */
 	public function actionDefault($path)
 	{
-		$category = $this->categoryService->findByPath($path);
+		$category = $this->categoryService->getByPath($path);
 		if ($category === null) {
 			// todo CategoryAlias
 			throw new BadRequestException(sprintf('Category with path %s not found.', $path));
