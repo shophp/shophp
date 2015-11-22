@@ -3,6 +3,7 @@
 namespace ShoPHP\Admin\Product;
 
 use Nette\Application\BadRequestException;
+use ShoPHP\EntityDuplicateException;
 use ShoPHP\Product;
 use ShoPHP\Repository\CategoryRepository;
 use ShoPHP\Repository\ProductRepository;
@@ -71,11 +72,15 @@ class EditPresenter extends \ShoPHP\Admin\BasePresenter
 		$this->product->setDiscountPercent($values->discount);
 		$this->product->setCategories($this->categoryRepository->getByIds($values->categories));
 
-		if (!$form->hasErrors()) {
-			$this->productRepository->flush();
+		try {
+			if (!$form->hasErrors()) {
+				$this->productRepository->update($this->product);
 
-			$this->flashMessage(sprintf('Product %s has been updated.', $this->product->getName()));
-			$this->redirect('this');
+				$this->flashMessage(sprintf('Product %s has been updated.', $this->product->getName()));
+				$this->redirect('this');
+			}
+		} catch (EntityDuplicateException $e) {
+			$form->addError(sprintf('Product with name %s already exists.', $this->product->getName()));
 		}
 	}
 

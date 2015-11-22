@@ -2,6 +2,7 @@
 
 namespace ShoPHP\Admin\Product;
 
+use ShoPHP\EntityDuplicateException;
 use ShoPHP\Product;
 use ShoPHP\Repository\CategoryRepository;
 use ShoPHP\Repository\ProductRepository;
@@ -52,10 +53,14 @@ class CreatePresenter extends \ShoPHP\Admin\BasePresenter
 		$product->setDiscountPercent($values->discount);
 		$product->setCategories($this->categoryRepository->getByIds($values->categories));
 
-		if (!$form->hasErrors()) {
-			$this->productRepository->create($product);
-			$this->flashMessage(sprintf('Product %s has been created.', $product->getName()));
-			$this->redirect('Edit:', ['id' => $product->getId()]);
+		try {
+			if (!$form->hasErrors()) {
+				$this->productRepository->create($product);
+				$this->flashMessage(sprintf('Product %s has been created.', $product->getName()));
+				$this->redirect('Edit:', ['id' => $product->getId()]);
+			}
+		} catch (EntityDuplicateException $e) {
+			$form->addError(sprintf('Product with name %s already exists.', $product->getName()));
 		}
 	}
 
