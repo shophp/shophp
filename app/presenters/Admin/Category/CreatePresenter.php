@@ -3,6 +3,7 @@
 namespace ShoPHP\Admin\Category;
 
 use ShoPHP\Category;
+use ShoPHP\EntityDuplicateException;
 use ShoPHP\Repository\CategoryRepository;
 
 class CreatePresenter extends \ShoPHP\Admin\BasePresenter
@@ -43,14 +44,15 @@ class CreatePresenter extends \ShoPHP\Admin\BasePresenter
 			$parentCategory = $this->categoryRepository->getById($values->parentCategory);
 			$category->setParent($parentCategory);
 		}
-		if ($this->categoryRepository->hasDuplicity($category)) {
-			$form->addError(sprintf('Category with name %s already exists.', $category->getName()));
-		}
 
-		if (!$form->hasErrors()) {
-			$this->categoryRepository->create($category);
-			$this->flashMessage(sprintf('Category %s has been created.', $category->getName()));
-			$this->redirect('this');
+		try {
+			if (!$form->hasErrors()) {
+				$this->categoryRepository->create($category);
+				$this->flashMessage(sprintf('Category %s has been created.', $category->getName()));
+				$this->redirect('this');
+			}
+		} catch (EntityDuplicateException $e) {
+			$form->addError(sprintf('Category with name %s already exists.', $category->getName()));
 		}
 	}
 

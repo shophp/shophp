@@ -4,13 +4,21 @@ namespace ShoPHP\Repository;
 
 use ShoPHP\Categories;
 use ShoPHP\Category;
+use ShoPHP\EntityDuplicateException;
 
 class CategoryRepository extends \ShoPHP\Repository
 {
 
 	public function create(Category $category)
 	{
+		$this->checkDuplicity($category);
 		$this->createEntity($category);
+	}
+
+	public function update(Category $category)
+	{
+		$this->checkDuplicity($category);
+		$this->updateEntity($category);
 	}
 
 	/**
@@ -69,6 +77,16 @@ class CategoryRepository extends \ShoPHP\Repository
 			'path' => $category->getPath(),
 		]);
 		return $duplicate !== null;
+	}
+
+	private function checkDuplicity(Category $category)
+	{
+		$duplicate = $this->findOneBy([
+			'path' => $category->getPath(),
+		]);
+		if ($duplicate !== null) {
+			throw new EntityDuplicateException(sprintf('Category with name %s already exists.', $category->getName()));
+		}
 	}
 
 }

@@ -4,6 +4,7 @@ namespace ShoPHP\Admin\Category;
 
 use Nette\Application\BadRequestException;
 use ShoPHP\Category;
+use ShoPHP\EntityDuplicateException;
 use ShoPHP\Repository\CategoryRepository;
 
 class EditPresenter extends \ShoPHP\Admin\BasePresenter
@@ -61,13 +62,14 @@ class EditPresenter extends \ShoPHP\Admin\BasePresenter
 		}
 		$this->category->setParent($parentCategory);
 
-		if ($this->categoryRepository->hasDuplicity($this->category)) {
+		try {
+			if (!$form->hasErrors()) {
+				$this->categoryRepository->update($this->category);
+				$this->flashMessage(sprintf('Category %s has been updated.', $this->category->getName()));
+				$this->redirect('this');
+			}
+		} catch (EntityDuplicateException $e) {
 			$form->addError(sprintf('Category with name %s already exists.', $this->category->getName()));
-		}
-		if (!$form->hasErrors()) {
-			$this->categoryRepository->flush();
-			$this->flashMessage(sprintf('Category %s has been updated.', $this->category->getName()));
-			$this->redirect('this');
 		}
 	}
 
