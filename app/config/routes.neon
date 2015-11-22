@@ -1,11 +1,8 @@
 services:
-	routerFactory:
-		class: ShoPHP\RouterFactory
+	router:
+		class: ShoPHP\Routes
 		arguments:
 			routes: %routes%
-
-	router:
-		factory: @routerFactory::createRouter
 
 parameters:
 	routes:
