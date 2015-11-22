@@ -6,7 +6,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Nette\Utils\Strings;
 
 /**
- * @Entity(repositoryClass="ShoPHP\Repository\CategoryRepository")
+ * @Entity
  * @Table(
  *     name="categories",
  *     uniqueConstraints={@UniqueConstraint(name="categories_path", columns={"path"})}

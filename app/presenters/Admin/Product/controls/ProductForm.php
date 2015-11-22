@@ -4,19 +4,19 @@ namespace ShoPHP\Admin\Product;
 
 use Nette\Forms\Controls\TextInput;
 use ShoPHP\Category;
+use ShoPHP\CategoryService;
 use ShoPHP\Product;
-use ShoPHP\Repository\CategoryRepository;
 
 class ProductForm extends \Nette\Application\UI\Form
 {
 
-	/** @var CategoryRepository */
-	private $categoryRepository;
+	/** @var CategoryService */
+	private $categoryService;
 
-	public function __construct(CategoryRepository $categoryRepository, Product $editedProduct = null)
+	public function __construct(CategoryService $categoryService, Product $editedProduct = null)
 	{
 		parent::__construct();
-		$this->categoryRepository = $categoryRepository;
+		$this->categoryService = $categoryService;
 		$this->createFields($editedProduct);
 	}
 
@@ -58,7 +58,7 @@ class ProductForm extends \Nette\Application\UI\Form
 			$discountControl->setDefaultValue($editedProduct->getDiscountPercent());
 		}
 
-		$categoryIds = iterator_to_array($this->categoryRepository->getAll());
+		$categoryIds = iterator_to_array($this->categoryService->getAll());
 		$categoryIds = array_map(function (Category $category) {
 			return $category->getId();
 		}, $categoryIds);

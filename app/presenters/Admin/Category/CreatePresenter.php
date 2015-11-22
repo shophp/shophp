@@ -3,8 +3,8 @@
 namespace ShoPHP\Admin\Category;
 
 use ShoPHP\Category;
+use ShoPHP\CategoryService;
 use ShoPHP\EntityDuplicateException;
-use ShoPHP\Repository\CategoryRepository;
 
 class CreatePresenter extends \ShoPHP\Admin\BasePresenter
 {
@@ -12,14 +12,14 @@ class CreatePresenter extends \ShoPHP\Admin\BasePresenter
 	/** @var CategoriesFormControlFactory */
 	private $categoriesFormControlFactory;
 
-	/** @var CategoryRepository */
-	private $categoryRepository;
+	/** @var CategoryService */
+	private $categoryService;
 
-	public function __construct(CategoriesFormControlFactory $categoriesFormControlFactory, CategoryRepository $categoryRepository)
+	public function __construct(CategoriesFormControlFactory $categoriesFormControlFactory, CategoryService $categoryService)
 	{
 		parent::__construct();
 		$this->categoriesFormControlFactory = $categoriesFormControlFactory;
-		$this->categoryRepository = $categoryRepository;
+		$this->categoryService = $categoryService;
 	}
 
 	public function actionDefault()
@@ -41,13 +41,13 @@ class CreatePresenter extends \ShoPHP\Admin\BasePresenter
 		$values = $form->getValues();
 		$category = new Category($values->name);
 		if ($values->parentCategory !== CategoriesForm::ROOT_CATEGORY_KEY) {
-			$parentCategory = $this->categoryRepository->getById($values->parentCategory);
+			$parentCategory = $this->categoryService->getById($values->parentCategory);
 			$category->setParent($parentCategory);
 		}
 
 		try {
 			if (!$form->hasErrors()) {
-				$this->categoryRepository->create($category);
+				$this->categoryService->create($category);
 				$this->flashMessage(sprintf('Category %s has been created.', $category->getName()));
 				$this->redirect('this');
 			}

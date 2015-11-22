@@ -3,18 +3,18 @@
 namespace ShoPHP\Front\Product;
 
 use Nette\Application\BadRequestException;
-use ShoPHP\Repository\CategoryRepository;
+use ShoPHP\CategoryService;
 
 class CategoryPresenter extends \ShoPHP\Front\BasePresenter
 {
 
-	/** @var CategoryRepository */
-	private $categoryRepository;
+	/** @var CategoryService */
+	private $categoryService;
 
-	public function __construct(CategoryRepository $categoryRepository)
+	public function __construct(CategoryService $categoryService)
 	{
 		parent::__construct();
-		$this->categoryRepository = $categoryRepository;
+		$this->categoryService = $categoryService;
 	}
 
 	/**
@@ -22,7 +22,7 @@ class CategoryPresenter extends \ShoPHP\Front\BasePresenter
 	 */
 	public function actionDefault($path)
 	{
-		$category = $this->categoryRepository->findByPath($path);
+		$category = $this->categoryService->findByPath($path);
 		if ($category === null) {
 			// todo CategoryAlias
 			throw new BadRequestException(sprintf('Category with path %s not found.', $path));

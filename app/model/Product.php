@@ -5,7 +5,7 @@ namespace ShoPHP;
 use Nette\Utils\Strings;
 
 /**
- * @Entity(repositoryClass="ShoPHP\Repository\ProductRepository")
+ * @Entity
  * @Table(name="products")
  */
 class Product extends \Nette\Object

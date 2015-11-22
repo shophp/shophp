@@ -4,8 +4,8 @@ namespace ShoPHP\Admin\Category;
 
 use Nette\Application\BadRequestException;
 use ShoPHP\Category;
+use ShoPHP\CategoryService;
 use ShoPHP\EntityDuplicateException;
-use ShoPHP\Repository\CategoryRepository;
 
 class EditPresenter extends \ShoPHP\Admin\BasePresenter
 {
@@ -16,20 +16,20 @@ class EditPresenter extends \ShoPHP\Admin\BasePresenter
 	/** @var CategoriesFormControlFactory */
 	private $categoriesFormControlFactory;
 
-	/** @var CategoryRepository */
-	private $categoryRepository;
+	/** @var CategoryService */
+	private $categoryService;
 
-	public function __construct(CategoriesFormControlFactory $categoriesFormControlFactory, CategoryRepository $categoryRepository)
+	public function __construct(CategoriesFormControlFactory $categoriesFormControlFactory, CategoryService $categoryService)
 	{
 		parent::__construct();
 		$this->categoriesFormControlFactory = $categoriesFormControlFactory;
-		$this->categoryRepository = $categoryRepository;
+		$this->categoryService = $categoryService;
 	}
 
 	public function actionDefault($id)
 	{
 		if ($id !== null) {
-			$this->category = $this->categoryRepository->getById($id);
+			$this->category = $this->categoryService->getById($id);
 		}
 		if ($this->category === null) {
 			throw new BadRequestException(sprintf('Category with ID %d not found.', $id));
@@ -58,13 +58,13 @@ class EditPresenter extends \ShoPHP\Admin\BasePresenter
 		if ($values->parentCategory === CategoriesForm::ROOT_CATEGORY_KEY) {
 			$parentCategory = null;
 		} else {
-			$parentCategory = $this->categoryRepository->getById($values->parentCategory);
+			$parentCategory = $this->categoryService->getById($values->parentCategory);
 		}
 		$this->category->setParent($parentCategory);
 
 		try {
 			if (!$form->hasErrors()) {
-				$this->categoryRepository->update($this->category);
+				$this->categoryService->update($this->category);
 				$this->flashMessage(sprintf('Category %s has been updated.', $this->category->getName()));
 				$this->redirect('this');
 			}

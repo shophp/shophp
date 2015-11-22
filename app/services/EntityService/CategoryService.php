@@ -1,13 +1,16 @@
 <?php
 
-namespace ShoPHP\Repository;
+namespace ShoPHP;
 
-use ShoPHP\Categories;
-use ShoPHP\Category;
-use ShoPHP\EntityDuplicateException;
+use Doctrine\ORM\EntityManagerInterface;
 
-class CategoryRepository extends \ShoPHP\Repository
+class CategoryService extends \ShoPHP\EntityService
 {
+
+	public function __construct(EntityManagerInterface $entityManager)
+	{
+		parent::__construct($entityManager->getRepository(Category::class), $entityManager);
+	}
 
 	public function create(Category $category)
 	{
@@ -27,7 +30,7 @@ class CategoryRepository extends \ShoPHP\Repository
 	 */
 	public function getById($id)
 	{
-		return $this->find($id);
+		return $this->repository->find($id);
 	}
 
 	/**
@@ -36,7 +39,7 @@ class CategoryRepository extends \ShoPHP\Repository
 	 */
 	public function getByIds(array $ids)
 	{
-		$categories = $this->findBy([
+		$categories = $this->repository->findBy([
 			'id' => $ids,
 		]);
 		return new Categories($categories);
@@ -47,7 +50,7 @@ class CategoryRepository extends \ShoPHP\Repository
 	 */
 	public function getAll()
 	{
-		return new Categories($this->findAll());
+		return new Categories($this->repository->findAll());
 	}
 
 	/**
@@ -55,7 +58,7 @@ class CategoryRepository extends \ShoPHP\Repository
 	 */
 	public function getRoot()
 	{
-		return $this->findBy([
+		return $this->repository->findBy([
 			'parent' => null,
 		]);
 	}
@@ -66,14 +69,14 @@ class CategoryRepository extends \ShoPHP\Repository
 	 */
 	public function findByPath($path)
 	{
-		return $this->findOneBy([
+		return $this->repository->findOneBy([
 			'path' => $path,
 		]);
 	}
 
 	public function hasDuplicity(Category $category)
 	{
-		$duplicate = $this->findOneBy([
+		$duplicate = $this->repository->findOneBy([
 			'path' => $category->getPath(),
 		]);
 		return $duplicate !== null;
@@ -81,7 +84,7 @@ class CategoryRepository extends \ShoPHP\Repository
 
 	private function checkDuplicity(Category $category)
 	{
-		$duplicate = $this->findOneBy([
+		$duplicate = $this->repository->findOneBy([
 			'path' => $category->getPath(),
 		]);
 		if ($duplicate !== null) {

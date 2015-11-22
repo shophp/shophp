@@ -3,27 +3,27 @@
 namespace ShoPHP\Front;
 
 use ShoPHP\Category;
-use ShoPHP\Repository\CategoryRepository;
+use ShoPHP\CategoryService;
 
 abstract class BasePresenter extends \ShoPHP\BasePresenter
 {
 
-	/** @var CategoryRepository */
-	private $categoryRepository;
+	/** @var CategoryService */
+	private $categoryService;
 
 	/** @var Category */
 	private $currentCategory;
 
-	public function injectFrontBase(CategoryRepository $categoryRepository)
+	public function injectFrontBase(CategoryService $categoryService)
 	{
-		$this->categoryRepository = $categoryRepository;
+		$this->categoryService = $categoryService;
 	}
 
 	public function beforeRender()
 	{
 		parent::beforeRender();
 
-		$this->template->categories = $this->categoryRepository->getRoot();
+		$this->template->categories = $this->categoryService->getRoot();
 		$this->template->currentCategory = $this->currentCategory;
 	}
 

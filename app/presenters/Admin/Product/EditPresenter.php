@@ -3,10 +3,10 @@
 namespace ShoPHP\Admin\Product;
 
 use Nette\Application\BadRequestException;
+use ShoPHP\CategoryService;
 use ShoPHP\EntityDuplicateException;
 use ShoPHP\Product;
-use ShoPHP\Repository\CategoryRepository;
-use ShoPHP\Repository\ProductRepository;
+use ShoPHP\ProductService;
 
 class EditPresenter extends \ShoPHP\Admin\BasePresenter
 {
@@ -14,25 +14,25 @@ class EditPresenter extends \ShoPHP\Admin\BasePresenter
 	/** @var ProductFormControlFactory */
 	private $productFormControlFactory;
 
-	/** @var ProductRepository */
-	private $productRepository;
+	/** @var ProductService */
+	private $productService;
 
-	/** @var CategoryRepository */
-	private $categoryRepository;
+	/** @var CategoryService */
+	private $categoryService;
 
 	/** @var Product */
 	private $product;
 
 	public function __construct(
 		ProductFormControlFactory $productFormControlFactory,
-		ProductRepository $productRepository,
-		CategoryRepository $categoryRepository
+		ProductService $productService,
+		CategoryService $categoryService
 	)
 	{
 		parent::__construct();
 		$this->productFormControlFactory = $productFormControlFactory;
-		$this->productRepository = $productRepository;
-		$this->categoryRepository = $categoryRepository;
+		$this->productService = $productService;
+		$this->categoryService = $categoryService;
 	}
 
 	/**
@@ -41,7 +41,7 @@ class EditPresenter extends \ShoPHP\Admin\BasePresenter
 	public function actionDefault($id)
 	{
 		if ($id !== null) {
-			$this->product = $this->productRepository->getById($id);
+			$this->product = $this->productService->getById($id);
 		}
 		if ($this->product === null) {
 			throw new BadRequestException(sprintf('Product with ID %d not found.', $id));
@@ -70,11 +70,11 @@ class EditPresenter extends \ShoPHP\Admin\BasePresenter
 		$this->product->setPrice($values->price);
 		$this->product->setDescription($values->description);
 		$this->product->setDiscountPercent($values->discount);
-		$this->product->setCategories($this->categoryRepository->getByIds($values->categories));
+		$this->product->setCategories($this->categoryService->getByIds($values->categories));
 
 		try {
 			if (!$form->hasErrors()) {
-				$this->productRepository->update($this->product);
+				$this->productService->update($this->product);
 
 				$this->flashMessage(sprintf('Product %s has been updated.', $this->product->getName()));
 				$this->redirect('this');

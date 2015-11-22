@@ -3,14 +3,14 @@
 namespace ShoPHP\Admin\Product;
 
 use Nette\Localization\ITranslator;
+use ShoPHP\CategoryService;
 use ShoPHP\Product;
-use ShoPHP\Repository\CategoryRepository;
 
 class ProductFormControl extends \ShoPHP\BaseControl
 {
 
-	/** @var CategoryRepository */
-	private $categoryRepository;
+	/** @var CategoryService */
+	private $categoryService;
 
 	/** @var ProductFormFactory */
 	private $productFormFactory;
@@ -19,14 +19,14 @@ class ProductFormControl extends \ShoPHP\BaseControl
 	private $editedProduct;
 
 	public function __construct(
-		CategoryRepository $categoryRepository,
+		CategoryService $categoryService,
 		ProductFormFactory $productFormFactory,
 		ITranslator $translator,
 		Product $editedProduct = null
 	)
 	{
 		parent::__construct($translator);
-		$this->categoryRepository = $categoryRepository;
+		$this->categoryService = $categoryService;
 		$this->productFormFactory = $productFormFactory;
 		$this->editedProduct = $editedProduct;
 	}
@@ -46,7 +46,7 @@ class ProductFormControl extends \ShoPHP\BaseControl
 
 	public function render()
 	{
-		$this->template->categories = $this->categoryRepository->getRoot();
+		$this->template->categories = $this->categoryService->getRoot();
 		$this->template->setFile(__DIR__ . '/ProductFormControl.latte');
 		$this->template->render();
 	}

@@ -6,7 +6,7 @@ use Nette\Application\UI\ITemplate;
 use Nette\Bridges\ApplicationLatte\Template;
 use Nette\ComponentModel\IComponent;
 use Nette\Localization\ITranslator;
-use ShoPHP\Repository\CategoryRepository;
+use ShoPHP\CategoryService;
 
 abstract class BasePresenter extends \Nette\Application\UI\Presenter
 {
@@ -14,8 +14,8 @@ abstract class BasePresenter extends \Nette\Application\UI\Presenter
 	/** @var BaseDataService */
 	private $baseDataService;
 
-	/** @var CategoryRepository */
-	private $categoryRepository;
+	/** @var CategoryService */
+	private $categoryService;
 
 	/** @var ITranslator */
 	private $translator;
@@ -25,12 +25,12 @@ abstract class BasePresenter extends \Nette\Application\UI\Presenter
 
 	public function injectBase(
 		BaseDataService $baseDataService,
-		CategoryRepository $categoryRepository,
+		CategoryService $categoryService,
 		ITranslator $translator
 	)
 	{
 		$this->baseDataService = $baseDataService;
-		$this->categoryRepository = $categoryRepository;
+		$this->categoryService = $categoryService;
 		$this->translator = $translator;
 	}
 
@@ -39,7 +39,7 @@ abstract class BasePresenter extends \Nette\Application\UI\Presenter
 		parent::beforeRender();
 
 		$this->template->projectName = $this->baseDataService->getProjectName();
-		$this->template->categories = $this->categoryRepository->getRoot();
+		$this->template->categories = $this->categoryService->getRoot();
 		$this->template->currentCategory = $this->currentCategory;
 	}
 

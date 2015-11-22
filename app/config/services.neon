@@ -19,14 +19,11 @@ services:
 	-
 		class: ShoPHP\Translator
 
-	repositoryFactory:
-		class: ShoPHP\Repository\RepositoryFactory
+	-
+		class: ShoPHP\CategoryService
 
 	-
-		factory: @repositoryFactory::getCategoryRepository
-
-	-
-		factory: @repositoryFactory::getProductRepository
+		class: ShoPHP\ProductService
 
 	-
 		implement: ShoPHP\Admin\Product\ProductFormFactory

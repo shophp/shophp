@@ -1,12 +1,16 @@
 <?php
 
-namespace ShoPHP\Repository;
+namespace ShoPHP;
 
-use ShoPHP\EntityDuplicateException;
-use ShoPHP\Product;
+use Doctrine\ORM\EntityManagerInterface;
 
-class ProductRepository extends \ShoPHP\Repository
+class ProductService extends \ShoPHP\EntityService
 {
+
+	public function __construct(EntityManagerInterface $entityManager)
+	{
+		parent::__construct($entityManager->getRepository(Product::class), $entityManager);
+	}
 
 	public function create(Product $product)
 	{
@@ -26,7 +30,7 @@ class ProductRepository extends \ShoPHP\Repository
 	 */
 	public function getById($id)
 	{
-		return $this->find($id);
+		return $this->repository->find($id);
 	}
 
 	/**
@@ -35,7 +39,7 @@ class ProductRepository extends \ShoPHP\Repository
 	 */
 	public function findByPath($path)
 	{
-		return $this->findBy([
+		return $this->repository->findBy([
 			'path' => $path,
 		]);
 	}

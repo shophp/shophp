@@ -4,20 +4,20 @@ namespace ShoPHP\Admin\Category;
 
 use Nette\Forms\Controls\RadioList;
 use ShoPHP\Category;
-use ShoPHP\Repository\CategoryRepository;
+use ShoPHP\CategoryService;
 
 class CategoriesForm extends \Nette\Application\UI\Form
 {
 
 	const ROOT_CATEGORY_KEY = 'root';
 
-	/** @var CategoryRepository */
-	private $categoryRepository;
+	/** @var CategoryService */
+	private $categoryService;
 
-	public function __construct(CategoryRepository $categoryRepository, Category $editedCategory = null)
+	public function __construct(CategoryService $categoryService, Category $editedCategory = null)
 	{
 		parent::__construct();
-		$this->categoryRepository = $categoryRepository;
+		$this->categoryService = $categoryService;
 		$this->createFields($editedCategory);
 	}
 
@@ -32,7 +32,7 @@ class CategoriesForm extends \Nette\Application\UI\Form
 		$parentCategoryItems = [
 			self::ROOT_CATEGORY_KEY => '',
 		];
-		foreach ($this->categoryRepository->getAll() as $category) {
+		foreach ($this->categoryService->getAll() as $category) {
 			if ($editedCategory !== null) {
 				if ($category->isSelfOrSubcategoryOf($editedCategory)) {
 					continue;

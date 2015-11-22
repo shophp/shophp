@@ -3,27 +3,27 @@
 namespace ShoPHP\Front\Product;
 
 use Nette\Application\BadRequestException;
+use ShoPHP\CategoryService;
 use ShoPHP\Product;
-use ShoPHP\Repository\CategoryRepository;
-use ShoPHP\Repository\ProductRepository;
+use ShoPHP\ProductService;
 
 class ProductPresenter extends \ShoPHP\Front\BasePresenter
 {
 
-	/** @var ProductRepository */
-	private $productRepository;
+	/** @var ProductService */
+	private $productService;
 
 	/** @var Product */
 	private $product;
 
-	/** @var CategoryRepository */
-	private $categoryRepository;
+	/** @var CategoryService */
+	private $categoryService;
 
-	public function __construct(ProductRepository $productRepository, CategoryRepository $categoryRepository)
+	public function __construct(ProductService $productService, CategoryService $categoryService)
 	{
 		parent::__construct();
-		$this->productRepository = $productRepository;
-		$this->categoryRepository = $categoryRepository;
+		$this->productService = $productService;
+		$this->categoryService = $categoryService;
 	}
 
 	/**
@@ -35,7 +35,7 @@ class ProductPresenter extends \ShoPHP\Front\BasePresenter
 		if ($pathsSeparatorPosition !== false) {
 			$categoryPath = substr($path, 0, $pathsSeparatorPosition);
 			$productPath = substr($path, $pathsSeparatorPosition + 1);
-			$productCandidates = $this->productRepository->findByPath($productPath);
+			$productCandidates = $this->productService->findByPath($productPath);
 			foreach ($productCandidates as $productCandidate) {
 				foreach ($productCandidate->getCategories() as $category) {
 					if ($category->getPath() === $categoryPath) {

@@ -4,7 +4,7 @@ namespace ShoPHP\Admin\Category;
 
 use Nette\Localization\ITranslator;
 use ShoPHP\Category;
-use ShoPHP\Repository\CategoryRepository;
+use ShoPHP\CategoryService;
 
 class CategoriesFormControl extends \ShoPHP\BaseControl
 {
@@ -12,21 +12,21 @@ class CategoriesFormControl extends \ShoPHP\BaseControl
 	/** @var Category|null */
 	private $editedCategory;
 
-	/** @var CategoryRepository */
-	private $categoryRepository;
+	/** @var CategoryService */
+	private $categoryService;
 
 	/** @var CategoriesFormFactory */
 	private $categoriesFormFactory;
 
 	public function __construct(
-		CategoryRepository $categoryRepository,
+		CategoryService $categoryService,
 		CategoriesFormFactory $categoriesFormFactory,
 		ITranslator $translator,
 		Category $editedCategory = null
 	)
 	{
 		parent::__construct($translator);
-		$this->categoryRepository = $categoryRepository;
+		$this->categoryService = $categoryService;
 		$this->categoriesFormFactory = $categoriesFormFactory;
 		$this->editedCategory = $editedCategory;
 	}
@@ -46,7 +46,7 @@ class CategoriesFormControl extends \ShoPHP\BaseControl
 
 	public function render()
 	{
-		$this->template->categories = $this->categoryRepository->getRoot();
+		$this->template->categories = $this->categoryService->getRoot();
 		$this->template->editedCategory = $this->editedCategory;
 		$this->template->rootCategoryKey = CategoriesForm::ROOT_CATEGORY_KEY;
 		$this->template->setFile(__DIR__ . '/CategoriesFormControl.latte');
