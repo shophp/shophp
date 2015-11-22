@@ -43,7 +43,7 @@ class ProductForm extends \Nette\Application\UI\Form
 				return $input->getValue() > 0;
 			}, $priceErrorMessage);
 		if ($editedProduct !== null) {
-			$priceControl->setDefaultValue($editedProduct->getPrice());
+			$priceControl->setDefaultValue($editedProduct->getOriginalPrice());
 		}
 
 		$discountErrorMessage = 'Discount must be number between 0 and 100.';

@@ -27,7 +27,7 @@ class Product extends \Nette\Object
 	protected $price;
 
 	/** @Column(type="float") * */
-	protected $discountPercent;
+	protected $discount = 0;
 
 	/**
 	 * @ManyToMany(targetEntity="Category", inversedBy="products")
@@ -47,7 +47,7 @@ class Product extends \Nette\Object
 	public function __construct($name, $price)
 	{
 		$this->setName($name);
-		$this->setPrice($price);
+		$this->setOriginalPrice($price);
 		$this->categories = new Categories();
 	}
 
@@ -113,13 +113,18 @@ class Product extends \Nette\Object
 
 	public function getPrice()
 	{
+		return $this->price - $this->discount;
+	}
+
+	public function getOriginalPrice()
+	{
 		return $this->price;
 	}
 
 	/**
 	 * @param float $price
 	 */
-	public function setPrice($price)
+	public function setOriginalPrice($price)
 	{
 		$price = (float) $price;
 		if ($price <= 0) {
@@ -128,17 +133,48 @@ class Product extends \Nette\Object
 		$this->price = $price;
 	}
 
-	public function getDiscountPercent()
+	public function hasDiscount()
 	{
-		return $this->discountPercent;
+		return $this->discount !== 0.0;
+	}
+
+	public function getNominalDiscount()
+	{
+		return $this->discount;
 	}
 
 	/**
-	 * @param float $discountPercent
+	 * @return float
 	 */
-	public function setDiscountPercent($discountPercent)
+	public function getDiscountPercent()
 	{
-		$this->discountPercent = $discountPercent;
+		return ($this->discount / $this->price) * 100;
+	}
+
+	/**
+	 * @param float $discount
+	 */
+	public function setDiscountPercent($discount)
+	{
+		$discount = (float) $discount;
+		if ($discount < 0) {
+			throw new EntityInvalidArgumentException(sprintf('Invalid percent discount %f.', $discount));
+		}
+
+		$this->discount = $this->price * ($discount / 100);
+	}
+
+	/**
+	 * @param float $discount
+	 */
+	public function setNominalDiscount($discount)
+	{
+		$discount = (float) $discount;
+		if ($discount < 0) {
+			throw new EntityInvalidArgumentException(sprintf('Invalid nominal discount %f.', $discount));
+		}
+
+		$this->discount = $discount;
 	}
 
 	public function getCategories()

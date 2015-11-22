@@ -9,5 +9,16 @@
 </div>
 
 <div class="product-buy">
-	{$currentProduct->price}
+	<div n:if="$currentProduct->hasDiscount()">
+		{_'Original price'}:
+		<span class="product-price-original">{$currentProduct->originalPrice}</span>
+	</div>
+	<div class="product-price">
+		{_'Price'}:
+		{$currentProduct->price}
+	</div>
+	<div n:if="$currentProduct->hasDiscount()">
+		{_'Discount'}:
+		<span class="product-discount">{$currentProduct->discountPercent} %</span>
+	</div>
 </div>

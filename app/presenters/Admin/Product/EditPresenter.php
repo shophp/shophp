@@ -67,7 +67,7 @@ class EditPresenter extends \ShoPHP\Admin\BasePresenter
 	{
 		$values = $form->getValues();
 		$this->product->setName($values->name);
-		$this->product->setPrice($values->price);
+		$this->product->setOriginalPrice($values->price);
 		$this->product->setDescription($values->description);
 		$this->product->setDiscountPercent($values->discount);
 		$this->product->setCategories($this->categoryService->getByIds($values->categories));
