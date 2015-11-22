@@ -76,33 +76,26 @@ class Product extends \Nette\Object
 
 	public function getPath(Category $fromCategory = null)
 	{
-		$categories = $this->getCategories();
-		if (count($categories) === 0) {
-			if ($fromCategory !== null) {
-				throw new EntityInvalidArgumentException(sprintf('Product %s does not belong into any category.', $this->getName()));
-			}
-			return $this->path;
-		}
+		if ($fromCategory !== null && count($this->getCategories()) === 0) {
+			throw new EntityInvalidArgumentException(sprintf('Product %s does not belong into any category.', $this->getName()));
 
-		$category = null;
-		foreach ($categories as $categoryCandidate) {
-			if ($fromCategory === null) {
-				$category = $categoryCandidate;
-				break;
-			} elseif ($categoryCandidate === $fromCategory) {
-				$category = $categoryCandidate;
-				break;
-			}
-		}
-		if ($category === null) {
+		} elseif ($fromCategory !== null && !$this->belongsIntoCategory($fromCategory)) {
 			throw new EntityInvalidArgumentException(sprintf(
 				'Product %s does not belong into category %s.',
 				$this->getName(),
 				$fromCategory->getName()
 			));
+
+		} elseif ($fromCategory === null) {
+			foreach ($this->getCategories() as $category) {
+				if ($category === $fromCategory) {
+					$fromCategory = $category;
+					break;
+				}
+			}
 		}
 
-		return sprintf('%s/%s', $category->getPath(), $this->path);
+		return sprintf('%s/%s', $fromCategory->getPath(), $this->path);
 	}
 
 	public function getDescription()
@@ -154,6 +147,16 @@ class Product extends \Nette\Object
 			$this->categories = new Categories(iterator_to_array($this->categories));
 		}
 		return $this->categories;
+	}
+
+	public function belongsIntoCategory(Category $category)
+	{
+		foreach ($this->getCategories() as $categoryCandidate) {
+			if ($category === $categoryCandidate) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	/**
