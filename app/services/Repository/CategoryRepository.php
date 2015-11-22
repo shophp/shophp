@@ -85,7 +85,7 @@ class CategoryRepository extends \ShoPHP\Repository
 			'path' => $category->getPath(),
 		]);
 		if ($duplicate !== null) {
-			throw new EntityDuplicateException(sprintf('Category with name %s already exists.', $category->getName()));
+			throw new EntityDuplicateException(sprintf('Category with path %s already exists.', $category->getPath()));
 		}
 	}
 

@@ -32,7 +32,7 @@ class EditPresenter extends \ShoPHP\Admin\BasePresenter
 			$this->category = $this->categoryRepository->getById($id);
 		}
 		if ($this->category === null) {
-			throw new BadRequestException(sprintf('Category %d not found.', $id));
+			throw new BadRequestException(sprintf('Category with ID %d not found.', $id));
 		}
 	}
 

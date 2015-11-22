@@ -25,7 +25,7 @@ class CategoryPresenter extends \ShoPHP\Front\BasePresenter
 		$category = $this->categoryRepository->findByPath($path);
 		if ($category === null) {
 			// todo CategoryAlias
-			throw new BadRequestException(sprintf('Category %s not found.', $path));
+			throw new BadRequestException(sprintf('Category with path %s not found.', $path));
 		}
 
 		$this->setCurrentCategory($category);

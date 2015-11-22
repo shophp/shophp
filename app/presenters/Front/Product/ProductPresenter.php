@@ -46,7 +46,7 @@ class ProductPresenter extends \ShoPHP\Front\BasePresenter
 			}
 		}
 		if ($this->product === null) {
-			throw new BadRequestException(sprintf('Product %s not found.', $path));
+			throw new BadRequestException(sprintf('Product with path %s not found.', $path));
 		}
 
 		$this->setCurrentCategory($category);

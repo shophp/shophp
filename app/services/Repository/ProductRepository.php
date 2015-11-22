@@ -44,8 +44,9 @@ class ProductRepository extends \ShoPHP\Repository
 	{
 		foreach ($product->getCategories() as $category) {
 			foreach ($category->getProducts() as $duplicateCandidate) {
-				if ($duplicateCandidate !== $product && $duplicateCandidate->getPath($category) === $product->getPath($category)) {
-					throw new EntityDuplicateException(sprintf('Product with name %s already exists.', $product->getName()));
+				$path = $product->getPath($category);
+				if ($duplicateCandidate !== $product && $duplicateCandidate->getPath($category) === $path) {
+					throw new EntityDuplicateException(sprintf('Product with path %s already exists.', $path));
 				}
 			}
 		}

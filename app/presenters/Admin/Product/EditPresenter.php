@@ -44,7 +44,7 @@ class EditPresenter extends \ShoPHP\Admin\BasePresenter
 			$this->product = $this->productRepository->getById($id);
 		}
 		if ($this->product === null) {
-			throw new BadRequestException(sprintf('Product %d not found.', $id));
+			throw new BadRequestException(sprintf('Product with ID %d not found.', $id));
 		}
 	}
 
