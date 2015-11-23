@@ -30,6 +30,11 @@ class Cart extends \Nette\Object
 		return $this->id;
 	}
 
+	public function hasItems()
+	{
+		return count($this->getItems()) > 0;
+	}
+
 	public function getItems()
 	{
 		return $this->items;

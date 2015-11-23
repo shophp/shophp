@@ -21,6 +21,9 @@ parameters:
 		"/product/<path [a-z0-9/-]+>":
 			defaults: "Front:Product:Product:default"
 
+		"/cart":
+			defaults: "Front:Order:Cart:default"
+
 		"/admin/<presenter>/<action>[/<id [0-9]+>]":
 			defaults:
 				module: Admin
