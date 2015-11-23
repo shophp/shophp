@@ -2,7 +2,6 @@
 
 namespace ShoPHP\Admin\Category;
 
-use Nette\Forms\Controls\RadioList;
 use ShoPHP\Category;
 use ShoPHP\CategoryService;
 
@@ -14,27 +13,41 @@ class CategoriesForm extends \Nette\Application\UI\Form
 	/** @var CategoryService */
 	private $categoryService;
 
+	/** @var Category|null */
+	private $editedCategory;
+
 	public function __construct(CategoryService $categoryService, Category $editedCategory = null)
 	{
 		parent::__construct();
 		$this->categoryService = $categoryService;
-		$this->createFields($editedCategory);
+		$this->editedCategory = $editedCategory;
+		$this->createFields();
 	}
 
-	private function createFields(Category $editedCategory = null)
+	private function createFields()
+	{
+		$this->addNameControl();
+		$this->addParentCategoryControl();
+		$this->addSubmit('send', $this->editedCategory === null ? 'Create' : 'Update');
+	}
+
+	private function addNameControl()
 	{
 		$nameControl = $this->addText('name', 'Name');
 		$nameControl->setRequired();
-		if ($editedCategory !== null) {
-			$nameControl->setDefaultValue($editedCategory->getName());
+		if ($this->editedCategory !== null) {
+			$nameControl->setDefaultValue($this->editedCategory->getName());
 		}
+	}
 
+	private function addParentCategoryControl()
+	{
 		$parentCategoryItems = [
 			self::ROOT_CATEGORY_KEY => '',
 		];
 		foreach ($this->categoryService->getAll() as $category) {
-			if ($editedCategory !== null) {
-				if ($category->isSelfOrSubcategoryOf($editedCategory)) {
+			if ($this->editedCategory !== null) {
+				if ($category->isSelfOrSubcategoryOf($this->editedCategory)) {
 					continue;
 				}
 			}
@@ -43,20 +56,10 @@ class CategoriesForm extends \Nette\Application\UI\Form
 		$parentCategoryControl = $this->addRadioList('parentCategory', 'Parent category', $parentCategoryItems);
 		$parentCategoryControl->setRequired();
 		$parentCategoryControl->setDefaultValue(
-			$editedCategory !== null && $editedCategory->hasParent()
-				? $editedCategory->getParent()->getId()
+			$this->editedCategory !== null && $this->editedCategory->hasParent()
+				? $this->editedCategory->getParent()->getId()
 				: self::ROOT_CATEGORY_KEY
 		);
-
-		$this->addSubmit('send', $editedCategory === null ? 'Create' : 'Update');
-	}
-
-	/**
-	 * @return RadioList
-	 */
-	private function getParentCategoryControl()
-	{
-		return $this->getComponent('parentCategory');
 	}
 
 }

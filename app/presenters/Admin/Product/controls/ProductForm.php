@@ -13,65 +13,89 @@ class ProductForm extends \Nette\Application\UI\Form
 	/** @var CategoryService */
 	private $categoryService;
 
+	/** @var Product|null */
+	private $editedProduct;
+
 	public function __construct(CategoryService $categoryService, Product $editedProduct = null)
 	{
 		parent::__construct();
 		$this->categoryService = $categoryService;
-		$this->createFields($editedProduct);
+		$this->editedProduct = $editedProduct;
+		$this->createFields();
 	}
 
-	private function createFields(Product $editedProduct = null)
+	private function createFields()
 	{
-		$nameControl = $this->addText('name', 'Name');
-		$nameControl->setRequired();
-		if ($editedProduct !== null) {
-			$nameControl->setDefaultValue($editedProduct->getName());
-		}
+		$this->addNameControl();
+		$this->addDescriptionControl();
+		$this->addOriginalPriceControl();
+		$this->addDiscountPercentControl();
+		$this->addCategoriesControl();
+		$this->addSubmit('send', $this->editedProduct !== null ? 'Update' : 'Create');
+	}
 
-		$descriptionControl = $this->addTextArea('description', 'Description');
-		if ($editedProduct !== null) {
-			$descriptionControl->setDefaultValue($editedProduct->getDescription());
+	private function addNameControl()
+	{
+		$control = $this->addText('name', 'Name');
+		$control->setRequired();
+		if ($this->editedProduct !== null) {
+			$control->setDefaultValue($this->editedProduct->getName());
 		}
+	}
 
-		$priceErrorMessage = 'Price must be positive number.';
-		$priceControl = $this->addText('price', 'Price');
-		$priceControl->setType('number')
+	private function addDescriptionControl()
+	{
+		$control = $this->addTextArea('description', 'Description');
+		if ($this->editedProduct !== null) {
+			$control->setDefaultValue($this->editedProduct->getDescription());
+		}
+	}
+
+	private function addOriginalPriceControl()
+	{
+		$errorMessage = 'Price must be positive number.';
+		$control = $this->addText('price', 'Price');
+		$control->setType('number')
 			->setAttribute('step', 'any')
 			->setRequired()
-			->addRule(self::FLOAT, $priceErrorMessage)
+			->addRule(self::FLOAT, $errorMessage)
 			->addRule(function (TextInput $input) {
 				return $input->getValue() > 0;
-			}, $priceErrorMessage);
-		if ($editedProduct !== null) {
-			$priceControl->setDefaultValue($editedProduct->getOriginalPrice());
+			}, $errorMessage);
+		if ($this->editedProduct !== null) {
+			$control->setDefaultValue($this->editedProduct->getOriginalPrice());
 		}
+	}
 
-		$discountErrorMessage = 'Discount must be number between 0 and 100.';
-		$discountControl = $this->addText('discount', 'Discount');
-		$discountControl->setType('number')
+	private function addDiscountPercentControl()
+	{
+		$errorMessage = 'Discount must be number between 0 and 100.';
+		$control = $this->addText('discount', 'Discount');
+		$control->setType('number')
 			->setDefaultValue(0)
-			->addRule(self::INTEGER, $discountErrorMessage)
+			->addRule(self::INTEGER, $errorMessage)
 			->addRule(function (TextInput $input) {
 				return $input->getValue() >= 0 && $input->getValue() < 100;
-			}, $discountErrorMessage);
-		if ($editedProduct !== null) {
-			$discountControl->setDefaultValue($editedProduct->getDiscountPercent());
+			}, $errorMessage);
+		if ($this->editedProduct !== null) {
+			$control->setDefaultValue($this->editedProduct->getDiscountPercent());
 		}
+	}
 
+	private function addCategoriesControl()
+	{
 		$categoryIds = iterator_to_array($this->categoryService->getAll());
 		$categoryIds = array_map(function (Category $category) {
 			return $category->getId();
 		}, $categoryIds);
-		$categoriesControl = $this->addCheckboxList('categories', 'Categories', array_flip($categoryIds));
-		if ($editedProduct !== null) {
-			$checkedIds = iterator_to_array($editedProduct->getCategories());
+		$control = $this->addCheckboxList('categories', 'Categories', array_flip($categoryIds));
+		if ($this->editedProduct !== null) {
+			$checkedIds = iterator_to_array($this->editedProduct->getCategories());
 			$checkedIds = array_map(function (Category $category) {
 				return $category->getId();
 			}, $checkedIds);
-			$categoriesControl->setDefaultValue($checkedIds);
+			$control->setDefaultValue($checkedIds);
 		}
-
-		$this->addSubmit('send', $editedProduct !== null ? 'Update' : 'Create');
 	}
 
 }
