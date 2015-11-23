@@ -2,14 +2,19 @@
 
 namespace ShoPHP;
 
+use Doctrine\Common\Persistence\ObjectRepository;
 use Doctrine\ORM\EntityManagerInterface;
 
 class CategoryService extends \ShoPHP\EntityService
 {
 
+	/** @var ObjectRepository */
+	private $repository;
+
 	public function __construct(EntityManagerInterface $entityManager)
 	{
-		parent::__construct($entityManager->getRepository(Category::class), $entityManager);
+		parent::__construct($entityManager);
+		$this->repository = $entityManager->getRepository(Category::class);
 	}
 
 	public function create(Category $category)

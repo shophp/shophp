@@ -2,21 +2,16 @@
 
 namespace ShoPHP;
 
-use Doctrine\Common\Persistence\ObjectRepository;
 use Doctrine\ORM\EntityManagerInterface;
 
 abstract class EntityService extends \Nette\Object
 {
 
-	/** @var ObjectRepository */
-	protected $repository;
-
 	/** @var EntityManagerInterface */
 	private $entityManager;
 
-	public function __construct(ObjectRepository $repository, EntityManagerInterface $entityManager)
+	public function __construct(EntityManagerInterface $entityManager)
 	{
-		$this->repository = $repository;
 		$this->entityManager = $entityManager;
 	}
 
@@ -28,6 +23,12 @@ abstract class EntityService extends \Nette\Object
 
 	protected function updateEntity($entity)
 	{
+		$this->entityManager->flush();
+	}
+
+	protected function removeEntity($entity)
+	{
+		$this->entityManager->remove($entity);
 		$this->entityManager->flush();
 	}
 

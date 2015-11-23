@@ -21,6 +21,7 @@ class BuyForm extends \Nette\Application\UI\Form
 	{
 		$errorMessage = 'Amount must be positive number.';
 		$this->addText('amount', 'Amount')
+			->setType('number')
 			->setDefaultValue(1)
 			->addRule(self::INTEGER, $errorMessage)
 			->addRule(self::RANGE, $errorMessage, [1, null]);

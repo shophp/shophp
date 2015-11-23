@@ -47,9 +47,19 @@ class CartItem extends \Nette\Object
 		return $this->product;
 	}
 
+	public function getCart()
+	{
+		return $this->cart;
+	}
+
 	public function setCart(Cart $cart)
 	{
 		$this->cart = $cart;
+	}
+
+	public function belongsIntoCart(Cart $cart)
+	{
+		return $this->getCart() === $cart;
 	}
 
 	public function getAmount()
