@@ -3,22 +3,42 @@
 namespace ShoPHP;
 
 use Doctrine\ORM\EntityManagerInterface;
+use Nette\Http\Session;
+use Nette\Http\SessionSection;
 
 class CartService extends \ShoPHP\EntityService
 {
 
-	public function __construct(EntityManagerInterface $entityManager)
+	/** @var SessionSection */
+	private $cartSession;
+
+	public function __construct(EntityManagerInterface $entityManager, Session $session)
 	{
 		parent::__construct($entityManager->getRepository(Cart::class), $entityManager);
+		$this->cartSession = $session->getSection('cart');
 	}
 
-	/**
-	 * @param integer $id
-	 * @return Category|null
-	 */
-	public function getById($id)
+	public function getCurrentCart()
 	{
-		return $this->repository->find($id);
+		if ($this->cartSession->cartId !== null) {
+			$cart = $this->repository->find($this->cartSession->cartId);
+			if ($cart !== null) {
+				return $cart;
+			}
+		}
+		return new Cart();
+	}
+
+	public function save(Cart $cart)
+	{
+		if (count($cart->getItems()) > 0) {
+			if ($cart->getId() === null) {
+				$this->createEntity($cart);
+				$this->cartSession->cartId = $cart->getId();
+			} else {
+				$this->updateEntity($cart);
+			}
+		}
 	}
 
 }

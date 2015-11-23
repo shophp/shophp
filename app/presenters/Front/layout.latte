@@ -11,7 +11,7 @@
 		<nav>
 			{include _mainMenu.latte}
 		</nav>
-		<aside n:if="$cart">
+		<aside n:if="count($cart->items) > 0">
 			{_'Cart'}:
 			<ul>
 				<li n:foreach="$cart->items as $item">

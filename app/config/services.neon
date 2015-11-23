@@ -38,6 +38,9 @@ services:
 		class: ShoPHP\ProductService
 
 	-
+		implement: ShoPHP\Front\Product\BuyFormFactory
+
+	-
 		implement: ShoPHP\Admin\Product\ProductFormFactory
 
 	-

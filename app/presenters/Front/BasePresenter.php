@@ -2,8 +2,7 @@
 
 namespace ShoPHP\Front;
 
-use Nette\Http\Session;
-use Nette\Http\SessionSection;
+use ShoPHP\Cart;
 use ShoPHP\CartService;
 use ShoPHP\Category;
 use ShoPHP\CategoryService;
@@ -17,21 +16,19 @@ abstract class BasePresenter extends \ShoPHP\BasePresenter
 	/** @var CartService */
 	private $cartService;
 
-	/** @var SessionSection */
-	private $cartSession;
-
 	/** @var Category */
 	private $currentCategory;
 
+	/** @var Cart|null */
+	private $cart;
+
 	public function injectFrontBase(
 		CategoryService $categoryService,
-		CartService $cartService,
-		Session $session
+		CartService $cartService
 	)
 	{
 		$this->categoryService = $categoryService;
 		$this->cartService = $cartService;
-		$this->cartSession = $session->getSection('cart');
 	}
 
 	public function beforeRender()
@@ -40,17 +37,23 @@ abstract class BasePresenter extends \ShoPHP\BasePresenter
 
 		$this->template->categories = $this->categoryService->getRoot();
 		$this->template->currentCategory = $this->currentCategory;
+		$this->template->cart = $this->cart;
+	}
 
-		$cart = null;
-		if ($this->cartSession->cartId !== null) {
-			$cart = $this->cartService->getById($this->cartSession->cartId);
-		}
-		$this->template->cart = $cart;
+	protected function startup()
+	{
+		parent::startup();
+		$this->cart = $this->cartService->getCurrentCart();
 	}
 
 	protected function setCurrentCategory(Category $category)
 	{
 		$this->currentCategory = $category;
+	}
+
+	protected function getCart()
+	{
+		return $this->cart;
 	}
 
 }

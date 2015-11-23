@@ -4,7 +4,10 @@ namespace ShoPHP;
 
 /**
  * @Entity
- * @Table(name="carts_items")
+ * @Table(
+ *     name="carts_items",
+ *     uniqueConstraints={@UniqueConstraint(name="cart_product", columns={"cart_id", "product"})}
+ * )
  */
 class CartItem extends \Nette\Object
 {
@@ -13,13 +16,13 @@ class CartItem extends \Nette\Object
 	protected $id;
 
 	/**
-	 * @ManyToOne(targetEntity="Category", inversedBy="items")
+	 * @ManyToOne(targetEntity="Cart", inversedBy="items")
 	 * @var Cart
 	 */
 	protected $cart;
 
 	/**
-	 * @OneToOne(targetEntity="Product")
+	 * @ManyToOne(targetEntity="Product")
      * @JoinColumn(name="product", referencedColumnName="id")
 	 * @var Product
 	 */
@@ -28,9 +31,8 @@ class CartItem extends \Nette\Object
 	/** @Column(type="integer") * */
 	protected $amount = 1;
 
-	public function __construct(Cart $cart, Product $product, $amount = 1)
+	public function __construct(Product $product, $amount = 1)
 	{
-		$this->cart = $cart;
 		$this->product = $product;
 		$this->setAmount($amount);
 	}
@@ -43,6 +45,11 @@ class CartItem extends \Nette\Object
 	public function getProduct()
 	{
 		return $this->product;
+	}
+
+	public function setCart(Cart $cart)
+	{
+		$this->cart = $cart;
 	}
 
 	public function getAmount()

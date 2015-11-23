@@ -3,7 +3,6 @@
 namespace ShoPHP;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use Nette\Utils\Strings;
 
 /**
  * @Entity
@@ -16,7 +15,7 @@ class Cart extends \Nette\Object
 	protected $id;
 
 	/**
-	 * @OneToMany(targetEntity="CartItem", mappedBy="cart")
+	 * @OneToMany(targetEntity="CartItem", mappedBy="cart", cascade={"persist"})
 	 * @var CartItem[]
 	 */
 	protected $items;
@@ -44,6 +43,7 @@ class Cart extends \Nette\Object
 				return;
 			}
 		}
+		$item->setCart($this);
 		$this->items[] = $item;
 	}
 
