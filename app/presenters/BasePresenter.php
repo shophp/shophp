@@ -17,6 +17,9 @@ abstract class BasePresenter extends \Nette\Application\UI\Presenter
 	/** @var CategoryService */
 	private $categoryService;
 
+	/** @var TemplateFilters */
+	private $templateFilters;
+
 	/** @var ITranslator */
 	private $translator;
 
@@ -26,11 +29,13 @@ abstract class BasePresenter extends \Nette\Application\UI\Presenter
 	public function injectBase(
 		BaseDataService $baseDataService,
 		CategoryService $categoryService,
+		TemplateFilters $templateFilters,
 		ITranslator $translator
 	)
 	{
 		$this->baseDataService = $baseDataService;
 		$this->categoryService = $categoryService;
+		$this->templateFilters = $templateFilters;
 		$this->translator = $translator;
 	}
 
@@ -77,9 +82,18 @@ abstract class BasePresenter extends \Nette\Application\UI\Presenter
 	protected function createTemplate()
 	{
 		$template = parent::createTemplate();
+
 		if ($template instanceof Template) {
 			$template->setTranslator($this->translator);
+
+			$template->addFilter(null, function ($filter, ...$args) {
+				if (method_exists($this->templateFilters, $filter)) {
+					return $this->templateFilters->$filter(...$args);
+				}
+				return null;
+			});
 		}
+
 		return $template;
 	}
 

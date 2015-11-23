@@ -17,6 +17,15 @@ services:
 			isDevMode: %debugMode%
 
 	-
+		class: ShoPHP\TemplateFilters
+		arguments:
+			currency: %currency.symbol%
+			currencyWrittenAfter: %currency.writtenAfter%
+
+	-
+		class: ShoPHP\StringHelper
+
+	-
 		class: ShoPHP\Translator
 
 	-

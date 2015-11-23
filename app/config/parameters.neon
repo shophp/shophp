@@ -9,3 +9,7 @@ parameters:
 			driver: pdo_mysql
 			charset: utf8
 			collation: utf8_czech_ci
+
+	currency:
+		symbol: $
+		writtenAfter: Yes

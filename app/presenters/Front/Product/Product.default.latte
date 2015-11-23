@@ -11,11 +11,11 @@
 <div class="product-buy">
 	<div n:if="$currentProduct->hasDiscount()">
 		{_'Original price'}:
-		<span class="product-price-original">{$currentProduct->originalPrice}</span>
+		<span class="product-price-original">{$currentProduct->originalPrice|formatPrice}</span>
 	</div>
 	<div class="product-price">
 		{_'Price'}:
-		{$currentProduct->price}
+		{$currentProduct->price|formatPrice}
 	</div>
 	<div n:if="$currentProduct->hasDiscount()">
 		{_'Discount'}:
