@@ -2,6 +2,7 @@
 
 namespace ShoPHP\Admin\Product;
 
+use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\TextInput;
 use ShoPHP\Category;
 use ShoPHP\CategoryService;
@@ -9,6 +10,9 @@ use ShoPHP\Product;
 
 class ProductForm extends \Nette\Application\UI\Form
 {
+
+	const DISCOUNT_PERCENT = 0;
+	const DISCOUNT_NOMINAL = 1;
 
 	/** @var CategoryService */
 	private $categoryService;
@@ -28,8 +32,8 @@ class ProductForm extends \Nette\Application\UI\Form
 	{
 		$this->addNameControl();
 		$this->addDescriptionControl();
-		$this->addOriginalPriceControl();
-		$this->addDiscountPercentControl();
+		$priceControl = $this->addOriginalPriceControl();
+		$this->addDiscountControls($priceControl);
 		$this->addCategoriesControl();
 		$this->addSubmit('send', $this->editedProduct !== null ? 'Update' : 'Create');
 	}
@@ -54,7 +58,7 @@ class ProductForm extends \Nette\Application\UI\Form
 	private function addOriginalPriceControl()
 	{
 		$errorMessage = 'Price must be positive number.';
-		$control = $this->addText('price', 'Price');
+		$control = $this->addText('price', 'Original price');
 		$control->setType('number')
 			->setAttribute('step', 'any')
 			->setRequired()
@@ -65,20 +69,50 @@ class ProductForm extends \Nette\Application\UI\Form
 		if ($this->editedProduct !== null) {
 			$control->setDefaultValue($this->editedProduct->getOriginalPrice());
 		}
+		return $control;
+	}
+
+	private function addDiscountControls(BaseControl $priceControl)
+	{
+		$discountTypeControl = $this->addRadioList('discountType', null, [
+			self::DISCOUNT_PERCENT => null,
+			self::DISCOUNT_NOMINAL => null,
+		]);
+		$discountTypeControl->setDefaultValue(self::DISCOUNT_PERCENT);
+
+		$this->addDiscountPercentControl();
+		$this->addNominalDiscountControl($priceControl);
 	}
 
 	private function addDiscountPercentControl()
 	{
-		$errorMessage = 'Discount must be number between 0 and 100.';
-		$control = $this->addText('discount', 'Discount');
+		$errorMessage = 'Discount percent must be number between 0 and 100.';
+		$control = $this->addText('discountPercent', 'Discount percent');
 		$control->setType('number')
+			->setAttribute('step', 'any')
 			->setDefaultValue(0)
-			->addRule(self::INTEGER, $errorMessage)
+			->addRule(self::FLOAT, $errorMessage)
 			->addRule(function (TextInput $input) {
 				return $input->getValue() >= 0 && $input->getValue() < 100;
 			}, $errorMessage);
 		if ($this->editedProduct !== null) {
 			$control->setDefaultValue($this->editedProduct->getDiscountPercent());
+		}
+	}
+
+	private function addNominalDiscountControl(BaseControl $priceControl)
+	{
+		$errorMessage = 'Nominal discount must be between 0 and original price.';
+		$control = $this->addText('nominalDiscount', 'Nominal discount');
+		$control->setType('number')
+			->setAttribute('step', 'any')
+			->setDefaultValue(0)
+			->addRule(self::FLOAT, $errorMessage)
+			->addRule(function (TextInput $input) use ($priceControl) {
+				return $input->getValue() >= 0 && $input->getValue() < $priceControl->getValue();
+			}, $errorMessage);
+		if ($this->editedProduct !== null) {
+			$control->setDefaultValue($this->editedProduct->getNominalDiscount());
 		}
 	}
 

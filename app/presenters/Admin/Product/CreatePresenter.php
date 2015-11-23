@@ -50,7 +50,11 @@ class CreatePresenter extends \ShoPHP\Admin\BasePresenter
 		$values = $form->getValues();
 		$product = new Product($values->name, $values->price);
 		$product->setDescription($values->description);
-		$product->setDiscountPercent($values->discount);
+		if ($values->discountType === ProductForm::DISCOUNT_PERCENT) {
+			$product->setDiscountPercent($values->discountPercent);
+		} else {
+			$product->setNominalDiscount($values->nominalDiscount);
+		}
 		$product->setCategories($this->categoryService->getByIds($values->categories));
 
 		try {

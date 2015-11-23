@@ -47,6 +47,8 @@ class ProductFormControl extends \ShoPHP\BaseControl
 	public function render()
 	{
 		$this->template->categories = $this->categoryService->getRoot();
+		$this->template->formDiscountPercentKey = ProductForm::DISCOUNT_PERCENT;
+		$this->template->formDiscountNominalKey = ProductForm::DISCOUNT_NOMINAL;
 		$this->template->setFile(__DIR__ . '/ProductFormControl.latte');
 		$this->template->render();
 	}

@@ -69,7 +69,11 @@ class EditPresenter extends \ShoPHP\Admin\BasePresenter
 		$this->product->setName($values->name);
 		$this->product->setOriginalPrice($values->price);
 		$this->product->setDescription($values->description);
-		$this->product->setDiscountPercent($values->discount);
+		if ($values->discountType === ProductForm::DISCOUNT_PERCENT) {
+			$this->product->setDiscountPercent($values->discountPercent);
+		} else {
+			$this->product->setNominalDiscount($values->nominalDiscount);
+		}
 		$this->product->setCategories($this->categoryService->getByIds($values->categories));
 
 		try {

@@ -33,8 +33,12 @@
 			<td>{input price}</td>
 		</tr>
 		<tr>
-			<th>{label discount /}</th>
-			<td>{input discount}</td>
+			<th>{input discountType:$formDiscountPercentKey} {label discountPercent /}</th>
+			<td>{input discountPercent} %</td>
+		</tr>
+		<tr>
+			<th>{input discountType:$formDiscountNominalKey} {label nominalDiscount /}</th>
+			<td>{input nominalDiscount}</td>
 		</tr>
 		<tr>
 			<th></th>
