@@ -32,6 +32,9 @@ services:
 		class: ShoPHP\CategoryService
 
 	-
+		class: ShoPHP\CartService
+
+	-
 		class: ShoPHP\ProductService
 
 	-
