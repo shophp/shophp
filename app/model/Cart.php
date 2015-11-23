@@ -52,5 +52,14 @@ class Cart extends \Nette\Object
 		$this->items[] = $item;
 	}
 
+	public function getPrice()
+	{
+		$price = 0;
+		foreach ($this->getItems() as $item) {
+			$price += $item->getPrice();
+		}
+		return $price;
+	}
+
 }
 
