@@ -11,6 +11,8 @@
 			{input $form[remove][$item->id] onclick => 'return confirm("' . $removeConfirm . '");'}
 			{$item->product->name}
 			{input $form[amount][$item->id]}x
+			{$item->piecePrice|formatPrice}
+			{_'Total'}: {$item->price|formatPrice}
 		</li>
 	</ul>
 

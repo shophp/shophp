@@ -12,7 +12,7 @@ namespace ShoPHP;
 class CartItem extends \Nette\Object
 {
 
-	/** @Id @Column(type="integer") @GeneratedValue * */
+	/** @Id @Column(type="integer") @GeneratedValue **/
 	protected $id;
 
 	/**
@@ -28,8 +28,11 @@ class CartItem extends \Nette\Object
 	 */
 	protected $product;
 
-	/** @Column(type="integer") * */
+	/** @Column(type="integer") **/
 	protected $amount = 1;
+
+	/** @Column(type="float", nullable=true) **/
+	protected $piecePrice = null;
 
 	public function __construct(Product $product, $amount = 1)
 	{
@@ -79,6 +82,27 @@ class CartItem extends \Nette\Object
 	public function addAmount($amount)
 	{
 		$this->setAmount($this->getAmount() + $amount);
+	}
+
+	public function getPiecePrice()
+	{
+		if ($this->piecePrice !== null) {
+			return $this->piecePrice;
+		} else {
+			return $this->getProduct()->getPrice();
+		}
+	}
+
+	public function getPrice()
+	{
+		return $this->getAmount() * $this->getPiecePrice();
+	}
+
+	public function bakePrice()
+	{
+		if ($this->piecePrice !== null) {
+			throw new EntityInvalidArgumentException('Price already baked.');
+		}
 	}
 
 }
