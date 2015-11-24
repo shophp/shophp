@@ -20,6 +20,18 @@ class Cart extends \Nette\Object
 	 */
 	protected $items;
 
+	/** @Column(type="string", nullable=true) */
+	protected $name;
+
+	/** @Column(type="string", nullable=true) */
+	protected $street;
+
+	/** @Column(type="string", nullable=true) */
+	protected $city;
+
+	/** @Column(type="string", nullable=true) */
+	protected $zip;
+
 	public function __construct()
 	{
 		$this->items = new ArrayCollection();
@@ -61,5 +73,50 @@ class Cart extends \Nette\Object
 		return $price;
 	}
 
-}
+	public function getName()
+	{
+		return $this->name;
+	}
 
+	public function getStreet()
+	{
+		return $this->street;
+	}
+
+	public function getCity()
+	{
+		return $this->city;
+	}
+
+	public function getZip()
+	{
+		return $this->zip;
+	}
+
+	public function setAddress($name, $street, $city, $zip)
+	{
+		$name = (string) $name;
+		$street = (string) $street;
+		$city = (string) $city;
+		$zip = (string) $zip;
+
+		if ($name === '') {
+			throw new EntityInvalidArgumentException('Name cannot be empty.');
+		}
+		if ($street === '') {
+			throw new EntityInvalidArgumentException('Street cannot be empty.');
+		}
+		if ($city === '') {
+			throw new EntityInvalidArgumentException('City cannot be empty.');
+		}
+		if ($zip === '') {
+			throw new EntityInvalidArgumentException('Zip cannot be empty.');
+		}
+
+		$this->name = $name;
+		$this->street = $street;
+		$this->city = $city;
+		$this->zip = $zip;
+	}
+
+}
