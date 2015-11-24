@@ -27,6 +27,9 @@ parameters:
 		"/cart/address":
 			defaults: "Front:Order:Address:default"
 
+		"/cart/shipment":
+			defaults: "Front:Order:Shipment:default"
+
 		"/admin/<presenter>/<action>[/<id [0-9]+>]":
 			defaults:
 				module: Admin
