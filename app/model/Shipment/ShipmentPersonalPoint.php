@@ -6,7 +6,7 @@ namespace ShoPHP\Shipment;
  * @Entity
  * @Table(name="shipment_personal_points")
  */
-class ShipmentPersonalPoint extends \Nette\Object
+class ShipmentPersonalPoint extends \Nette\Object implements ShipmentType
 {
 
 	use ShipmentWithAddress;

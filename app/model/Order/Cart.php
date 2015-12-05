@@ -80,9 +80,19 @@ class Cart extends \Nette\Object
 		return $price;
 	}
 
-	public function getShipmentType()
+	public function isForPersonalPickup()
 	{
-		return $this->shipmentType;
+		return $this->shipmentType === ShipmentPersonalPoint::ID;
+	}
+
+	public function isShippedByTransportCompany()
+	{
+		return $this->shipmentType === ShipmentTransportCompany::ID;
+	}
+
+	public function isShippedToBrand()
+	{
+		return $this->shipmentType === ShipmentTransportBrand::ID;
 	}
 
 	public function setShipmentType($shipmentType)
