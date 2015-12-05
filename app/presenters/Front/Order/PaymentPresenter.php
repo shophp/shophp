@@ -4,7 +4,7 @@ namespace ShoPHP\Front\Order;
 
 use ShoPHP\CartService;
 
-class ShipmentPresenter extends \ShoPHP\Front\Order\BasePresenter
+class PaymentPresenter extends \ShoPHP\Front\Order\BasePresenter
 {
 
 	/** @var ShipmentFormFactory */

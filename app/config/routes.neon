@@ -30,6 +30,9 @@ parameters:
 		"/cart/shipment":
 			defaults: "Front:Order:Shipment:default"
 
+		"/cart/payment":
+			defaults: "Front:Order:Payment:default"
+
 		"/admin/<presenter>/<action>[/<id [0-9]+>]":
 			defaults:
 				module: Admin

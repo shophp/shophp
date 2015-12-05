@@ -4,7 +4,7 @@ namespace ShoPHP\Front\Order;
 
 use ShoPHP\CartService;
 
-class AddressPresenter extends \ShoPHP\Front\BasePresenter
+class AddressPresenter extends \ShoPHP\Front\Order\BasePresenter
 {
 
 	/** @var AddressFormFactory */

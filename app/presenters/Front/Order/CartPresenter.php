@@ -4,7 +4,7 @@ namespace ShoPHP\Front\Order;
 
 use ShoPHP\CartService;
 
-class CartPresenter extends \ShoPHP\Front\BasePresenter
+class CartPresenter extends \ShoPHP\Front\Order\BasePresenter
 {
 
 	/** @var CartFormFactory */
@@ -22,10 +22,6 @@ class CartPresenter extends \ShoPHP\Front\BasePresenter
 
 	public function actionDefault()
 	{
-		if (!$this->getCart()->hasItems()) {
-			$this->flashMessage('Yout cart is empty.');
-			$this->redirect(':Front:Home:Homepage:');
-		}
 	}
 
 	public function createComponentCartForm()
