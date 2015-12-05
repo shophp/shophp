@@ -3,8 +3,8 @@
 namespace ShoPHP\Admin\Category;
 
 use Nette\Application\BadRequestException;
-use ShoPHP\Category;
-use ShoPHP\CategoryService;
+use ShoPHP\Product\Category;
+use ShoPHP\Product\CategoryService;
 use ShoPHP\EntityDuplicateException;
 
 class EditPresenter extends \ShoPHP\Admin\BasePresenter

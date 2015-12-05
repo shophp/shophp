@@ -3,8 +3,8 @@
 namespace ShoPHP\Admin\Product;
 
 use Nette\Localization\ITranslator;
-use ShoPHP\CategoryService;
-use ShoPHP\Product;
+use ShoPHP\Product\CategoryService;
+use ShoPHP\Product\Product;
 
 class ProductFormControl extends \ShoPHP\BaseControl
 {

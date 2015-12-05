@@ -2,8 +2,8 @@
 
 namespace ShoPHP\Admin\Category;
 
-use ShoPHP\Category;
-use ShoPHP\CategoryService;
+use ShoPHP\Product\Category;
+use ShoPHP\Product\CategoryService;
 
 class CategoriesForm extends \Nette\Application\UI\Form
 {

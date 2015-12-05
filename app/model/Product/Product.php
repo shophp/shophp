@@ -1,8 +1,9 @@
 <?php
 
-namespace ShoPHP;
+namespace ShoPHP\Product;
 
 use Nette\Utils\Strings;
+use ShoPHP\EntityInvalidArgumentException;
 
 /**
  * @Entity
@@ -30,7 +31,7 @@ class Product extends \Nette\Object
 	protected $discount = 0;
 
 	/**
-	 * @ManyToMany(targetEntity="Category", inversedBy="products")
+	 * @ManyToMany(targetEntity="\ShoPHP\Product\Category", inversedBy="products")
 	 * @JoinTable(
 	 *     name="products_categories",
 	 *     joinColumns={@JoinColumn(name="product", referencedColumnName="id", onDelete="CASCADE")},

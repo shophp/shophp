@@ -3,7 +3,7 @@
 namespace ShoPHP\Front\Product;
 
 use Nette\Application\BadRequestException;
-use ShoPHP\CategoryService;
+use ShoPHP\Product\CategoryService;
 
 class CategoryPresenter extends \ShoPHP\Front\BasePresenter
 {

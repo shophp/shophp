@@ -29,13 +29,13 @@ services:
 		class: ShoPHP\Translator
 
 	-
-		class: ShoPHP\CategoryService
+		class: ShoPHP\Product\CategoryService
 
 	-
-		class: ShoPHP\CartService
+		class: ShoPHP\Order\CartService
 
 	-
-		class: ShoPHP\ProductService
+		class: ShoPHP\Product\ProductService
 
 	-
 		implement: ShoPHP\Front\Product\BuyFormFactory

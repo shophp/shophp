@@ -1,9 +1,10 @@
 <?php
 
-namespace ShoPHP;
+namespace ShoPHP\Product;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Nette\Utils\Strings;
+use ShoPHP\EntityInvalidArgumentException;
 
 /**
  * @Entity
@@ -19,13 +20,13 @@ class Category extends \Nette\Object
 	protected $id;
 
 	/**
-	 * @ManyToOne(targetEntity="Category", inversedBy="subcategories")
+	 * @ManyToOne(targetEntity="\ShoPHP\Product\Category", inversedBy="subcategories")
 	 * @var self
 	 */
 	protected $parent;
 
 	/**
-	 * @OneToMany(targetEntity="Category", mappedBy="parent")
+	 * @OneToMany(targetEntity="\ShoPHP\Product\Category", mappedBy="parent")
 	 * @var Categories|self[]
 	 */
 	protected $subcategories;
@@ -37,7 +38,7 @@ class Category extends \Nette\Object
 	protected $path;
 
 	/**
-	 * @ManyToMany(targetEntity="Product", mappedBy="categories")
+	 * @ManyToMany(targetEntity="\ShoPHP\Product\Product", mappedBy="categories")
 	 * @var Product[]
 	 */
 	protected $products;

@@ -2,10 +2,10 @@
 
 namespace ShoPHP\Front;
 
-use ShoPHP\Cart;
-use ShoPHP\CartService;
-use ShoPHP\Category;
-use ShoPHP\CategoryService;
+use ShoPHP\Order\Cart;
+use ShoPHP\Order\CartService;
+use ShoPHP\Product\Category;
+use ShoPHP\Product\CategoryService;
 
 abstract class BasePresenter extends \ShoPHP\BasePresenter
 {

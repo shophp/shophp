@@ -2,8 +2,8 @@
 
 namespace ShoPHP\Admin\Category;
 
-use ShoPHP\Category;
-use ShoPHP\CategoryService;
+use ShoPHP\Product\Category;
+use ShoPHP\Product\CategoryService;
 use ShoPHP\EntityDuplicateException;
 
 class CreatePresenter extends \ShoPHP\Admin\BasePresenter

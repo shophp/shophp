@@ -1,6 +1,6 @@
 <?php
 
-namespace ShoPHP;
+namespace ShoPHP\Order;
 
 use Doctrine\Common\Persistence\ObjectRepository;
 use Doctrine\ORM\EntityManagerInterface;

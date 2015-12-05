@@ -2,7 +2,7 @@
 
 namespace ShoPHP\Admin\Category;
 
-use ShoPHP\Category;
+use ShoPHP\Product\Category;
 
 interface CategoriesFormControlFactory
 {

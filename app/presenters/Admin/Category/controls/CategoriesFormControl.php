@@ -3,8 +3,8 @@
 namespace ShoPHP\Admin\Category;
 
 use Nette\Localization\ITranslator;
-use ShoPHP\Category;
-use ShoPHP\CategoryService;
+use ShoPHP\Product\Category;
+use ShoPHP\Product\CategoryService;
 
 class CategoriesFormControl extends \ShoPHP\BaseControl
 {

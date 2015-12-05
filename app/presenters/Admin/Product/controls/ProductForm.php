@@ -4,9 +4,9 @@ namespace ShoPHP\Admin\Product;
 
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\TextInput;
-use ShoPHP\Category;
-use ShoPHP\CategoryService;
-use ShoPHP\Product;
+use ShoPHP\Product\Category;
+use ShoPHP\Product\CategoryService;
+use ShoPHP\Product\Product;
 
 class ProductForm extends \Nette\Application\UI\Form
 {

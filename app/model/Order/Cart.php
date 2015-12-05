@@ -1,8 +1,9 @@
 <?php
 
-namespace ShoPHP;
+namespace ShoPHP\Order;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use ShoPHP\EntityInvalidArgumentException;
 use ShoPHP\Shipment\ShipmentPersonalPoint;
 use ShoPHP\Shipment\ShipmentTransportBrand;
 use ShoPHP\Shipment\ShipmentTransportCompany;
@@ -18,7 +19,7 @@ class Cart extends \Nette\Object
 	protected $id;
 
 	/**
-	 * @OneToMany(targetEntity="CartItem", mappedBy="cart", cascade={"persist"})
+	 * @OneToMany(targetEntity="\ShoPHP\Order\CartItem", mappedBy="cart", cascade={"persist"})
 	 * @var CartItem[]
 	 */
 	protected $items;

@@ -1,9 +1,10 @@
 <?php
 
-namespace ShoPHP;
+namespace ShoPHP\Product;
 
 use Doctrine\Common\Persistence\ObjectRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use ShoPHP\EntityDuplicateException;
 
 class CategoryService extends \ShoPHP\EntityService
 {

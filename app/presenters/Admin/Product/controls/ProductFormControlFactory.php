@@ -2,7 +2,7 @@
 
 namespace ShoPHP\Admin\Product;
 
-use ShoPHP\Product;
+use ShoPHP\Product\Product;
 
 interface ProductFormControlFactory
 {

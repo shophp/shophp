@@ -6,7 +6,8 @@ use Nette\Application\UI\ITemplate;
 use Nette\Bridges\ApplicationLatte\Template;
 use Nette\ComponentModel\IComponent;
 use Nette\Localization\ITranslator;
-use ShoPHP\CategoryService;
+use ShoPHP\Product\Category;
+use ShoPHP\Product\CategoryService;
 
 abstract class BasePresenter extends \Nette\Application\UI\Presenter
 {

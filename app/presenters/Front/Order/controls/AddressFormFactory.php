@@ -2,7 +2,7 @@
 
 namespace ShoPHP\Front\Order;
 
-use ShoPHP\Cart;
+use ShoPHP\Order\Cart;
 
 interface AddressFormFactory
 {

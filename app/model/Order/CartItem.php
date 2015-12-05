@@ -1,6 +1,9 @@
 <?php
 
-namespace ShoPHP;
+namespace ShoPHP\Order;
+
+use ShoPHP\EntityInvalidArgumentException;
+use ShoPHP\Product\Product;
 
 /**
  * @Entity
@@ -16,13 +19,13 @@ class CartItem extends \Nette\Object
 	protected $id;
 
 	/**
-	 * @ManyToOne(targetEntity="Cart", inversedBy="items")
+	 * @ManyToOne(targetEntity="\ShoPHP\Order\Cart", inversedBy="items")
 	 * @var Cart
 	 */
 	protected $cart;
 
 	/**
-	 * @ManyToOne(targetEntity="Product")
+	 * @ManyToOne(targetEntity="\ShoPHP\Product\Product")
      * @JoinColumn(name="product", referencedColumnName="id")
 	 * @var Product
 	 */

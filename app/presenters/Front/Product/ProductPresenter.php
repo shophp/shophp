@@ -3,11 +3,11 @@
 namespace ShoPHP\Front\Product;
 
 use Nette\Application\BadRequestException;
-use ShoPHP\CartItem;
-use ShoPHP\CartService;
-use ShoPHP\CategoryService;
-use ShoPHP\Product;
-use ShoPHP\ProductService;
+use ShoPHP\Order\CartItem;
+use ShoPHP\Order\CartService;
+use ShoPHP\Product\CategoryService;
+use ShoPHP\Product\Product;
+use ShoPHP\Product\ProductService;
 
 class ProductPresenter extends \ShoPHP\Front\BasePresenter
 {

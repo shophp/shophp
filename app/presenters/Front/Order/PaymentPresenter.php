@@ -2,7 +2,7 @@
 
 namespace ShoPHP\Front\Order;
 
-use ShoPHP\CartService;
+use ShoPHP\Order\CartService;
 
 class PaymentPresenter extends \ShoPHP\Front\Order\BasePresenter
 {

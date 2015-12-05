@@ -2,10 +2,10 @@
 
 namespace ShoPHP\Admin\Product;
 
-use ShoPHP\CategoryService;
+use ShoPHP\Product\CategoryService;
 use ShoPHP\EntityDuplicateException;
-use ShoPHP\Product;
-use ShoPHP\ProductService;
+use ShoPHP\Product\Product;
+use ShoPHP\Product\ProductService;
 
 class CreatePresenter extends \ShoPHP\Admin\BasePresenter
 {

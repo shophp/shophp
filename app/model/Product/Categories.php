@@ -1,8 +1,8 @@
 <?php
 
-namespace ShoPHP;
+namespace ShoPHP\Product;
 
-class Categories extends Collection
+class Categories extends \ShoPHP\Collection
 {
 
 	protected function getEntityClass()

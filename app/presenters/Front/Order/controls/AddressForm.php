@@ -2,9 +2,7 @@
 
 namespace ShoPHP\Front\Order;
 
-use Nette\Forms\Container;
-use Nette\Forms\Controls\SubmitButton;
-use ShoPHP\Cart;
+use ShoPHP\Order\Cart;
 
 class AddressForm extends \Nette\Application\UI\Form
 {
