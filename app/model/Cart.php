@@ -3,6 +3,9 @@
 namespace ShoPHP;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use ShoPHP\Shipment\ShipmentPersonalPoint;
+use ShoPHP\Shipment\ShipmentTransportBrand;
+use ShoPHP\Shipment\ShipmentTransportCompany;
 
 /**
  * @Entity
@@ -19,6 +22,9 @@ class Cart extends \Nette\Object
 	 * @var CartItem[]
 	 */
 	protected $items;
+
+	/** @Column(type="integer") */
+	protected $shipmentType;
 
 	/** @Column(type="string", nullable=true) */
 	protected $name;
@@ -71,6 +77,25 @@ class Cart extends \Nette\Object
 			$price += $item->getPrice();
 		}
 		return $price;
+	}
+
+	public function getShipmentType()
+	{
+		return $this->shipmentType;
+	}
+
+	public function setShipmentType($shipmentType)
+	{
+		$shipmentTypes = [
+			ShipmentPersonalPoint::ID,
+			ShipmentTransportCompany::ID,
+			ShipmentTransportBrand::ID,
+		];
+		if (!in_array($shipmentType, $shipmentTypes, true)) {
+			throw new EntityInvalidArgumentException(sprintf('Invalid shipment type %d.', $shipmentType));
+		}
+
+		$this->shipmentType = $shipmentType;
 	}
 
 	public function getName()

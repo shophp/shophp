@@ -128,7 +128,7 @@ class Product extends \Nette\Object
 	{
 		$price = (float) $price;
 		if ($price <= 0) {
-			throw new EntityInvalidArgumentException(sprintf('Invalid price %f.', $price));
+			throw new EntityInvalidArgumentException(sprintf('Invalid price %.2f.', $price));
 		}
 		$this->price = $price;
 	}
