@@ -4,9 +4,7 @@ namespace ShoPHP\Order;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use ShoPHP\EntityInvalidArgumentException;
-use ShoPHP\Shipment\ShipmentPersonalPoint;
-use ShoPHP\Shipment\ShipmentTransportBrand;
-use ShoPHP\Shipment\ShipmentTransportCompany;
+use ShoPHP\Shipment\ShipmentType;
 
 /**
  * @Entity
@@ -80,33 +78,14 @@ class Cart extends \Nette\Object
 		return $price;
 	}
 
-	public function isForPersonalPickup()
+	public function getShipmentType()
 	{
-		return $this->shipmentType === ShipmentPersonalPoint::ID;
+		return ShipmentType::createFromValue($this->shipmentType);
 	}
 
-	public function isShippedByTransportCompany()
+	public function setShipmentType(ShipmentType $shipmentType)
 	{
-		return $this->shipmentType === ShipmentTransportCompany::ID;
-	}
-
-	public function isShippedToBrand()
-	{
-		return $this->shipmentType === ShipmentTransportBrand::ID;
-	}
-
-	public function setShipmentType($shipmentType)
-	{
-		$shipmentTypes = [
-			ShipmentPersonalPoint::ID,
-			ShipmentTransportCompany::ID,
-			ShipmentTransportBrand::ID,
-		];
-		if (!in_array($shipmentType, $shipmentTypes, true)) {
-			throw new EntityInvalidArgumentException(sprintf('Invalid shipment type %d.', $shipmentType));
-		}
-
-		$this->shipmentType = $shipmentType;
+		$this->shipmentType = $shipmentType->getValue();
 	}
 
 	public function getName()

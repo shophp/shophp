@@ -8,13 +8,11 @@ use ShoPHP\EntityInvalidArgumentException;
  * @Entity
  * @Table(name="shipment_transport_brands")
  */
-class ShipmentTransportBrand extends \Nette\Object implements ShipmentType
+class ShipmentTransportBrand extends \Nette\Object implements ShipmentOption
 {
 
 	use ShipmentWithAddress;
 	use ShipmentFreeFromCertainOrderPrice;
-
-	const ID = 3;
 
 	/** @Id @Column(type="integer") @GeneratedValue * */
 	protected $id;
