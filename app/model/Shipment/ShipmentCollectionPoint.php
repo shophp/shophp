@@ -6,9 +6,9 @@ use ShoPHP\EntityInvalidArgumentException;
 
 /**
  * @Entity
- * @Table(name="shipment_transport_brands")
+ * @Table(name="shipment_collection_points")
  */
-class ShipmentTransportBrand extends \Nette\Object implements ShipmentOption
+class ShipmentCollectionPoint extends \Nette\Object implements ShipmentOption
 {
 
 	use ShipmentWithAddress {
@@ -54,7 +54,7 @@ class ShipmentTransportBrand extends \Nette\Object implements ShipmentOption
 
 	public function getType()
 	{
-		return ShipmentType::TRANSPORT_TO_BRAND();
+		return ShipmentType::TO_COLLECTION_POINT();
 	}
 
 }

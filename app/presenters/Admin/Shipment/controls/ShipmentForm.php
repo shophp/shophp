@@ -7,7 +7,7 @@ use Nette\Forms\Controls\TextInput;
 use ShoPHP\AddressForm;
 use ShoPHP\Shipment\ShipmentOption;
 use ShoPHP\Shipment\ShipmentPersonalPoint;
-use ShoPHP\Shipment\ShipmentTransportBrand;
+use ShoPHP\Shipment\ShipmentCollectionPoint;
 use ShoPHP\Shipment\ShipmentTransportCompany;
 use ShoPHP\Shipment\ShipmentType;
 
@@ -114,7 +114,7 @@ class ShipmentForm extends \Nette\Application\UI\Form
 
 		if (
 			$this->editedShipment !== null
-			&& ($this->editedShipment instanceof ShipmentTransportCompany || $this->editedShipment instanceof ShipmentTransportBrand)
+			&& ($this->editedShipment instanceof ShipmentTransportCompany || $this->editedShipment instanceof ShipmentCollectionPoint)
 		) {
 			$priceControl->setDefaultValue($this->editedShipment->getPrice());
 		}
@@ -142,7 +142,7 @@ class ShipmentForm extends \Nette\Application\UI\Form
 
 		if (
 			$this->editedShipment !== null
-			&& ($this->editedShipment instanceof ShipmentTransportCompany || $this->editedShipment instanceof ShipmentTransportBrand)
+			&& ($this->editedShipment instanceof ShipmentTransportCompany || $this->editedShipment instanceof ShipmentCollectionPoint)
 			&& $this->editedShipment->isFreeFromCertainOrderPrice()
 		) {
 			$priceControl->setDefaultValue($this->editedShipment->getMinimumOrderPriceToBeFree());

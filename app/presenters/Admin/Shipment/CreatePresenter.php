@@ -5,7 +5,7 @@ namespace ShoPHP\Admin\Shipment;
 use ShoPHP\EntityDuplicateException;
 use ShoPHP\Shipment\ShipmentPersonalPoint;
 use ShoPHP\Shipment\ShipmentService;
-use ShoPHP\Shipment\ShipmentTransportBrand;
+use ShoPHP\Shipment\ShipmentCollectionPoint;
 use ShoPHP\Shipment\ShipmentTransportCompany;
 use ShoPHP\Shipment\ShipmentType;
 
@@ -60,8 +60,8 @@ class CreatePresenter extends \ShoPHP\Admin\BasePresenter
 			case ShipmentType::TRANSPORT_BY_COMPANY:
 				$shipmentOption = new ShipmentTransportCompany($values->companyName, $values->price);
 				break;
-			case ShipmentType::TRANSPORT_TO_BRAND:
-				$shipmentOption = new ShipmentTransportBrand(
+			case ShipmentType::TO_COLLECTION_POINT:
+				$shipmentOption = new ShipmentCollectionPoint(
 					$values->name !== '' ? $values->name : null,
 					$values->street,
 					$values->city,

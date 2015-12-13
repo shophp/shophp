@@ -16,14 +16,14 @@ class ShipmentService extends \ShoPHP\EntityService
 	private $transportCompanyRepository;
 
 	/** @var ObjectRepository */
-	private $transportBrandRepository;
+	private $collectionPointRepository;
 
 	public function __construct(EntityManagerInterface $entityManager)
 	{
 		parent::__construct($entityManager);
 		$this->personalPointRepository = $entityManager->getRepository(ShipmentPersonalPoint::class);
 		$this->transportCompanyRepository = $entityManager->getRepository(ShipmentTransportCompany::class);
-		$this->transportBrandRepository = $entityManager->getRepository(ShipmentTransportBrand::class);
+		$this->collectionPointRepository = $entityManager->getRepository(ShipmentCollectionPoint::class);
 	}
 
 	public function create(ShipmentOption $shipment)
@@ -48,8 +48,8 @@ class ShipmentService extends \ShoPHP\EntityService
 		} elseif ($type === ShipmentType::TRANSPORT_BY_COMPANY()) {
 			return $this->transportCompanyRepository->find($id);
 
-		} elseif ($type === ShipmentType::TRANSPORT_TO_BRAND()) {
-			return $this->transportBrandRepository->find($id);
+		} elseif ($type === ShipmentType::TO_COLLECTION_POINT()) {
+			return $this->collectionPointRepository->find($id);
 
 		} else {
 			throw new \LogicException();
@@ -73,11 +73,11 @@ class ShipmentService extends \ShoPHP\EntityService
 	}
 
 	/**
-	 * @return ShipmentTransportBrand[]
+	 * @return ShipmentCollectionPoint[]
 	 */
-	public function getTransportBrands()
+	public function getCollectionPoints()
 	{
-		return $this->transportBrandRepository->findAll();
+		return $this->collectionPointRepository->findAll();
 	}
 
 	private function checkDuplicity(ShipmentOption $shipment)

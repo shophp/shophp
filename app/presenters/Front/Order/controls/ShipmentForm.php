@@ -44,10 +44,10 @@ class ShipmentForm extends \Nette\Application\UI\Form
 			$shipmentOptions[$key] = sprintf('Personally at: %s', $personalPoint->getDescription());
 		}
 
-		$transportBrands = $this->shipmentService->getTransportBrands();
-		foreach ($transportBrands as $transportBrand) {
-			$key = sprintf('%d-%d', ShipmentType::TRANSPORT_TO_BRAND, $transportBrand->getId());
-			$shipmentOptions[$key] = sprintf('At collection point: %s', $transportBrand->getDescription());
+		$collectionPoints = $this->shipmentService->getCollectionPoints();
+		foreach ($collectionPoints as $collectionPoint) {
+			$key = sprintf('%d-%d', ShipmentType::TO_COLLECTION_POINT, $collectionPoint->getId());
+			$shipmentOptions[$key] = sprintf('At collection point: %s', $collectionPoint->getDescription());
 		}
 
 		$transportCompanies = $this->shipmentService->getTransportCompanies();
