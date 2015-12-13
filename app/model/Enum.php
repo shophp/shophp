@@ -39,6 +39,10 @@ abstract class Enum implements LabeledEnum
 		return self::createFromValue(constant(sprintf('%s::%s', get_called_class(), $name)));
 	}
 
+	/**
+	 * @param integer $value
+	 * @return self
+	 */
 	public static function createFromValue($value)
 	{
 		$class = get_called_class();

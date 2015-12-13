@@ -24,4 +24,9 @@ class ShipmentPersonalPoint extends \Nette\Object implements ShipmentOption
 		return $this->id;
 	}
 
+	public function getType()
+	{
+		return ShipmentType::PERSONAL();
+	}
+
 }

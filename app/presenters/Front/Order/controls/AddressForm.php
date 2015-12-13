@@ -7,6 +7,8 @@ use ShoPHP\Order\Cart;
 class AddressForm extends \Nette\Application\UI\Form
 {
 
+	use \ShoPHP\AddressForm;
+
 	/** @var Cart */
 	private $cart;
 
@@ -19,47 +21,11 @@ class AddressForm extends \Nette\Application\UI\Form
 
 	private function createFields()
 	{
-		$this->addNameControl();
-		$this->addStreetControl();
-		$this->addCityControl();
-		$this->addZipControl();
+		$this->addNameControl('name', $this->cart->getName(), true);
+		$this->addStreetControl('street', $this->cart->getStreet(), true);
+		$this->addCityControl('city', $this->cart->getCity(), true);
+		$this->addZipControl('zip', $this->cart->getZip(), true);
 		$this->addSubmit('next', 'Next');
-	}
-
-	private function addNameControl()
-	{
-		$control = $this->addText('name', 'Your name');
-		$control->setRequired();
-		if ($this->cart->getName()) {
-			$control->setDefaultValue($this->cart->getName());
-		}
-	}
-
-	private function addStreetControl()
-	{
-		$control = $this->addText('street', 'Street and house number');
-		$control->setRequired();
-		if ($this->cart->getStreet()) {
-			$control->setDefaultValue($this->cart->getStreet());
-		}
-	}
-
-	private function addCityControl()
-	{
-		$control = $this->addText('city', 'City');
-		$control->setRequired();
-		if ($this->cart->getCity()) {
-			$control->setDefaultValue($this->cart->getCity());
-		}
-	}
-
-	private function addZipControl()
-	{
-		$control = $this->addText('zip', 'Zip');
-		$control->setRequired();
-		if ($this->cart->getZip()) {
-			$control->setDefaultValue($this->cart->getZip());
-		}
 	}
 
 }

@@ -50,6 +50,21 @@ trait ShipmentWithAddress
 		return $this->zip;
 	}
 
+	public function hasGps()
+	{
+		return $this->latitude !== null;
+	}
+
+	public function getLongitude()
+	{
+		return $this->longitude;
+	}
+
+	public function getLatitude()
+	{
+		return $this->latitude;
+	}
+
 	/**
 	 * @param string|null $name
 	 * @param string $street
@@ -87,15 +102,21 @@ trait ShipmentWithAddress
 		$longitude = (float) $longitude;
 		$latitude = (float) $latitude;
 
-		if ($longitude > 180 || $longitude < -180) {
+		if ($longitude >= 180 || $longitude <= -180) {
 			throw new EntityInvalidArgumentException('Invalid longitude %f.', $latitude);
 		}
-		if ($latitude > 90 || $latitude < -90) {
+		if ($latitude >= 90 || $latitude <= -90) {
 			throw new EntityInvalidArgumentException('Invalid latitude %f.', $latitude);
 		}
 
 		$this->longitude = (float) $longitude;
 		$this->latitude = (float) $latitude;
+	}
+
+	public function removeGps()
+	{
+		$this->longitude = null;
+		$this->latitude = null;
 	}
 
 }

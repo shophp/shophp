@@ -1,0 +1,73 @@
+{form shipmentForm}
+
+	<div class="errors" n:if="$form->hasErrors()" n:foreach="$form->errors as $error">
+		{$error}
+	</div>
+
+	<table>
+		<tr>
+			<th>{label type /}</th>
+			<td>{input type}</td>
+		</tr>
+	</table>
+
+	<table id="shipment-company-name">
+		<tr>
+			<th>{label companyName /}</th>
+			<td>{input companyName}</td>
+		</tr>
+	</table>
+
+	<table id="shipment-address">
+		<tr>
+			<th>{label name /}</th>
+			<td>{input name}</td>
+		</tr>
+		<tr>
+			<th>{label street /}</th>
+			<td>{input street}</td>
+		</tr>
+		<tr>
+			<th>{label city /}</th>
+			<td>{input city}</td>
+		</tr>
+		<tr>
+			<th>{label zip /}</th>
+			<td>{input zip}</td>
+		</tr>
+		<tr>
+			<th>{label longitude /}</th>
+			<td>{input longitude}</td>
+		</tr>
+		<tr>
+			<th>{label latitude /}</th>
+			<td>{input latitude}</td>
+		</tr>
+	</table>
+
+	<table id="shipment-price">
+		<tr>
+			<th>{label price /}</th>
+			<td>{input price}</td>
+		</tr>
+	</table>
+
+	<table id="shipment-free-price">
+		<tr>
+			<th>{label enableFreeFromCertainOrderPrice /}</th>
+			<td>{input enableFreeFromCertainOrderPrice}</td>
+		</tr>
+		<tr id="shipment-free-price-input">
+			<th>{label minimumOrderPriceToBeFree /}</th>
+			<td>{input minimumOrderPriceToBeFree}</td>
+		</tr>
+	</table>
+
+	<table>
+		<tr>
+			<th></th>
+			<td>{input send}</td>
+		</tr>
+	</table>
+
+{/form}

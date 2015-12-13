@@ -22,11 +22,6 @@ class ShipmentTransportCompany extends \Nette\Object implements ShipmentOption
 	/** @Column(type="float") */
 	protected $price;
 
-	public function getId()
-	{
-		return $this->id;
-	}
-
 	public function __construct($name, $price)
 	{
 		$name = (string) $name;
@@ -44,9 +39,24 @@ class ShipmentTransportCompany extends \Nette\Object implements ShipmentOption
 		$this->price = $price;
 	}
 
+	public function getId()
+	{
+		return $this->id;
+	}
+
+	public function getName()
+	{
+		return $this->name;
+	}
+
 	public function getPrice()
 	{
 		return $this->price;
+	}
+
+	public function getType()
+	{
+		return ShipmentType::TRANSPORT_BY_COMPANY();
 	}
 
 }

@@ -61,6 +61,7 @@ class ProductForm extends \Nette\Application\UI\Form
 		$control = $this->addText('price', 'Original price');
 		$control->setType('number')
 			->setAttribute('step', 'any')
+			->setDefaultValue(0)
 			->setRequired()
 			->addRule(self::FLOAT, $errorMessage)
 			->addRule(function (TextInput $input) {

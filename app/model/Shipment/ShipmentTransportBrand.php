@@ -36,4 +36,9 @@ class ShipmentTransportBrand extends \Nette\Object implements ShipmentOption
 		$this->price = $price;
 	}
 
+	public function getType()
+	{
+		return ShipmentType::TRANSPORT_TO_BRAND();
+	}
+
 }
