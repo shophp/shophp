@@ -35,6 +35,8 @@ class ShipmentPresenter extends \ShoPHP\Front\Order\BasePresenter
 
 	private function updateShipment(ShipmentForm $form)
 	{
+		$shipmentOption = $form->getChosenShipment();
+
 		if (!$form->hasErrors()) {
 			$this->redirect(':Front:Order:Address:');
 		}

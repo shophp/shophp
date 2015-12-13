@@ -37,6 +37,49 @@ class ShipmentService extends \ShoPHP\EntityService
 		$this->updateEntity($shipment);
 	}
 
+	/**
+	 * @return ShipmentOption
+	 */
+	public function getById(ShipmentType $type, $id)
+	{
+		if ($type === ShipmentType::PERSONAL()) {
+			return $this->personalPointRepository->find($id);
+
+		} elseif ($type === ShipmentType::TRANSPORT_BY_COMPANY()) {
+			return $this->transportCompanyRepository->find($id);
+
+		} elseif ($type === ShipmentType::TRANSPORT_TO_BRAND()) {
+			return $this->transportBrandRepository->find($id);
+
+		} else {
+			throw new \LogicException();
+		}
+	}
+
+	/**
+	 * @return ShipmentPersonalPoint[]
+	 */
+	public function getPersonalPoints()
+	{
+		return $this->personalPointRepository->findAll();
+	}
+
+	/**
+	 * @return ShipmentTransportCompany[]
+	 */
+	public function getTransportCompanies()
+	{
+		return $this->transportCompanyRepository->findAll();
+	}
+
+	/**
+	 * @return ShipmentTransportBrand[]
+	 */
+	public function getTransportBrands()
+	{
+		return $this->transportBrandRepository->findAll();
+	}
+
 	private function checkDuplicity(ShipmentOption $shipment)
 	{
 		if ($shipment instanceof ShipmentTransportCompany) {

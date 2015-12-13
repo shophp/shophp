@@ -11,7 +11,9 @@ use ShoPHP\EntityInvalidArgumentException;
 class ShipmentTransportBrand extends \Nette\Object implements ShipmentOption
 {
 
-	use ShipmentWithAddress;
+	use ShipmentWithAddress {
+		getDescription as getBaseDescription;
+	}
 	use ShipmentFreeFromCertainOrderPrice;
 
 	/** @Id @Column(type="integer") @GeneratedValue * */
@@ -19,11 +21,6 @@ class ShipmentTransportBrand extends \Nette\Object implements ShipmentOption
 
 	/** @Column(type="float") */
 	protected $price;
-
-	public function getId()
-	{
-		return $this->id;
-	}
 
 	public function __construct($name, $street, $city, $zip, $price)
 	{
@@ -34,6 +31,25 @@ class ShipmentTransportBrand extends \Nette\Object implements ShipmentOption
 			throw new EntityInvalidArgumentException(sprintf('Invalid price %.2f.', $price));
 		}
 		$this->price = $price;
+	}
+
+	public function getId()
+	{
+		return $this->id;
+	}
+
+	public function getPrice()
+	{
+		return $this->price;
+	}
+
+	public function getDescription()
+	{
+		$description = $this->getBaseDescription();
+		if ($this->getPrice() > 0) {
+			$description = sprintf('%s (%s)', $description, $this->getPrice()); // todo format with currency
+		}
+		return $description;
 	}
 
 	public function getType()

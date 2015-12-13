@@ -41,7 +41,7 @@ abstract class Enum implements LabeledEnum
 
 	/**
 	 * @param integer $value
-	 * @return self
+	 * @return static
 	 */
 	public static function createFromValue($value)
 	{
