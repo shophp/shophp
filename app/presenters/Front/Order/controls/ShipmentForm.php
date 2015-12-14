@@ -57,7 +57,7 @@ class ShipmentForm extends \Nette\Application\UI\Form
 		$transportCompanies = $this->shipmentService->getTransportCompanies();
 		$transportCompanyKeys = [];
 		foreach ($transportCompanies as $transportCompany) {
-			$key = sprintf('%d-%d', ShipmentType::TRANSPORT_BY_COMPANY, $transportCompany->getId());
+			$key = sprintf('%d-%d', ShipmentType::BY_TRANSPORT_COMPANY, $transportCompany->getId());
 			$shipmentOptions[$key] = $transportCompany->getDescription();
 			$transportCompanyKeys[] = $key;
 		}

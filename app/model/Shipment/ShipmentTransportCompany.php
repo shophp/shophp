@@ -65,7 +65,7 @@ class ShipmentTransportCompany extends \Nette\Object implements ShipmentOption
 
 	public function getType()
 	{
-		return ShipmentType::TRANSPORT_BY_COMPANY();
+		return ShipmentType::BY_TRANSPORT_COMPANY();
 	}
 
 }

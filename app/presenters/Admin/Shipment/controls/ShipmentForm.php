@@ -73,23 +73,23 @@ class ShipmentForm extends \Nette\Application\UI\Form
 			->setDefaultValue($defaultName);
 
 		$requiring = function (TextInput $control) use ($typeControl) {
-			return $control->addConditionOn($typeControl, self::NOT_EQUAL, ShipmentType::TRANSPORT_BY_COMPANY);
+			return $control->addConditionOn($typeControl, self::NOT_EQUAL, ShipmentType::BY_TRANSPORT_COMPANY);
 		};
 		$this->addStreetControl('street', $defaultStreet, $requiring);
 		$this->addCityControl('city', $defaultCity, $requiring);
 		$this->addZipControl('zip', $defaultZip, $requiring);
 		$this->addGpsControls('longitude', 'latitude', $defaultLongitude, $defaultLatitude);
 
-		$typeControl->addCondition(self::NOT_EQUAL, ShipmentType::TRANSPORT_BY_COMPANY)
+		$typeControl->addCondition(self::NOT_EQUAL, ShipmentType::BY_TRANSPORT_COMPANY)
 			->toggle('shipment-address');
 	}
 
 	private function addCompanyNameControl(ChoiceControl $typeControl)
 	{
 		$control = $this->addText('companyName', 'Company name')
-			->addConditionOn($typeControl, self::EQUAL, ShipmentType::TRANSPORT_BY_COMPANY)
+			->addConditionOn($typeControl, self::EQUAL, ShipmentType::BY_TRANSPORT_COMPANY)
 			->setRequired('Please fill company name.');
-		$typeControl->addCondition(self::EQUAL, ShipmentType::TRANSPORT_BY_COMPANY)
+		$typeControl->addCondition(self::EQUAL, ShipmentType::BY_TRANSPORT_COMPANY)
 			->toggle('shipment-company-name');
 		return $control;
 	}

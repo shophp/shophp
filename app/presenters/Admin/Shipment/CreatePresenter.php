@@ -57,7 +57,7 @@ class CreatePresenter extends \ShoPHP\Admin\BasePresenter
 					$shipmentOption->setGps($values->longitude, $values->latitude);
 				}
 				break;
-			case ShipmentType::TRANSPORT_BY_COMPANY:
+			case ShipmentType::BY_TRANSPORT_COMPANY:
 				$shipmentOption = new ShipmentTransportCompany($values->companyName, $values->price);
 				break;
 			case ShipmentType::TO_COLLECTION_POINT:
