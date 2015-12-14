@@ -9,7 +9,7 @@ use ShoPHP\Shipment\ShipmentTransportCompany;
  * @Entity
  * @Table(name="carts_shipment_by_transport_company")
  */
-class ShipmentByTransportCompany extends \Nette\Object
+class ShipmentByTransportCompany extends \Nette\Object implements Shipment
 {
 
 	/** @Id @Column(type="integer") @GeneratedValue * */
@@ -39,8 +39,9 @@ class ShipmentByTransportCompany extends \Nette\Object
 	/** @Column(type="string") */
 	protected $zip;
 
-	public function __construct(ShipmentTransportCompany $transportCompany, $name, $street, $city, $zip)
+	public function __construct(Cart $cart, ShipmentTransportCompany $transportCompany, $name, $street, $city, $zip)
 	{
+		$this->cart = $cart;
 		$this->transportCompany = $transportCompany;
 		$this->setAddress($name, $street, $city, $zip);
 	}
@@ -50,7 +51,7 @@ class ShipmentByTransportCompany extends \Nette\Object
 		return $this->id;
 	}
 
-	public function getTransportCompany()
+	public function getShipmentOption()
 	{
 		return $this->transportCompany;
 	}
@@ -80,7 +81,19 @@ class ShipmentByTransportCompany extends \Nette\Object
 		return $this->zip;
 	}
 
-	public function setAddress($name, $street, $city, $zip)
+	/**
+	 * @param Shipment|self $shipment
+	 */
+	public function equals(Shipment $shipment)
+	{
+		return $shipment->getShipmentOption() === $this->getShipmentOption()
+			&& $shipment->getName() === $this->getName()
+			&& $shipment->getStreet() === $this->getStreet()
+			&& $shipment->getCity() === $this->getCity()
+			&& $shipment->getZip() === $this->getZip();
+	}
+
+	private function setAddress($name, $street, $city, $zip)
 	{
 		$name = (string) $name;
 		$street = (string) $street;

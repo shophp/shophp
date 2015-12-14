@@ -23,4 +23,19 @@ class ShipmentType extends \ShoPHP\Enum
 		];
 	}
 
+	public function isPersonal()
+	{
+		return $this->getValue() === self::PERSONAL;
+	}
+
+	public function isByTransportCompany()
+	{
+		return $this->getValue() === self::TRANSPORT_BY_COMPANY;
+	}
+
+	public function isToCollectionPoint()
+	{
+		return $this->getValue() === self::TO_COLLECTION_POINT;
+	}
+
 }

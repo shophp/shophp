@@ -4,7 +4,45 @@
 
 <h1>{_'Shipment'}</h1>
 
-{control shipmentForm}
+{form shipmentForm}
+
+	<div class="errors" n:if="$form->hasErrors()" n:foreach="$form->errors as $error">
+		{$error}
+	</div>
+
+	<table>
+		<tr>
+			<th>{label shipment /}</th>
+			<td>{input shipment}</td>
+		</tr>
+	</table>
+
+	<table id="order-shipment-address">
+		<tr>
+			<th>{label name /}</th>
+			<td>{input name}</td>
+		</tr>
+		<tr>
+			<th>{label street /}</th>
+			<td>{input street}</td>
+		</tr>
+		<tr>
+			<th>{label city /}</th>
+			<td>{input city}</td>
+		</tr>
+		<tr>
+			<th>{label zip /}</th>
+			<td>{input zip}</td>
+		</tr>
+	</table>
+
+	<table>
+		<tr>
+			<th></th>
+			<td>{input next}</td>
+		</tr>
+	</table>
+{/form}
 
 <div>
 	<a n:href=":Front:Order:Cart:">{_'Back'}</a>

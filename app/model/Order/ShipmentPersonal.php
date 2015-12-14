@@ -8,7 +8,7 @@ use ShoPHP\Shipment\ShipmentPersonalPoint;
  * @Entity
  * @Table(name="carts_shipment_personal")
  */
-class ShipmentPersonal extends \Nette\Object
+class ShipmentPersonal extends \Nette\Object implements Shipment
 {
 
 	/** @Id @Column(type="integer") @GeneratedValue * */
@@ -26,8 +26,9 @@ class ShipmentPersonal extends \Nette\Object
 	 */
 	protected $cart;
 
-	public function __construct(ShipmentPersonalPoint $personalPoint)
+	public function __construct(Cart $cart, ShipmentPersonalPoint $personalPoint)
 	{
+		$this->cart = $cart;
 		$this->personalPoint = $personalPoint;
 	}
 
@@ -36,7 +37,7 @@ class ShipmentPersonal extends \Nette\Object
 		return $this->id;
 	}
 
-	public function getPersonalPoint()
+	public function getShipmentOption()
 	{
 		return $this->personalPoint;
 	}
@@ -44,6 +45,11 @@ class ShipmentPersonal extends \Nette\Object
 	public function getCart()
 	{
 		return $this->cart;
+	}
+
+	public function equals(Shipment $shipment)
+	{
+		return $shipment->getShipmentOption() === $this->getShipmentOption();
 	}
 
 }

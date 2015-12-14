@@ -42,13 +42,13 @@ class ShipmentService extends \ShoPHP\EntityService
 	 */
 	public function getById(ShipmentType $type, $id)
 	{
-		if ($type === ShipmentType::PERSONAL()) {
+		if ($type->isPersonal()) {
 			return $this->personalPointRepository->find($id);
 
-		} elseif ($type === ShipmentType::TRANSPORT_BY_COMPANY()) {
+		} elseif ($type->isByTransportCompany()) {
 			return $this->transportCompanyRepository->find($id);
 
-		} elseif ($type === ShipmentType::TO_COLLECTION_POINT()) {
+		} elseif ($type->isToCollectionPoint()) {
 			return $this->collectionPointRepository->find($id);
 
 		} else {

@@ -24,20 +24,4 @@ class PaymentPresenter extends \ShoPHP\Front\Order\BasePresenter
 	{
 	}
 
-	public function createComponentShipmentForm()
-	{
-		$form = $this->shipmentFormFactory->create();
-		$form->onSuccess[] = function(ShipmentForm $form) {
-			$this->updateShipment($form);
-		};
-		return $form;
-	}
-
-	private function updateShipment(ShipmentForm $form)
-	{
-		if (!$form->hasErrors()) {
-			$this->redirect(':Front:Order:Address:');
-		}
-	}
-
 }

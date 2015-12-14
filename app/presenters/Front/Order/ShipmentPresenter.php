@@ -26,7 +26,7 @@ class ShipmentPresenter extends \ShoPHP\Front\Order\BasePresenter
 
 	public function createComponentShipmentForm()
 	{
-		$form = $this->shipmentFormFactory->create();
+		$form = $this->shipmentFormFactory->create($this->getCart()->getShipment());
 		$form->onSuccess[] = function(ShipmentForm $form) {
 			$this->updateShipment($form);
 		};
@@ -35,11 +35,18 @@ class ShipmentPresenter extends \ShoPHP\Front\Order\BasePresenter
 
 	private function updateShipment(ShipmentForm $form)
 	{
+		$values = $form->getValues();
 		$shipmentOption = $form->getChosenShipment();
+		$this->cartService->createShipmentForCart(
+			$this->getCart(),
+			$shipmentOption,
+			$values->name,
+			$values->street,
+			$values->city,
+			$values->zip
+		);
 
-		if (!$form->hasErrors()) {
-			$this->redirect(':Front:Order:Address:');
-		}
+		$this->redirect(':Front:Order:Payment:');
 	}
 
 }

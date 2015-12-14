@@ -3,7 +3,6 @@
 namespace ShoPHP\Order;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use ShoPHP\EntityInvalidArgumentException;
 use ShoPHP\Shipment\ShipmentType;
 
 /**
@@ -22,7 +21,7 @@ class Cart extends \Nette\Object
 	 */
 	protected $items;
 
-	/** @Column(type="integer") */
+	/** @Column(type="integer", nullable=true) */
 	protected $shipmentType;
 
 	/**
@@ -84,14 +83,55 @@ class Cart extends \Nette\Object
 		return $price;
 	}
 
-	public function getShipmentType()
+	public function hasShipment()
 	{
-		return ShipmentType::createFromValue($this->shipmentType);
+		return $this->shipmentType !== null;
 	}
 
-	public function setShipmentType(ShipmentType $shipmentType)
+	/**
+	 * @return ShipmentType
+	 */
+	public function getShipmentType()
 	{
-		$this->shipmentType = $shipmentType->getValue();
+		if ($this->shipmentType !== null) {
+			return ShipmentType::createFromValue($this->shipmentType);
+		}
+		return null;
+	}
+
+	/**
+	 * @return Shipment|null
+	 */
+	public function getShipment()
+	{
+		if ($this->getShipmentType() !== null) {
+			if ($this->getShipmentType()->isPersonal()) {
+				return $this->shipmentPersonal;
+			} elseif ($this->getShipmentType()->isByTransportCompany()) {
+				return $this->shipmentByTransportCompany;
+			} elseif ($this->getShipmentType()->isToCollectionPoint()) {
+				return $this->shipmentToCollectionPoint;
+			}
+		}
+		return null;
+	}
+
+	public function setShipment(Shipment $shipment)
+	{
+		$this->shipmentPersonal = null;
+		$this->shipmentByTransportCompany = null;
+		$this->shipmentToCollectionPoint = null;
+
+		$type = $shipment->getShipmentOption()->getType();
+		$this->shipmentType = $type->getValue();
+
+		if ($type->isPersonal()) {
+			$this->shipmentPersonal = $shipment;
+		} elseif ($type->isByTransportCompany()) {
+			$this->shipmentByTransportCompany = $shipment;
+		} elseif ($type->isToCollectionPoint()) {
+			$this->shipmentToCollectionPoint = $shipment;
+		}
 	}
 
 }

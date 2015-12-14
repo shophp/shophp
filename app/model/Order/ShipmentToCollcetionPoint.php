@@ -8,7 +8,7 @@ use ShoPHP\Shipment\ShipmentCollectionPoint;
  * @Entity
  * @Table(name="carts_shipment_to_collection_point")
  */
-class ShipmentToCollectionPoint extends \Nette\Object
+class ShipmentToCollectionPoint extends \Nette\Object implements Shipment
 {
 
 	/** @Id @Column(type="integer") @GeneratedValue * */
@@ -26,8 +26,9 @@ class ShipmentToCollectionPoint extends \Nette\Object
 	 */
 	protected $cart;
 
-	public function __construct(ShipmentCollectionPoint $collectionPoint)
+	public function __construct(Cart $cart, ShipmentCollectionPoint $collectionPoint)
 	{
+		$this->cart = $cart;
 		$this->collectionPoint = $collectionPoint;
 	}
 
@@ -36,7 +37,7 @@ class ShipmentToCollectionPoint extends \Nette\Object
 		return $this->id;
 	}
 
-	public function getCollectionPoint()
+	public function getShipmentOption()
 	{
 		return $this->collectionPoint;
 	}
@@ -44,6 +45,11 @@ class ShipmentToCollectionPoint extends \Nette\Object
 	public function getCart()
 	{
 		return $this->cart;
+	}
+
+	public function equals(Shipment $shipment)
+	{
+		return $shipment->getShipmentOption() === $this->getShipmentOption();
 	}
 
 }
