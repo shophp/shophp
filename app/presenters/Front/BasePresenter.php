@@ -16,16 +16,21 @@ abstract class BasePresenter extends \ShoPHP\BasePresenter
 	/** @var CurrentCartService */
 	private $currentCartService;
 
+	/** @var LoginFormFactory */
+	private $loginFormFactory;
+
 	/** @var Category */
 	private $currentCategory;
 
 	public function injectFrontBase(
 		CategoryService $categoryService,
-		CurrentCartService $currentCartService
+		CurrentCartService $currentCartService,
+		LoginFormFactory $loginFormFactory
 	)
 	{
 		$this->categoryService = $categoryService;
 		$this->currentCartService = $currentCartService;
+		$this->loginFormFactory = $loginFormFactory;
 	}
 
 	public function beforeRender()
@@ -40,6 +45,11 @@ abstract class BasePresenter extends \ShoPHP\BasePresenter
 	protected function setCurrentCategory(Category $category)
 	{
 		$this->currentCategory = $category;
+	}
+
+	protected function createComponentLoginForm()
+	{
+		return $this->loginFormFactory->create();
 	}
 
 }
