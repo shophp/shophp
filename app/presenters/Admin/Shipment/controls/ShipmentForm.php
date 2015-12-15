@@ -28,11 +28,26 @@ class ShipmentForm extends \Nette\Application\UI\Form
 
 	private function createFields()
 	{
-		$typeControl = $this->addTypeControl();
-		$this->addAddressControls($typeControl);
-		$this->addCompanyNameControl($typeControl);
-		$this->addPriceControl($typeControl);
-		$this->addMinimumOrderPriceToBeFreeControl($typeControl);
+		if ($this->editedShipment === null) {
+			$typeControl = $this->addTypeControl();
+			$this->addAddressControls(null, $typeControl);
+			$this->addCompanyNameControl(null, $typeControl);
+			$this->addPriceControl(null, $typeControl);
+			$this->addMinimumOrderPriceToBeFreeControl(null, $typeControl);
+
+		} elseif ($this->editedShipment instanceof ShipmentPersonalPoint) {
+			$this->addAddressControls($this->editedShipment);
+
+		} elseif ($this->editedShipment instanceof ShipmentCollectionPoint) {
+			$this->addAddressControls($this->editedShipment);
+			$this->addPriceControl($this->editedShipment);
+			$this->addMinimumOrderPriceToBeFreeControl($this->editedShipment);
+
+		} elseif ($this->editedShipment instanceof ShipmentTransportCompany) {
+			$this->addCompanyNameControl($this->editedShipment);
+			$this->addPriceControl($this->editedShipment);
+			$this->addMinimumOrderPriceToBeFreeControl($this->editedShipment);
+		}
 
 		$this->addSubmit('send', $this->editedShipment !== null ? 'Update' : 'Create');
 	}
@@ -40,16 +55,14 @@ class ShipmentForm extends \Nette\Application\UI\Form
 	private function addTypeControl()
 	{
 		$control = $this->addRadioList('type', 'Type', ShipmentType::getLabels());
-		$defaultValue = ShipmentType::PERSONAL;
-		if ($this->editedShipment !== null) {
-			$defaultValue = $this->editedShipment->getType()->getValue();
-		}
-		$control->setDefaultValue($defaultValue);
-
+		$control->setDefaultValue(ShipmentType::PERSONAL);
 		return $control;
 	}
 
-	private function addAddressControls(ChoiceControl $typeControl)
+	/**
+	 * @param ShipmentPersonalPoint|ShipmentCollectionPoint|null $shipment
+	 */
+	private function addAddressControls(ShipmentOption $shipment = null, ChoiceControl $typeControl = null)
 	{
 		$defaultName = null;
 		$defaultStreet = null;
@@ -57,44 +70,57 @@ class ShipmentForm extends \Nette\Application\UI\Form
 		$defaultZip = null;
 		$defaultLongitude = null;
 		$defaultLatitude = null;
-		if (
-			$this->editedShipment !== null
-			&& ($this->editedShipment instanceof ShipmentPersonalPoint || $this->editedShipment instanceof ShipmentTransportCompany)
-		) {
-			$defaultName = $this->editedShipment->getName();
-			$defaultStreet = $this->editedShipment->getStreet();
-			$defaultCity = $this->editedShipment->getCity();
-			$defaultZip = $this->editedShipment->getZip();
-			$defaultLongitude = $this->editedShipment->getLongitude();
-			$defaultLatitude = $this->editedShipment->getLatitude();
+		if ($shipment !== null) {
+			$defaultName = $shipment->getName();
+			$defaultStreet = $shipment->getStreet();
+			$defaultCity = $shipment->getCity();
+			$defaultZip = $shipment->getZip();
+			$defaultLongitude = $shipment->getLongitude();
+			$defaultLatitude = $shipment->getLatitude();
 		}
 
 		$this->addText('name', 'Name')
 			->setDefaultValue($defaultName);
 
-		$requiring = function (TextInput $control) use ($typeControl) {
-			return $control->addConditionOn($typeControl, self::NOT_EQUAL, ShipmentType::BY_TRANSPORT_COMPANY);
-		};
+		$requiring = true;
+		if ($typeControl !== null) {
+			$requiring = function (TextInput $control) use ($typeControl) {
+				return $control->addConditionOn($typeControl, self::NOT_EQUAL, ShipmentType::BY_TRANSPORT_COMPANY);
+			};
+
+			$typeControl->addCondition(self::NOT_EQUAL, ShipmentType::BY_TRANSPORT_COMPANY)
+				->toggle('shipment-address');
+		}
+
 		$this->addStreetControl('street', $defaultStreet, $requiring);
 		$this->addCityControl('city', $defaultCity, $requiring);
 		$this->addZipControl('zip', $defaultZip, $requiring);
 		$this->addGpsControls('longitude', 'latitude', $defaultLongitude, $defaultLatitude);
-
-		$typeControl->addCondition(self::NOT_EQUAL, ShipmentType::BY_TRANSPORT_COMPANY)
-			->toggle('shipment-address');
 	}
 
-	private function addCompanyNameControl(ChoiceControl $typeControl)
+	private function addCompanyNameControl(ShipmentTransportCompany $shipment = null, ChoiceControl $typeControl = null)
 	{
-		$control = $this->addText('companyName', 'Company name')
-			->addConditionOn($typeControl, self::EQUAL, ShipmentType::BY_TRANSPORT_COMPANY)
-			->setRequired('Please fill company name.');
-		$typeControl->addCondition(self::EQUAL, ShipmentType::BY_TRANSPORT_COMPANY)
-			->toggle('shipment-company-name');
+		$control = $this->addText('companyName', 'Company name');
+
+		if ($typeControl === null) {
+			$requiredCondition = $control;
+			$control->setDefaultValue($shipment->getName());
+
+		} else {
+			$requiredCondition = $control->addConditionOn($typeControl, self::EQUAL, ShipmentType::BY_TRANSPORT_COMPANY);
+			$typeControl->addCondition(self::EQUAL, ShipmentType::BY_TRANSPORT_COMPANY)
+				->toggle('shipment-company-name');
+		}
+
+		$requiredCondition->setRequired('Please fill company name.');
+
 		return $control;
 	}
 
-	private function addPriceControl(ChoiceControl $typeControl)
+	/**
+	 * @param ShipmentTransportCompany|ShipmentCollectionPoint|null $shipment
+	 */
+	private function addPriceControl(ShipmentOption $shipment = null, ChoiceControl $typeControl = null)
 	{
 		$errorMessage = 'Price must be positive number.';
 		$priceControl = $this->addText('price', 'Price');
@@ -106,50 +132,56 @@ class ShipmentForm extends \Nette\Application\UI\Form
 				return $input->getValue() >= 0;
 			}, $errorMessage);
 
-		$priceControl->addConditionOn($typeControl, self::NOT_EQUAL, ShipmentType::PERSONAL)
-			->setRequired();
+		if ($typeControl === null) {
+			$requiredCondition = $priceControl;
+			$priceControl->setDefaultValue($shipment->getPrice());
 
-		$typeControl->addCondition(self::NOT_EQUAL, ShipmentType::PERSONAL)
-			->toggle('shipment-price');
-
-		if (
-			$this->editedShipment !== null
-			&& ($this->editedShipment instanceof ShipmentTransportCompany || $this->editedShipment instanceof ShipmentCollectionPoint)
-		) {
-			$priceControl->setDefaultValue($this->editedShipment->getPrice());
+		} else {
+			$requiredCondition = $priceControl->addConditionOn($typeControl, self::NOT_EQUAL, ShipmentType::PERSONAL);
+			$typeControl->addCondition(self::NOT_EQUAL, ShipmentType::PERSONAL)
+				->toggle('shipment-price');
 		}
+
+		$requiredCondition->setRequired('Please fill price.');
 	}
 
-	private function addMinimumOrderPriceToBeFreeControl(ChoiceControl $typeControl)
+	/**
+	 * @param ShipmentTransportCompany|ShipmentCollectionPoint|null $shipment
+	 */
+	private function addMinimumOrderPriceToBeFreeControl(ShipmentOption $shipment = null, ChoiceControl $typeControl = null)
 	{
 		$enableControl = $this->addCheckbox('enableFreeFromCertainOrderPrice', 'Free from certain order price');
 		$enableControl->addCondition(self::EQUAL, true)
 			->toggle('shipment-free-price-input');
 
-		$errorMessage = 'Price must be positive number.';
+		$errorMessage = 'Minimum order price must be positive number.';
 		$priceControl = $this->addText('minimumOrderPriceToBeFree', 'Minimum order price to be free');
 		$priceControl->setType('number')
 			->setAttribute('step', 'any')
 			->setDefaultValue(0);
-		$priceControl
-			->addConditionOn($enableControl, self::EQUAL, true)
-			->addConditionOn($typeControl, self::NOT_EQUAL, ShipmentType::PERSONAL)
-			->setRequired()
-			->addRule(self::FLOAT, $errorMessage)
-			->addRule(function (TextInput $input) {
-				return $input->getValue() > 0;
-			}, $errorMessage);
 
-		if (
-			$this->editedShipment !== null
-			&& ($this->editedShipment instanceof ShipmentTransportCompany || $this->editedShipment instanceof ShipmentCollectionPoint)
-			&& $this->editedShipment->isFreeFromCertainOrderPrice()
-		) {
-			$priceControl->setDefaultValue($this->editedShipment->getMinimumOrderPriceToBeFree());
+		if ($typeControl === null) {
+			$requiredCondition = $priceControl;
+			$enableControl->setDefaultValue($shipment->isFreeFromCertainOrderPrice());
+			if ($shipment->isFreeFromCertainOrderPrice()) {
+				$priceControl->setDefaultValue($shipment->getMinimumOrderPriceToBeFree());
+			}
+
+		} else {
+			$requiredCondition = $priceControl
+				->addConditionOn($typeControl, self::NOT_EQUAL, ShipmentType::PERSONAL);
+
+			$typeControl->addCondition(self::NOT_EQUAL, ShipmentType::PERSONAL)
+				->toggle('shipment-free-price');
 		}
 
-		$typeControl->addCondition(self::NOT_EQUAL, ShipmentType::PERSONAL)
-			->toggle('shipment-free-price');
+		$requiredCondition
+			->addConditionOn($enableControl, self::EQUAL, true)
+				->setRequired()
+				->addRule(self::FLOAT, $errorMessage)
+				->addRule(function (TextInput $input) {
+					return $input->getValue() > 0;
+				}, $errorMessage);
 	}
 
 }

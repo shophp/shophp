@@ -34,6 +34,7 @@ class ShipmentService extends \ShoPHP\EntityService
 
 	public function update(ShipmentOption $shipment)
 	{
+		$this->checkDuplicity($shipment);
 		$this->updateEntity($shipment);
 	}
 

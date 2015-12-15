@@ -11,7 +11,7 @@ use ShoPHP\EntityInvalidArgumentException;
 class ShipmentTransportCompany extends \Nette\Object implements ShipmentOption
 {
 
-	use ShipmentFreeFromCertainOrderPrice;
+	use ShipmentWithPrice;
 
 	/** @Id @Column(type="integer") @GeneratedValue * */
 	protected $id;
@@ -19,24 +19,10 @@ class ShipmentTransportCompany extends \Nette\Object implements ShipmentOption
 	/** @Column(type="string") */
 	protected $name;
 
-	/** @Column(type="float") */
-	protected $price;
-
 	public function __construct($name, $price)
 	{
-		$name = (string) $name;
-
-		if ($name === '') {
-			throw new EntityInvalidArgumentException('Name cannot be empty.');
-		}
-
-		$price = (float) $price;
-		if ($price < 0) {
-			throw new EntityInvalidArgumentException(sprintf('Invalid price %.2f.', $price));
-		}
-
-		$this->name = $name;
-		$this->price = $price;
+		$this->setName($name);
+		$this->setPrice($price);
 	}
 
 	public function getId()
@@ -49,9 +35,13 @@ class ShipmentTransportCompany extends \Nette\Object implements ShipmentOption
 		return $this->name;
 	}
 
-	public function getPrice()
+	public function setName($name)
 	{
-		return $this->price;
+		$name = (string) $name;
+		if ($name === '') {
+			throw new EntityInvalidArgumentException('Name cannot be empty.');
+		}
+		$this->name = $name;
 	}
 
 	public function getType()

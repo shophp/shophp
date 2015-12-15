@@ -4,21 +4,21 @@
 		{$error}
 	</div>
 
-	<table>
+	<table n:ifset="$_form[type]">
 		<tr>
 			<th>{label type /}</th>
 			<td>{input type}</td>
 		</tr>
 	</table>
 
-	<table id="shipment-company-name">
+	<table n:ifset="$_form[companyName]" id="shipment-company-name">
 		<tr>
 			<th>{label companyName /}</th>
 			<td>{input companyName}</td>
 		</tr>
 	</table>
 
-	<table id="shipment-address">
+	<table n:ifset="$_form[name]" id="shipment-address">
 		<tr>
 			<th>{label name /}</th>
 			<td>{input name}</td>
@@ -45,14 +45,14 @@
 		</tr>
 	</table>
 
-	<table id="shipment-price">
+	<table n:ifset="$_form[price]" id="shipment-price">
 		<tr>
 			<th>{label price /}</th>
 			<td>{input price}</td>
 		</tr>
 	</table>
 
-	<table id="shipment-free-price">
+	<table n:ifset="$_form[enableFreeFromCertainOrderPrice]" id="shipment-free-price">
 		<tr>
 			<th>{label enableFreeFromCertainOrderPrice /}</th>
 			<td>{input enableFreeFromCertainOrderPrice}</td>

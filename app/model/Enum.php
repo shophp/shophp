@@ -64,6 +64,17 @@ abstract class Enum implements LabeledEnum
 		return self::$constants[$class];
 	}
 
+	public static function isValidName($name)
+	{
+		$constants = self::getConstants();
+		return array_key_exists($name, $constants);
+	}
+
+	public static function isValidValue($value)
+	{
+		return in_array($value, self::getConstants(), true);
+	}
+
 	private static function checkConsistence($constants)
 	{
 		if (count(array_unique($constants)) !== count($constants)) {
@@ -73,17 +84,6 @@ abstract class Enum implements LabeledEnum
 		if (count($labels) !== count($constants) || count(array_diff($constants, array_keys($labels))) > 0) {
 			throw new InvalidEnumException(sprintf('Enum %s has inconsistent labels.', get_called_class()));
 		}
-	}
-
-	private static function isValidName($name)
-	{
-		$constants = self::getConstants();
-		return array_key_exists($name, $constants);
-	}
-
-	private static function isValidValue($value)
-	{
-		return in_array($value, self::getConstants(), true);
 	}
 
 }

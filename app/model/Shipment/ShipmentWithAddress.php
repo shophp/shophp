@@ -71,7 +71,7 @@ trait ShipmentWithAddress
 	 * @param string $city
 	 * @param string $zip
 	 */
-	public function setAddress($name, $street, $city, $zip)
+	public function setAddress($name = null, $street, $city, $zip)
 	{
 		$name = $name !== null ? (string) $name : null;
 		$street = (string) $street;

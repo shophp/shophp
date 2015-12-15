@@ -1,0 +1,7 @@
+{block pageTitle}Edit shipment{if $shipment->name} {$shipment->name}{/if}{/block}
+
+{block content}
+
+<h1>{include pageTitle}</h1>
+
+{control shipmentFormControl}
