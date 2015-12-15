@@ -59,6 +59,9 @@ class CreatePresenter extends \ShoPHP\Admin\BasePresenter
 				break;
 			case ShipmentType::BY_TRANSPORT_COMPANY:
 				$shipmentOption = new ShipmentTransportCompany($values->companyName, $values->price);
+				if ($values->enableFreeFromCertainOrderPrice) {
+					$shipmentOption->setMinimumOrderPriceToBeFree($values->minimumOrderPriceToBeFree);
+				}
 				break;
 			case ShipmentType::TO_COLLECTION_POINT:
 				$shipmentOption = new ShipmentCollectionPoint(
@@ -71,6 +74,9 @@ class CreatePresenter extends \ShoPHP\Admin\BasePresenter
 				if ($values->longitude !== '') {
 					$shipmentOption->setGps($values->longitude, $values->latitude);
 				}
+				if ($values->enableFreeFromCertainOrderPrice) {
+					$shipmentOption->setMinimumOrderPriceToBeFree($values->minimumOrderPriceToBeFree);
+				}
 				break;
 			default:
 				throw new \LogicException();
@@ -80,7 +86,7 @@ class CreatePresenter extends \ShoPHP\Admin\BasePresenter
 			if (!$form->hasErrors()) {
 				$this->shipmentService->create($shipmentOption);
 				$this->flashMessage('Shipment has been created.');
-//				todo $this->redirect('Edit:', ['id' => $shipmentOption->getId()]);
+				$this->redirect('Edit:', ['type' => $type->getValue(), 'id' => $shipmentOption->getId()]);
 			}
 		} catch (EntityDuplicateException $e) {
 			$form->addError(sprintf('Shipment company with name %s already exists.', $shipmentOption->getName()));
