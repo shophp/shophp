@@ -4,7 +4,7 @@ namespace ShoPHP\Front\Product;
 
 use Nette\Application\BadRequestException;
 use ShoPHP\Order\CartItem;
-use ShoPHP\Order\CartService;
+use ShoPHP\Order\CurrentCartService;
 use ShoPHP\Product\CategoryService;
 use ShoPHP\Product\Product;
 use ShoPHP\Product\ProductService;
@@ -21,24 +21,24 @@ class ProductPresenter extends \ShoPHP\Front\BasePresenter
 	/** @var CategoryService */
 	private $categoryService;
 
+	/** @var CurrentCartService */
+	private $currentCartService;
+
 	/** @var BuyFormFactory */
 	private $buyFormFactory;
-
-	/** @var CartService */
-	private $cartService;
 
 	public function __construct(
 		ProductService $productService,
 		CategoryService $categoryService,
-		CartService $cartService,
+		CurrentCartService $currentCartService,
 		BuyFormFactory $buyFormFactory
 	)
 	{
 		parent::__construct();
 		$this->productService = $productService;
 		$this->categoryService = $categoryService;
+		$this->currentCartService = $currentCartService;
 		$this->buyFormFactory = $buyFormFactory;
-		$this->cartService = $cartService;
 	}
 
 	/**
@@ -85,10 +85,10 @@ class ProductPresenter extends \ShoPHP\Front\BasePresenter
 	{
 		$values = $form->getValues();
 		$item = new CartItem($this->product, $values->amount);
-		$this->getCart()->addItem($item);
+		$this->currentCartService->getCurrentCart()->addItem($item);
 
 		if (!$form->hasErrors()) {
-			$this->cartService->save($this->getCart());
+			$this->currentCartService->saveCurrentCart();
 			if ($item->getAmount() > 1) {
 				$this->flashMessage(sprintf('%dx %s was added to cart.', $item->getAmount(), $this->product->getName()));
 			} else {

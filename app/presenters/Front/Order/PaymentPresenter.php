@@ -2,6 +2,7 @@
 
 namespace ShoPHP\Front\Order;
 
+use ShoPHP\Order\CurrentCartService;
 use ShoPHP\Order\Order;
 use ShoPHP\Order\OrderService;
 
@@ -11,10 +12,14 @@ class PaymentPresenter extends \ShoPHP\Front\Order\BasePresenter
 	/** @var OrderService */
 	private $orderService;
 
-	public function __construct(OrderService $orderService)
+	/** @var CurrentCartService */
+	private $currentCartService;
+
+	public function __construct(OrderService $orderService, CurrentCartService $currentCartService)
 	{
 		parent::__construct();
 		$this->orderService = $orderService;
+		$this->currentCartService = $currentCartService;
 	}
 
 	public function actionDefault()
@@ -33,9 +38,9 @@ class PaymentPresenter extends \ShoPHP\Front\Order\BasePresenter
 
 	private function createOrder(\Nette\Application\UI\Form $form)
 	{
-		$order = new Order($this->getCart());
+		$order = new Order($this->currentCartService->getCurrentCart());
 		$this->orderService->create($order);
-		$this->resetCart();
+		$this->currentCartService->resetCurrentCart();
 		$this->flashMessage('Ordered !');
 		$this->redirect(':Front:Order:Order:');
 	}

@@ -2,7 +2,7 @@
 
 namespace ShoPHP\Front\Order;
 
-use ShoPHP\Order\CartService;
+use ShoPHP\Order\CurrentCartService;
 
 class AddressPresenter extends \ShoPHP\Front\Order\BasePresenter
 {
@@ -10,14 +10,14 @@ class AddressPresenter extends \ShoPHP\Front\Order\BasePresenter
 	/** @var AddressFormFactory */
 	private $addressFormFactory;
 
-	/** @var CartService */
-	private $cartService;
+	/** @var CurrentCartService */
+	private $currentCartService;
 
-	public function __construct(AddressFormFactory $addressFormFactory, CartService $cartService)
+	public function __construct(AddressFormFactory $addressFormFactory, CurrentCartService $currentCartService)
 	{
 		parent::__construct();
 		$this->addressFormFactory = $addressFormFactory;
-		$this->cartService = $cartService;
+		$this->currentCartService = $currentCartService;
 	}
 
 	public function actionDefault()
@@ -26,7 +26,7 @@ class AddressPresenter extends \ShoPHP\Front\Order\BasePresenter
 
 	public function createComponentAddressForm()
 	{
-		$form = $this->addressFormFactory->create($this->getCart());
+		$form = $this->addressFormFactory->create($this->currentCartService->getCurrentCart());
 		$form->onSuccess[] = function(AddressForm $form) {
 			$this->updateAddress($form);
 		};
@@ -36,10 +36,10 @@ class AddressPresenter extends \ShoPHP\Front\Order\BasePresenter
 	private function updateAddress(AddressForm $form)
 	{
 		$values = $form->getValues();
-		$this->getCart()->setAddress($values->name, $values->street, $values->city, $values->zip);
+		$this->currentCartService->getCurrentCart()->setAddress($values->name, $values->street, $values->city, $values->zip);
 
 		if (!$form->hasErrors()) {
-			$this->cartService->save($this->getCart());
+			$this->currentCartService->saveCurrentCart();
 			$this->redirect(':Front:Order:Payment:');
 		}
 	}
