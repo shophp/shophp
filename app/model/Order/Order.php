@@ -39,4 +39,9 @@ class Order extends \Nette\Object
 		return $this->id;
 	}
 
+	public function getCart()
+	{
+		return $this->cart;
+	}
+
 }

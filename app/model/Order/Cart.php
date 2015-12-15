@@ -80,9 +80,9 @@ class Cart extends \Nette\Object
 		$this->items[] = $item;
 	}
 
-	public function getPrice()
+	public function getItemsPrice()
 	{
-		$price = 0;
+		$price = 0.0;
 		foreach ($this->getItems() as $item) {
 			$price += $item->getPrice();
 		}
@@ -103,6 +103,15 @@ class Cart extends \Nette\Object
 			return ShipmentType::createFromValue($this->shipmentType);
 		}
 		return null;
+	}
+
+	public function getPrice()
+	{
+		$price = $this->getItemsPrice();
+		if ($this->hasShipment()) {
+			$price += $this->getShipment()->getPrice();
+		}
+		return $price;
 	}
 
 	/**

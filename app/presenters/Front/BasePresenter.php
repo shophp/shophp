@@ -56,4 +56,11 @@ abstract class BasePresenter extends \ShoPHP\BasePresenter
 		return $this->cart;
 	}
 
+	protected function resetCart()
+	{
+		$this->cartService->resetCurrentCart();
+		$this->cart = $this->cartService->getCurrentCart();
+		return $this->cart;
+	}
+
 }

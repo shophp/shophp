@@ -1,0 +1,19 @@
+{block pageTitle}{_'Order complete'}{/block}
+
+{block content}
+
+<h1>{_'Order complete'}</h1>
+
+<ul>
+	<li n:foreach="$order->cart->items as $item">
+		{$item->amount}x {$item->product->name} ({$item->price|formatPrice})
+	</li>
+</ul>
+
+<div>
+	{_'Shipment'}: {$order->cart->shipment->price|formatPrice}
+</div>
+
+<div>
+	{_'Total'}: {$order->cart->price|formatPrice}
+</div>

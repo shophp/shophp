@@ -33,6 +33,9 @@ parameters:
 		"/cart/payment":
 			defaults: "Front:Order:Payment:default"
 
+		"/order":
+			defaults: "Front:Order:Order:default"
+
 		"/admin/<presenter>/<action>[/<id [0-9]+>]":
 			defaults:
 				module: Admin

@@ -42,6 +42,11 @@ class CartService extends \ShoPHP\EntityService
 		return new Cart();
 	}
 
+	public function resetCurrentCart()
+	{
+		unset($this->cartSession->cartId);
+	}
+
 	/**
 	 * @param int $id
 	 * @return CartItem|null

@@ -35,7 +35,9 @@ class PaymentPresenter extends \ShoPHP\Front\Order\BasePresenter
 	{
 		$order = new Order($this->getCart());
 		$this->orderService->create($order);
+		$this->resetCart();
 		$this->flashMessage('Ordered !');
+		$this->redirect(':Front:Order:Order:');
 	}
 
 }
