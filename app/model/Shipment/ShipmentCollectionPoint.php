@@ -11,9 +11,7 @@ use ShoPHP\EntityInvalidArgumentException;
 class ShipmentCollectionPoint extends \Nette\Object implements ShipmentOption
 {
 
-	use ShipmentWithAddress {
-		getDescription as getBaseDescription;
-	}
+	use ShipmentWithAddress;
 	use ShipmentFreeFromCertainOrderPrice;
 
 	/** @Id @Column(type="integer") @GeneratedValue * */
@@ -41,15 +39,6 @@ class ShipmentCollectionPoint extends \Nette\Object implements ShipmentOption
 	public function getPrice()
 	{
 		return $this->price;
-	}
-
-	public function getDescription()
-	{
-		$description = $this->getBaseDescription();
-		if ($this->getPrice() > 0) {
-			$description = sprintf('%s (%s)', $description, $this->getPrice()); // todo format with currency
-		}
-		return $description;
 	}
 
 	public function getType()

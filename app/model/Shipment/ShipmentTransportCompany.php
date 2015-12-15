@@ -54,15 +54,6 @@ class ShipmentTransportCompany extends \Nette\Object implements ShipmentOption
 		return $this->price;
 	}
 
-	public function getDescription()
-	{
-		$description = $this->getName();
-		if ($this->getPrice() > 0) {
-			$description = sprintf('%s (%s)', $description, $this->getPrice()); // todo format with currency
-		}
-		return $description;
-	}
-
 	public function getType()
 	{
 		return ShipmentType::BY_TRANSPORT_COMPANY();

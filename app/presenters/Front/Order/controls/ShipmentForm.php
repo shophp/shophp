@@ -6,6 +6,7 @@ use Nette\Forms\Controls\RadioList;
 use Nette\Forms\Controls\TextInput;
 use ShoPHP\Order\Shipment;
 use ShoPHP\Order\ShipmentByTransportCompany;
+use ShoPHP\Shipment\ShipmentHelper;
 use ShoPHP\Shipment\ShipmentService;
 use ShoPHP\Shipment\ShipmentType;
 
@@ -17,13 +18,17 @@ class ShipmentForm extends \Nette\Application\UI\Form
 	/** @var ShipmentService */
 	private $shipmentService;
 
+	/** @var ShipmentHelper */
+	private $shipmentHelper;
+
 	/** @var Shipment */
 	private $shipment;
 
-	public function __construct(ShipmentService $shipmentService, Shipment $shipment = null)
+	public function __construct(ShipmentService $shipmentService, ShipmentHelper $shipmentHelper, Shipment $shipment = null)
 	{
 		parent::__construct();
 		$this->shipmentService = $shipmentService;
+		$this->shipmentHelper = $shipmentHelper;
 		$this->shipment = $shipment;
 
 		$this->createFields();
@@ -45,20 +50,20 @@ class ShipmentForm extends \Nette\Application\UI\Form
 		$personalPoints = $this->shipmentService->getPersonalPoints();
 		foreach ($personalPoints as $personalPoint) {
 			$key = sprintf('%d-%d', ShipmentType::PERSONAL, $personalPoint->getId());
-			$shipmentOptions[$key] = sprintf('Personally at: %s', $personalPoint->getDescription());
+			$shipmentOptions[$key] = sprintf('Personally at: %s', $this->shipmentHelper->formatShipmentOption($personalPoint));
 		}
 
 		$collectionPoints = $this->shipmentService->getCollectionPoints();
 		foreach ($collectionPoints as $collectionPoint) {
 			$key = sprintf('%d-%d', ShipmentType::TO_COLLECTION_POINT, $collectionPoint->getId());
-			$shipmentOptions[$key] = sprintf('At collection point: %s', $collectionPoint->getDescription());
+			$shipmentOptions[$key] = sprintf('At collection point: %s', $this->shipmentHelper->formatShipmentOption($collectionPoint));
 		}
 
 		$transportCompanies = $this->shipmentService->getTransportCompanies();
 		$transportCompanyKeys = [];
 		foreach ($transportCompanies as $transportCompany) {
 			$key = sprintf('%d-%d', ShipmentType::BY_TRANSPORT_COMPANY, $transportCompany->getId());
-			$shipmentOptions[$key] = $transportCompany->getDescription();
+			$shipmentOptions[$key] = $this->shipmentHelper->formatShipmentOption($transportCompany);
 			$transportCompanyKeys[] = $key;
 		}
 

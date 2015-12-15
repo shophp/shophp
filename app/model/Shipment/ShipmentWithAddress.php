@@ -50,15 +50,6 @@ trait ShipmentWithAddress
 		return $this->zip;
 	}
 
-	public function getDescription()
-	{
-		$description = sprintf('%s %s %s', $this->getStreet(),  $this->getCity(), $this->getZip());
-		if ($this->hasName()) {
-			$description = sprintf('%s, %s', $this->getName(), $description);
-		}
-		return $description;
-	}
-
 	public function hasGps()
 	{
 		return $this->latitude !== null;

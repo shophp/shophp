@@ -18,12 +18,18 @@ services:
 
 	-
 		class: ShoPHP\TemplateFilters
+
+	-
+		class: ShoPHP\StringHelper
+
+	-
+		class: ShoPHP\MoneyHelper
 		arguments:
 			currency: %currency.symbol%
 			currencyWrittenAfter: %currency.writtenAfter%
 
 	-
-		class: ShoPHP\StringHelper
+		class: ShoPHP\Shipment\ShipmentHelper
 
 	-
 		class: ShoPHP\Translator
