@@ -42,6 +42,12 @@ class Cart extends \Nette\Object
 	 */
 	protected $shipmentToCollectionPoint;
 
+	/**
+	 * @OneToOne(targetEntity="\ShoPHP\Order\Order", mappedBy="cart")
+	 * @var Order|null
+	 */
+	private $order;
+
 	public function __construct()
 	{
 		$this->items = new ArrayCollection();
@@ -89,7 +95,7 @@ class Cart extends \Nette\Object
 	}
 
 	/**
-	 * @return ShipmentType
+	 * @return ShipmentType|null
 	 */
 	public function getShipmentType()
 	{
@@ -132,6 +138,25 @@ class Cart extends \Nette\Object
 		} elseif ($type->isToCollectionPoint()) {
 			$this->shipmentToCollectionPoint = $shipment;
 		}
+	}
+
+	public function isOrdered()
+	{
+		return $this->getOrder() !== null;
+	}
+
+	public function getOrder()
+	{
+		return $this->order;
+	}
+
+	public function setOrder(Order $order)
+	{
+		foreach ($this->getItems() as $item) {
+			$item->bakePrice();
+		}
+		$this->getShipment()->bakePrice();
+		$this->order = $order;
 	}
 
 }

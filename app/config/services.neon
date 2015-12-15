@@ -41,6 +41,9 @@ services:
 		class: ShoPHP\Order\CartService
 
 	-
+		class: ShoPHP\Order\OrderService
+
+	-
 		class: ShoPHP\Product\ProductService
 
 	-

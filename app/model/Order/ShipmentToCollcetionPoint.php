@@ -2,6 +2,7 @@
 
 namespace ShoPHP\Order;
 
+use ShoPHP\EntityInvalidArgumentException;
 use ShoPHP\Shipment\ShipmentCollectionPoint;
 
 /**
@@ -25,6 +26,9 @@ class ShipmentToCollectionPoint extends \Nette\Object implements Shipment
 	 * @var Cart
 	 */
 	protected $cart;
+
+	/** @Column(type="float", nullable=true) */
+	protected $price = null;
 
 	public function __construct(Cart $cart, ShipmentCollectionPoint $collectionPoint)
 	{
@@ -50,6 +54,23 @@ class ShipmentToCollectionPoint extends \Nette\Object implements Shipment
 	public function equals(Shipment $shipment)
 	{
 		return $shipment->getShipmentOption() === $this->getShipmentOption();
+	}
+
+	public function getPrice()
+	{
+		if ($this->price !== null) {
+			return $this->getShipmentOption()->getPrice();
+		} else {
+			return $this->price;
+		}
+	}
+
+	public function bakePrice()
+	{
+		if ($this->price !== null) {
+			throw new EntityInvalidArgumentException('Price already baked.');
+		}
+		$this->price = $this->getPrice();
 	}
 
 }

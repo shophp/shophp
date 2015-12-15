@@ -39,6 +39,9 @@ class ShipmentByTransportCompany extends \Nette\Object implements Shipment
 	/** @Column(type="string") */
 	protected $zip;
 
+	/** @Column(type="float", nullable=true) */
+	protected $price = null;
+
 	public function __construct(Cart $cart, ShipmentTransportCompany $transportCompany, $name, $street, $city, $zip)
 	{
 		$this->cart = $cart;
@@ -91,6 +94,23 @@ class ShipmentByTransportCompany extends \Nette\Object implements Shipment
 			&& $shipment->getStreet() === $this->getStreet()
 			&& $shipment->getCity() === $this->getCity()
 			&& $shipment->getZip() === $this->getZip();
+	}
+
+	public function getPrice()
+	{
+		if ($this->price !== null) {
+			return $this->price;
+		} else {
+			return $this->getShipmentOption()->getPrice();
+		}
+	}
+
+	public function bakePrice()
+	{
+		if ($this->price !== null) {
+			throw new EntityInvalidArgumentException('Price already baked.');
+		}
+		$this->price = $this->getPrice();
 	}
 
 	private function setAddress($name, $street, $city, $zip)

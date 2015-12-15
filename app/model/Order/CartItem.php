@@ -106,6 +106,7 @@ class CartItem extends \Nette\Object
 		if ($this->piecePrice !== null) {
 			throw new EntityInvalidArgumentException('Price already baked.');
 		}
+		$this->piecePrice = $this->getPiecePrice();
 	}
 
 }

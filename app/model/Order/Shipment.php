@@ -28,4 +28,11 @@ interface Shipment
 	 */
 	function equals(self $shipment);
 
+	/**
+	 * @return float
+	 */
+	function getPrice();
+
+	function bakePrice();
+
 }

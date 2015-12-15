@@ -52,4 +52,13 @@ class ShipmentPersonal extends \Nette\Object implements Shipment
 		return $shipment->getShipmentOption() === $this->getShipmentOption();
 	}
 
+	public function getPrice()
+	{
+		return 0.0;
+	}
+
+	public function bakePrice()
+	{
+	}
+
 }
