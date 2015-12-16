@@ -53,6 +53,9 @@ services:
 		class: ShoPHP\Shipment\ShipmentService
 
 	-
+		class: ShoPHP\User\UserService
+
+	-
 		implement: ShoPHP\Front\LoginFormFactory
 
 	-

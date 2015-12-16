@@ -8,3 +8,6 @@ application:
 
 session:
 	expiration: 14 days
+
+services:
+	authenticator: ShoPHP\Authenticator

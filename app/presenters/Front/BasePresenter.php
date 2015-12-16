@@ -2,7 +2,7 @@
 
 namespace ShoPHP\Front;
 
-use ShoPHP\Order\Cart;
+use Nette\Security\AuthenticationException;
 use ShoPHP\Order\CurrentCartService;
 use ShoPHP\Product\Category;
 use ShoPHP\Product\CategoryService;
@@ -19,18 +19,23 @@ abstract class BasePresenter extends \ShoPHP\BasePresenter
 	/** @var LoginFormFactory */
 	private $loginFormFactory;
 
+	/** @var \Nette\Security\User */
+	private $user;
+
 	/** @var Category */
 	private $currentCategory;
 
 	public function injectFrontBase(
 		CategoryService $categoryService,
 		CurrentCartService $currentCartService,
-		LoginFormFactory $loginFormFactory
+		LoginFormFactory $loginFormFactory,
+		\Nette\Security\User $user
 	)
 	{
 		$this->categoryService = $categoryService;
 		$this->currentCartService = $currentCartService;
 		$this->loginFormFactory = $loginFormFactory;
+		$this->user = $user;
 	}
 
 	public function beforeRender()
@@ -40,6 +45,7 @@ abstract class BasePresenter extends \ShoPHP\BasePresenter
 		$this->template->categories = $this->categoryService->getRoot();
 		$this->template->currentCategory = $this->currentCategory;
 		$this->template->cart = $this->currentCartService->getCurrentCart();
+		$this->template->user = $this->user;
 	}
 
 	protected function setCurrentCategory(Category $category)
@@ -49,7 +55,19 @@ abstract class BasePresenter extends \ShoPHP\BasePresenter
 
 	protected function createComponentLoginForm()
 	{
-		return $this->loginFormFactory->create();
+		$form = $this->loginFormFactory->create();
+
+		$form->onSuccess[] = function (LoginForm $form) {
+			$values = $form->getValues();
+			try {
+				$this->user->login($values->email, $values->password);
+				$this->redirect('this');
+			} catch (AuthenticationException $e) {
+				$this->flashMessage('Invalid credentials.', 'fail');
+			}
+		};
+
+		return $form;
 	}
 
 }

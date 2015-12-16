@@ -23,7 +23,11 @@
 		</aside>
 
 		<aside>
-			{control loginForm}
+			{if $user->loggedIn}
+				{$user->identity->email}
+			{else}
+				{control loginForm}
+			{/if}
 		</aside>
 	</header>
 
