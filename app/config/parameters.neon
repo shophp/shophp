@@ -13,3 +13,6 @@ parameters:
 	currency:
 		symbol: $
 		writtenAfter: Yes
+
+	session:
+		expiration: 14 days

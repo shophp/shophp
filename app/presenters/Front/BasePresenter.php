@@ -2,10 +2,7 @@
 
 namespace ShoPHP\Front;
 
-use Nette\Security\AuthenticationException;
-use ShoPHP\LoginForm;
 use ShoPHP\LoginFormFactory;
-use ShoPHP\LogoutForm;
 use ShoPHP\LogoutFormFactory;
 use ShoPHP\Order\CurrentCartService;
 use ShoPHP\Product\Category;
@@ -65,25 +62,16 @@ abstract class BasePresenter extends \ShoPHP\BasePresenter
 	protected function createComponentLoginForm()
 	{
 		$form = $this->loginFormFactory->create();
-
-		$form->onSuccess[] = function (LoginForm $form) {
-			$values = $form->getValues();
-			try {
-				$this->user->login($values->email, $values->password);
-				$this->redirect('this');
-			} catch (AuthenticationException $e) {
-				$this->flashMessage('Invalid credentials.', 'fail');
-			}
+		$form->onSuccess[] = function () {
+			$this->redirect('this');
 		};
-
 		return $form;
 	}
 
 	protected function createComponentLogoutForm()
 	{
 		$form = $this->logoutFormFactory->create();
-		$form->onSuccess[] = function (LogoutForm $form) {
-			$this->user->logout();
+		$form->onSuccess[] = function () {
 			$this->redirect('this');
 		};
 		return $form;

@@ -7,7 +7,7 @@ application:
 		*: ShoPHP\*\*Presenter
 
 session:
-	expiration: 14 days
+	expiration: %session.expiration%
 
 services:
 	authenticator: ShoPHP\Authenticator

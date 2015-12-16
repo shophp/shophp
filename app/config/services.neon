@@ -57,6 +57,8 @@ services:
 
 	-
 		implement: ShoPHP\LoginFormFactory
+		arguments:
+			permanentLoginExpiration: %session.expiration%
 
 	-
 		implement: ShoPHP\LogoutFormFactory

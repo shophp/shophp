@@ -2,13 +2,24 @@
 
 namespace ShoPHP;
 
+use Nette\Security\AuthenticationException;
+
 class LoginForm extends \Nette\Application\UI\Form
 {
 
-	public function __construct()
+	/** @var \Nette\Security\User*/
+	private $user;
+
+	/**
+	 * @param string $permanentLoginExpiration
+	 */
+	public function __construct(\Nette\Security\User $user, $permanentLoginExpiration)
 	{
 		parent::__construct();
+		$this->user = $user;
+
 		$this->createFields();
+		$this->addEventListeners($permanentLoginExpiration);
 	}
 
 	private function createFields()
@@ -36,6 +47,28 @@ class LoginForm extends \Nette\Application\UI\Form
 	private function addPermanentControl()
 	{
 		$this->addCheckbox('permanent', 'Do not logout');
+	}
+
+	private function addEventListeners($permanentLoginExpiration)
+	{
+		$this->onValidate[] = function () {
+			$values = $this->getValues();
+			try {
+				$this->user->login($values->email, $values->password);
+			} catch (AuthenticationException $e) {
+				$this->addError('Invalid credentials.');
+			}
+		};
+
+		$this->onSuccess[] = function () use ($permanentLoginExpiration) {
+			$values = $this->getValues();
+
+			if ($values->permanent) {
+				$this->user->setExpiration($permanentLoginExpiration, false);
+			} else {
+				$this->user->setExpiration(0, true);
+			}
+		};
 	}
 
 }
