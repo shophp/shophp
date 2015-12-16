@@ -6,6 +6,10 @@
 
 {control orderForm}
 
+<div n:if="!$user->loggedIn">
+	<a n:href=":Front:User:Registration: backlink => $presenter->storeRequest()">{_'Register'}</a>
+</div>
+
 <div>
 	<a n:href=":Front:Order:Shipment:">{_'Back'}</a>
 </div>

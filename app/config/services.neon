@@ -67,6 +67,9 @@ services:
 		implement: ShoPHP\Front\Product\BuyFormFactory
 
 	-
+		implement: ShoPHP\Front\User\RegistrationFormFactory
+
+	-
 		implement: ShoPHP\Front\Order\CartFormFactory
 
 	-

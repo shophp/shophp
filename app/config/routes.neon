@@ -36,6 +36,9 @@ parameters:
 		"/order":
 			defaults: "Front:Order:Order:default"
 
+		"/registration":
+			defaults: "Front:User:Registration:default"
+
 		"/admin/<presenter>/<action>[/<id [0-9]+>]":
 			defaults:
 				module: Admin
