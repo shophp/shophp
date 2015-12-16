@@ -25,6 +25,7 @@
 		<aside>
 			{if $user->loggedIn}
 				{$user->identity->email}
+				{control logoutForm}
 			{else}
 				{control loginForm}
 			{/if}

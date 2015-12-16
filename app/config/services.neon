@@ -56,7 +56,10 @@ services:
 		class: ShoPHP\User\UserService
 
 	-
-		implement: ShoPHP\Front\LoginFormFactory
+		implement: ShoPHP\LoginFormFactory
+
+	-
+		implement: ShoPHP\LogoutFormFactory
 
 	-
 		implement: ShoPHP\Front\Product\BuyFormFactory

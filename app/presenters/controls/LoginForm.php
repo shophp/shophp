@@ -1,6 +1,6 @@
 <?php
 
-namespace ShoPHP\Front;
+namespace ShoPHP;
 
 class LoginForm extends \Nette\Application\UI\Form
 {

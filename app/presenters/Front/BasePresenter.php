@@ -3,6 +3,10 @@
 namespace ShoPHP\Front;
 
 use Nette\Security\AuthenticationException;
+use ShoPHP\LoginForm;
+use ShoPHP\LoginFormFactory;
+use ShoPHP\LogoutForm;
+use ShoPHP\LogoutFormFactory;
 use ShoPHP\Order\CurrentCartService;
 use ShoPHP\Product\Category;
 use ShoPHP\Product\CategoryService;
@@ -19,6 +23,9 @@ abstract class BasePresenter extends \ShoPHP\BasePresenter
 	/** @var LoginFormFactory */
 	private $loginFormFactory;
 
+	/** @var LogoutFormFactory */
+	private $logoutFormFactory;
+
 	/** @var \Nette\Security\User */
 	private $user;
 
@@ -29,12 +36,14 @@ abstract class BasePresenter extends \ShoPHP\BasePresenter
 		CategoryService $categoryService,
 		CurrentCartService $currentCartService,
 		LoginFormFactory $loginFormFactory,
+		LogoutFormFactory $logoutFormFactory,
 		\Nette\Security\User $user
 	)
 	{
 		$this->categoryService = $categoryService;
 		$this->currentCartService = $currentCartService;
 		$this->loginFormFactory = $loginFormFactory;
+		$this->logoutFormFactory = $logoutFormFactory;
 		$this->user = $user;
 	}
 
@@ -67,6 +76,16 @@ abstract class BasePresenter extends \ShoPHP\BasePresenter
 			}
 		};
 
+		return $form;
+	}
+
+	protected function createComponentLogoutForm()
+	{
+		$form = $this->logoutFormFactory->create();
+		$form->onSuccess[] = function (LogoutForm $form) {
+			$this->user->logout();
+			$this->redirect('this');
+		};
 		return $form;
 	}
 
