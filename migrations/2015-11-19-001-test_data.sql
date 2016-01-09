@@ -7,6 +7,6 @@ INSERT INTO `categories` (`id`, `parent_id`, `name`, `path`) VALUES
 (6,	3,	'Medium wedding cakes',	'cakes/wedding-cakes/medium'),
 (7,	3,	'Big wedding cakes',	'cakes/wedding-cakes/big');
 
-INSERT INTO `products` (`id`, `name`, `description`, `price`, `discountPercent`) VALUES
-(1,	'Muffin cake',	'Tasty muffin.',	150,	0),
-(2,	'Swiss chocolate',	'From Swiss.',	98,	10);
+INSERT INTO `products` (`id`, `name`, `path`, `description`, `price`, `discount`) VALUES
+(1,	'Muffin cake',  '',	'Tasty muffin.',	150,	0),
+(2,	'Swiss chocolate',  '',	'From Swiss.',	98,	10);
