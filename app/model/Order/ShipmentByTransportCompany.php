@@ -12,7 +12,7 @@ use ShoPHP\Shipment\ShipmentTransportCompany;
 class ShipmentByTransportCompany extends \Nette\Object implements Shipment
 {
 
-	/** @Id @Column(type="integer") @GeneratedValue * */
+	/** @Id @Column(type="integer") @GeneratedValue */
 	protected $id;
 
 	/**

@@ -11,7 +11,7 @@ class ShipmentPersonalPoint extends \Nette\Object implements ShipmentOption
 
 	use ShipmentWithAddress;
 
-	/** @Id @Column(type="integer") @GeneratedValue * */
+	/** @Id @Column(type="integer") @GeneratedValue */
 	protected $id;
 
 	public function __construct($name, $street, $city, $zip)

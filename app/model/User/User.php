@@ -15,13 +15,13 @@ class User extends \Nette\Object implements \Nette\Security\IIdentity
 
 	const PASSWORD_MIN_LENGTH = 3;
 
-	/** @Id @Column(type="integer") @GeneratedValue * */
+	/** @Id @Column(type="integer") @GeneratedValue */
 	protected $id;
 
-	/** @Column(type="string") * */
+	/** @Column(type="string") */
 	protected $email;
 
-	/** @Column(type="string") * */
+	/** @Column(type="string") */
 	protected $password;
 
 	public function __construct($email, $password)

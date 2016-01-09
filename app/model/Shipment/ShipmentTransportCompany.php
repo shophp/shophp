@@ -13,7 +13,7 @@ class ShipmentTransportCompany extends \Nette\Object implements ShipmentOption
 
 	use ShipmentWithPrice;
 
-	/** @Id @Column(type="integer") @GeneratedValue * */
+	/** @Id @Column(type="integer") @GeneratedValue */
 	protected $id;
 
 	/** @Column(type="string") */

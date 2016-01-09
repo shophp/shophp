@@ -14,7 +14,7 @@ class ShipmentCollectionPoint extends \Nette\Object implements ShipmentOption
 	use ShipmentWithAddress;
 	use ShipmentWithPrice;
 
-	/** @Id @Column(type="integer") @GeneratedValue * */
+	/** @Id @Column(type="integer") @GeneratedValue */
 	protected $id;
 
 	public function __construct($name, $street, $city, $zip, $price)

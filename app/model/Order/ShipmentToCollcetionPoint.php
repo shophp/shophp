@@ -12,7 +12,7 @@ use ShoPHP\Shipment\ShipmentCollectionPoint;
 class ShipmentToCollectionPoint extends \Nette\Object implements Shipment
 {
 
-	/** @Id @Column(type="integer") @GeneratedValue * */
+	/** @Id @Column(type="integer") @GeneratedValue */
 	protected $id;
 
 	/**

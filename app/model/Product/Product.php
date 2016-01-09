@@ -12,22 +12,22 @@ use ShoPHP\EntityInvalidArgumentException;
 class Product extends \Nette\Object
 {
 
-	/** @Id @Column(type="integer") @GeneratedValue * */
+	/** @Id @Column(type="integer") @GeneratedValue */
 	protected $id;
 
-	/** @Column(type="string") * */
+	/** @Column(type="string") */
 	protected $name;
 
-	/** @Column(type="string") * */
+	/** @Column(type="string") */
 	protected $path;
 
-	/** @Column(type="string") * */
+	/** @Column(type="string") */
 	protected $description;
 
-	/** @Column(type="float") * */
+	/** @Column(type="float") */
 	protected $price;
 
-	/** @Column(type="float") * */
+	/** @Column(type="float") */
 	protected $discount = 0;
 
 	/**

@@ -12,7 +12,7 @@ use ShoPHP\Shipment\ShipmentType;
 class Cart extends \Nette\Object
 {
 
-	/** @Id @Column(type="integer") @GeneratedValue * */
+	/** @Id @Column(type="integer") @GeneratedValue */
 	protected $id;
 
 	/**
