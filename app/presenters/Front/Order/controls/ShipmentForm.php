@@ -9,6 +9,7 @@ use ShoPHP\Order\ShipmentByTransportCompany;
 use ShoPHP\Shipment\ShipmentHelper;
 use ShoPHP\Shipment\ShipmentService;
 use ShoPHP\Shipment\ShipmentType;
+use ShoPHP\User\User;
 
 class ShipmentForm extends \Nette\Application\UI\Form
 {
@@ -24,12 +25,21 @@ class ShipmentForm extends \Nette\Application\UI\Form
 	/** @var Shipment */
 	private $shipment;
 
-	public function __construct(ShipmentService $shipmentService, ShipmentHelper $shipmentHelper, Shipment $shipment = null)
+	/** @var User */
+	private $user;
+
+	public function __construct(
+		ShipmentService $shipmentService,
+		ShipmentHelper $shipmentHelper,
+		Shipment $shipment = null,
+		User $user = null
+	)
 	{
 		parent::__construct();
 		$this->shipmentService = $shipmentService;
 		$this->shipmentHelper = $shipmentHelper;
 		$this->shipment = $shipment;
+		$this->user = $user;
 
 		$this->createFields();
 	}
@@ -88,6 +98,11 @@ class ShipmentForm extends \Nette\Application\UI\Form
 			$defaultStreet = $this->shipment->getStreet();
 			$defaultCity = $this->shipment->getCity();
 			$defaultZip = $this->shipment->getZip();
+		} elseif ($this->user !== null) {
+			$defaultName = $this->user->getName();
+			$defaultStreet = $this->user->getStreet();
+			$defaultCity = $this->user->getCity();
+			$defaultZip = $this->user->getZip();
 		}
 		$requiring = function (TextInput $control) use ($shipmentControl, $transportCompanyKeys) {
 			return $control->addConditionOn($shipmentControl, self::IS_IN, $transportCompanyKeys);
