@@ -3,6 +3,7 @@
 namespace ShoPHP\Order;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use ShoPHP\EntityImmutableException;
 use ShoPHP\Shipment\ShipmentType;
 use ShoPHP\User\User;
 
@@ -77,6 +78,8 @@ class Cart extends \Nette\Object
 
 	public function addItem(CartItem $item)
 	{
+		$this->checkMutability();
+
 		foreach ($this->items as $addedItem) {
 			if ($addedItem->getProduct() === $item->getProduct()) {
 				$addedItem->addAmount($item->getAmount());
@@ -140,6 +143,8 @@ class Cart extends \Nette\Object
 
 	public function setShipment(Shipment $shipment)
 	{
+		$this->checkMutability();
+
 		$this->shipmentPersonal = null;
 		$this->shipmentByTransportCompany = null;
 		$this->shipmentToCollectionPoint = null;
@@ -168,6 +173,8 @@ class Cart extends \Nette\Object
 
 	public function setUser(User $user)
 	{
+		$this->checkMutability();
+
 		$this->user = $user;
 	}
 
@@ -183,6 +190,8 @@ class Cart extends \Nette\Object
 
 	public function setOrder(Order $order)
 	{
+		$this->checkMutability();
+
 		foreach ($this->getItems() as $item) {
 			$item->bakePrice();
 		}
@@ -190,6 +199,13 @@ class Cart extends \Nette\Object
 			$this->getShipment()->bakePrice();
 		}
 		$this->order = $order;
+	}
+
+	private function checkMutability()
+	{
+		if ($this->isOrdered()) {
+			throw new EntityImmutableException('Ordered cart cannot be modified.');
+		}
 	}
 
 }
