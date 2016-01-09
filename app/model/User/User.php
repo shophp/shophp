@@ -24,10 +24,22 @@ class User extends \Nette\Object implements \Nette\Security\IIdentity
 	/** @Column(type="string") */
 	protected $password;
 
+	/** @Column(type="string", nullable=true) */
+	protected $name;
+
+	/** @Column(type="string", nullable=true) */
+	protected $street;
+
+	/** @Column(type="string", nullable=true) */
+	protected $city;
+
+	/** @Column(type="string", nullable=true) */
+	protected $zip;
+
 	public function __construct($email, $password)
 	{
-		$email = (string) $email;
-		$password = (string) $password;
+		$email = (string)$email;
+		$password = (string)$password;
 		if (!Validators::isEmail($email)) {
 			throw new EntityInvalidArgumentException(sprintf('Invalid e-mail %s.', $email));
 		}
@@ -47,6 +59,87 @@ class User extends \Nette\Object implements \Nette\Security\IIdentity
 	public function getEmail()
 	{
 		return $this->email;
+	}
+
+	public function hasAddress()
+	{
+		return $this->getName() !== null;
+	}
+
+	public function getName()
+	{
+		return $this->name;
+	}
+
+	public function hasName()
+	{
+		return $this->getName() !== null;
+	}
+
+	public function setName($name)
+	{
+		$name = (string) $name;
+		if ($name === '') {
+			$name = null;
+		}
+		$this->name = $name;
+	}
+
+	public function getStreet()
+	{
+		return $this->street;
+	}
+
+	public function hasStreet()
+	{
+		return $this->getStreet() !== null;
+	}
+
+	public function setStreet($street)
+	{
+		$street = (string) $street;
+		if ($street === '') {
+			$street = null;
+		}
+		$this->street = $street;
+	}
+
+	public function getCity()
+	{
+		return $this->city;
+	}
+
+	public function hasCity()
+	{
+		return $this->getCity() !== null;
+	}
+
+	public function setCity($city)
+	{
+		$city = (string) $city;
+		if ($city === '') {
+			$city = null;
+		}
+		$this->city = $city;
+	}
+
+	public function getZip()
+	{
+		return $this->zip;
+	}
+
+	public function hasZip()
+	{
+		return $this->getZip() !== null;
+	}
+
+	public function setZip($zip)
+	{
+		$zip = (string) $zip;
+		if ($zip === '') {
+			$zip = null;
+		}
+		$this->zip = $zip;
 	}
 
 	public function equalsPassword($password)

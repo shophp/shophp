@@ -58,7 +58,10 @@ class RegistrationPresenter extends \ShoPHP\Front\BasePresenter
 	{
 		$values = $form->getValues();
 		$user = new User($values->email, $values->password);
-		// todo store address
+		$user->setName($values->name);
+		$user->setStreet($values->street);
+		$user->setCity($values->city);
+		$user->setZip($values->zip);
 
 		try {
 			if (!$form->hasErrors()) {
