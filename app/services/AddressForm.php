@@ -9,6 +9,8 @@ trait AddressForm
 
 	use RequiredFormFieldResolution;
 
+	abstract protected function addText($name, $label = null, $cols = null, $maxLength = null);
+
 	/**
 	 * @param bool|callable $required
 	 */
