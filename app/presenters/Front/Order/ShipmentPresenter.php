@@ -5,6 +5,7 @@ namespace ShoPHP\Front\Order;
 use Nette\Security\User;
 use ShoPHP\Order\CartService;
 use ShoPHP\Order\CurrentCartService;
+use ShoPHP\Shipment\ShipmentService;
 
 class ShipmentPresenter extends \ShoPHP\Front\Order\BasePresenter
 {
@@ -18,6 +19,9 @@ class ShipmentPresenter extends \ShoPHP\Front\Order\BasePresenter
 	/** @var CartService */
 	private $cartService;
 
+	/** @var ShipmentService */
+	private $shipmentService;
+
 	/** @var User */
 	private $user;
 
@@ -25,6 +29,7 @@ class ShipmentPresenter extends \ShoPHP\Front\Order\BasePresenter
 		ShipmentFormFactory $shipmentFormFactory,
 		CurrentCartService $currentCartService,
 		CartService $cartService,
+		ShipmentService $shipmentService,
 		User $user
 	)
 	{
@@ -32,11 +37,15 @@ class ShipmentPresenter extends \ShoPHP\Front\Order\BasePresenter
 		$this->shipmentFormFactory = $shipmentFormFactory;
 		$this->currentCartService = $currentCartService;
 		$this->cartService = $cartService;
+		$this->shipmentService = $shipmentService;
 		$this->user = $user;
 	}
 
 	public function actionDefault()
 	{
+		if (!$this->shipmentService->existsAnyShipmentOption()) {
+			$this->redirect(':Front:Order:Payment:');
+		}
 	}
 
 	public function createComponentShipmentForm()

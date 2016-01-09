@@ -5,6 +5,7 @@ namespace ShoPHP\Front\Order;
 use ShoPHP\Order\CurrentCartService;
 use ShoPHP\Order\Order;
 use ShoPHP\Order\OrderService;
+use ShoPHP\Shipment\ShipmentService;
 
 class PaymentPresenter extends \ShoPHP\Front\Order\BasePresenter
 {
@@ -15,15 +16,28 @@ class PaymentPresenter extends \ShoPHP\Front\Order\BasePresenter
 	/** @var CurrentCartService */
 	private $currentCartService;
 
-	public function __construct(OrderService $orderService, CurrentCartService $currentCartService)
+	/** @var ShipmentService */
+	private $shipmentService;
+
+	public function __construct(
+		OrderService $orderService,
+		CurrentCartService $currentCartService,
+		ShipmentService $shipmentService
+	)
 	{
 		parent::__construct();
 		$this->orderService = $orderService;
 		$this->currentCartService = $currentCartService;
+		$this->shipmentService = $shipmentService;
 	}
 
 	public function actionDefault()
 	{
+	}
+
+	public function renderDefault()
+	{
+		$this->template->offersShipment = $this->shipmentService->existsAnyShipmentOption();
 	}
 
 	protected function createComponentOrderForm()

@@ -11,5 +11,6 @@
 </div>
 
 <div>
-	<a n:href=":Front:Order:Shipment:">{_'Back'}</a>
+	<a n:if="$offersShipment" n:href=":Front:Order:Shipment:">{_'Back'}</a>
+	<a n:if="!$offersShipment" n:href=":Front:Order:Cart:">{_'Back'}</a>
 </div>

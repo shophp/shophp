@@ -9,6 +9,9 @@ use ShoPHP\EntityDuplicateException;
 class ShipmentService extends \ShoPHP\EntityService
 {
 
+	/** @var EntityManagerInterface */
+	private $entityManager;
+
 	/** @var ObjectRepository */
 	private $personalPointRepository;
 
@@ -21,6 +24,7 @@ class ShipmentService extends \ShoPHP\EntityService
 	public function __construct(EntityManagerInterface $entityManager)
 	{
 		parent::__construct($entityManager);
+		$this->entityManager = $entityManager;
 		$this->personalPointRepository = $entityManager->getRepository(ShipmentPersonalPoint::class);
 		$this->transportCompanyRepository = $entityManager->getRepository(ShipmentTransportCompany::class);
 		$this->collectionPointRepository = $entityManager->getRepository(ShipmentCollectionPoint::class);
@@ -36,6 +40,29 @@ class ShipmentService extends \ShoPHP\EntityService
 	{
 		$this->checkDuplicity($shipment);
 		$this->updateEntity($shipment);
+	}
+
+	public function existsAnyShipmentOption()
+	{
+		$query = $this->entityManager->createQuery('SELECT 1 FROM ShoPHP\\Shipment\\ShipmentPersonalPoint');
+		$query->setMaxResults(1);
+		if (count($query->getResult()) > 0) {
+			return true;
+		}
+
+		$query = $this->entityManager->createQuery('SELECT 1 FROM ShoPHP\\Shipment\\ShipmentCollectionPoint');
+		$query->setMaxResults(1);
+		if (count($query->getResult()) > 0) {
+			return true;
+		}
+
+		$query = $this->entityManager->createQuery('SELECT 1 FROM ShoPHP\\Shipment\\ShipmentTransportCompany');
+		$query->setMaxResults(1);
+		if (count($query->getResult()) > 0) {
+			return true;
+		}
+
+		return false;
 	}
 
 	/**

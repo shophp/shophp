@@ -26,5 +26,6 @@
 {/form}
 
 <div>
-	<a n:href=":Front:Order:Shipment:">{_'Next'}</a>
+	<a n:if="$offersShipment" n:href=":Front:Order:Shipment:">{_'Next'}</a>
+	<a n:if="!$offersShipment" n:href=":Front:Order:Payment:">{_'Next'}</a>
 </div>

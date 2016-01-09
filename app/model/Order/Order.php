@@ -26,9 +26,6 @@ class Order extends \Nette\Object
 		if (count($cart->getItems()) === 0) {
 			throw new InvalidEnumException('Cannot create order from empty cart.');
 		}
-		if (!$cart->hasShipment()) {
-			throw new InvalidEnumException('Cannot create order from cart without shipment.');
-		}
 
 		$cart->setOrder($this);
 		$this->cart = $cart;

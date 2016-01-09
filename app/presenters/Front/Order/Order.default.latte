@@ -10,7 +10,7 @@
 	</li>
 </ul>
 
-<div>
+<div n:if="$order->cart->shipment">
 	{_'Shipment'}: {$order->cart->shipment->price|formatPrice}
 </div>
 

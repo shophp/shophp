@@ -164,7 +164,9 @@ class Cart extends \Nette\Object
 		foreach ($this->getItems() as $item) {
 			$item->bakePrice();
 		}
-		$this->getShipment()->bakePrice();
+		if ($this->hasShipment()) {
+			$this->getShipment()->bakePrice();
+		}
 		$this->order = $order;
 	}
 

@@ -4,6 +4,7 @@ namespace ShoPHP\Front\Order;
 
 use ShoPHP\Order\CartService;
 use ShoPHP\Order\CurrentCartService;
+use ShoPHP\Shipment\ShipmentService;
 
 class CartPresenter extends \ShoPHP\Front\Order\BasePresenter
 {
@@ -17,20 +18,30 @@ class CartPresenter extends \ShoPHP\Front\Order\BasePresenter
 	/** @var CartService */
 	private $cartService;
 
+	/** @var ShipmentService */
+	private $shipmentService;
+
 	public function __construct(
 		CartFormFactory $cartFormFactory,
 		CurrentCartService $currentCartService,
-		CartService $cartService
+		CartService $cartService,
+		ShipmentService $shipmentService
 	)
 	{
 		parent::__construct();
 		$this->cartFormFactory = $cartFormFactory;
 		$this->currentCartService = $currentCartService;
 		$this->cartService = $cartService;
+		$this->shipmentService = $shipmentService;
 	}
 
 	public function actionDefault()
 	{
+	}
+
+	public function renderDefault()
+	{
+		$this->template->offersShipment = $this->shipmentService->existsAnyShipmentOption();
 	}
 
 	public function createComponentCartForm()
