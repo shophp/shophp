@@ -4,6 +4,7 @@ namespace ShoPHP\Order;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use ShoPHP\Shipment\ShipmentType;
+use ShoPHP\User\User;
 
 /**
  * @Entity
@@ -46,7 +47,13 @@ class Cart extends \Nette\Object
 	 * @OneToOne(targetEntity="\ShoPHP\Order\Order", mappedBy="cart")
 	 * @var Order|null
 	 */
-	private $order;
+	protected $order;
+
+	/**
+	 * @ManyToOne(targetEntity="\ShoPHP\User\User", inversedBy="carts")
+	 * @var User|null
+	 */
+	protected $user;
 
 	public function __construct()
 	{
@@ -147,6 +154,21 @@ class Cart extends \Nette\Object
 		} elseif ($type->isToCollectionPoint()) {
 			$this->shipmentToCollectionPoint = $shipment;
 		}
+	}
+
+	public function hasUser()
+	{
+		return $this->getUser() !== null;
+	}
+
+	public function getUser()
+	{
+		return $this->user;
+	}
+
+	public function setUser(User $user)
+	{
+		$this->user = $user;
 	}
 
 	public function isOrdered()

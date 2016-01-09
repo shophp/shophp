@@ -59,4 +59,10 @@ class CurrentCartService extends \Nette\Object
 		}
 	}
 
+	public function setCurrentCart(Cart $cart)
+	{
+		$this->currentCart = $cart;
+		$this->cartSession->cartId = $cart->getId();
+	}
+
 }

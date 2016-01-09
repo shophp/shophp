@@ -2,9 +2,11 @@
 
 namespace ShoPHP\User;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Nette\Security\Passwords;
 use Nette\Utils\Validators;
 use ShoPHP\EntityInvalidArgumentException;
+use ShoPHP\Order\Cart;
 
 /**
  * @Entity
@@ -36,6 +38,12 @@ class User extends \Nette\Object implements \Nette\Security\IIdentity
 	/** @Column(type="string", nullable=true) */
 	protected $zip;
 
+	/**
+	 * @OneToMany(targetEntity="\ShoPHP\Order\Cart", mappedBy="user")
+	 * @var Cart[]
+	 */
+	protected $carts;
+
 	public function __construct($email, $password)
 	{
 		$email = (string)$email;
@@ -49,6 +57,8 @@ class User extends \Nette\Object implements \Nette\Security\IIdentity
 
 		$this->email = $email;
 		$this->password = Passwords::hash($password);
+
+		$this->carts = new ArrayCollection();
 	}
 
 	public function getId()
@@ -150,6 +160,25 @@ class User extends \Nette\Object implements \Nette\Security\IIdentity
 	public function getRoles()
 	{
 		return [];
+	}
+
+	public function hasAnyCart()
+	{
+		return count($this->getCarts()) > 0;
+	}
+
+	public function getCarts()
+	{
+		return $this->carts;
+	}
+
+	public function getLastCart()
+	{
+		if (!$this->hasAnyCart()) {
+			return null;
+		}
+
+		return $this->getCarts()->last();
 	}
 
 }
