@@ -52,8 +52,7 @@ class PaymentPresenter extends \ShoPHP\Front\Order\BasePresenter
 
 	private function createOrder(\Nette\Application\UI\Form $form)
 	{
-		$order = new Order($this->currentCartService->getCurrentCart());
-		$this->orderService->create($order);
+		$order = $this->orderService->createFromCart($this->currentCartService->getCurrentCart());
 		$this->currentCartService->resetCurrentCart();
 		$this->flashMessage('Ordered !');
 		$this->redirect(':Front:Order:Order:');
