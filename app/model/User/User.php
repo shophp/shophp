@@ -181,5 +181,22 @@ class User extends \Nette\Object implements \Nette\Security\IIdentity
 		return $this->getCarts()->last();
 	}
 
+	public function hasAnyOrder()
+	{
+		return count($this->getOrders()) > 0;
+	}
+
+	public function getOrders()
+	{
+		$orders = [];
+		foreach ($this->getCarts() as $cart) {
+			if ($cart->isOrdered()) {
+				$orders[] = $cart->getOrder();
+			}
+		}
+
+		return $orders;
+	}
+
 }
 

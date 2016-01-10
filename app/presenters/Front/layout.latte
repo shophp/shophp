@@ -25,6 +25,9 @@
 		<aside>
 			{if $user->loggedIn}
 				{$user->identity->email}
+				<a n:href=":Front:Proprietary:MyOrders:">
+					{_'My orders'}
+				</a>
 				{control logoutForm}
 			{else}
 				{control loginForm}

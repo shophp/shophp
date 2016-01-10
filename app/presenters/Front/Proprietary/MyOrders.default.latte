@@ -1,0 +1,16 @@
+{block pageTitle}{_'My orders'}{/block}
+
+{block content}
+
+<h1>{include pageTitle}</h1>
+
+{if $customer->hasAnyOrder()}
+	<ul>
+		<li n:foreach="$customer->orders as $order">
+			{include ../../controls/orderSummary.latte, order => $order}
+		</li>
+	</ul>
+
+{else}
+	No orders...
+{/if}

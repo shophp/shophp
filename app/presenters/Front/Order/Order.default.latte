@@ -4,16 +4,4 @@
 
 <h1>{_'Order complete'}</h1>
 
-<ul>
-	<li n:foreach="$order->cart->items as $item">
-		{$item->amount}x {$item->product->name} ({$item->price|formatPrice})
-	</li>
-</ul>
-
-<div n:if="$order->cart->shipment">
-	{_'Shipment'}: {$order->cart->shipment->price|formatPrice}
-</div>
-
-<div>
-	{_'Total'}: {$order->cart->price|formatPrice}
-</div>
+{include ../../controls/orderSummary.latte}

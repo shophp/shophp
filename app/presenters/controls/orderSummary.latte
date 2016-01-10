@@ -1,0 +1,15 @@
+<h2>{$order->id}</h2>
+
+<ul>
+	<li n:foreach="$order->cart->items as $item">
+		{$item->amount}x {$item->product->name} ({$item->price|formatPrice})
+	</li>
+</ul>
+
+<div n:if="$order->cart->shipment">
+	{_'Shipment'}: {$order->cart->shipment->price|formatPrice}
+</div>
+
+<div>
+	{_'Total'}: {$order->cart->price|formatPrice}
+</div>

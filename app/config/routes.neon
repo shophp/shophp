@@ -36,6 +36,9 @@ parameters:
 		"/order":
 			defaults: "Front:Order:Order:default"
 
+		"/my-orders":
+			defaults: "Front:Proprietary:MyOrders:default"
+
 		"/registration":
 			defaults: "Front:User:Registration:default"
 
