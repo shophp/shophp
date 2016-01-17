@@ -59,9 +59,9 @@ abstract class BasePresenter extends \Nette\Application\UI\Presenter
 	 */
 	public function formatLayoutTemplateFiles()
 	{
-		$module = substr($this->getName(), 0, strpos($this->getName(), ':'));
+		$dir = dirname(dirname($this->getReflection()->getFileName()));
 		return [
-			sprintf('%s/%s/layout.latte', __DIR__, $module),
+			sprintf('%s/layout.latte', $dir),
 		];
 	}
 
