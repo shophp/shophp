@@ -1,0 +1,29 @@
+application:
+	mapping:
+		Front: YourNamespace\*\*Presenter
+
+parameters:
+
+	projectName: Your project name
+
+	doctrine:
+		paths:
+			- %appDir%/../vendor/shophp/shophp/app/model
+		connection:
+			driver: pdo_mysql
+			charset: utf8
+			collation: utf8_bin
+
+			# it is highly recommended to place following sensitive data
+			# into separated config file and do not expose it into versioning system
+			host: localhost
+			dbname: database_name
+			user: user
+			password: password
+
+	currency:
+		symbol: $
+		writtenAfter: Yes
+
+	session:
+		expiration: 14 days
