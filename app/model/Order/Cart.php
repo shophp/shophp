@@ -76,6 +76,15 @@ class Cart extends \Nette\Object
 		return $this->items;
 	}
 
+	public function getItemsAmount()
+	{
+		$amount = 0;
+		foreach ($this->getItems() as $item) {
+			$amount += $item->getAmount();
+		}
+		return $amount;
+	}
+
 	public function addItem(CartItem $item)
 	{
 		$this->checkMutability();
