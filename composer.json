@@ -16,5 +16,6 @@
 	},
 	"autoload": {
 		"classmap": ["app/"]
-	}
+	},
+  	"bin": ["bin/shophp-db-update.bat"]
 }
