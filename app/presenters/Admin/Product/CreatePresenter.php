@@ -2,9 +2,11 @@
 
 namespace ShoPHP\Admin\Product;
 
+use Nette\Http\FileUpload;
 use ShoPHP\Product\CategoryService;
 use ShoPHP\EntityDuplicateException;
 use ShoPHP\Product\Product;
+use ShoPHP\Product\ProductImageService;
 use ShoPHP\Product\ProductService;
 
 class CreatePresenter extends \ShoPHP\Admin\BasePresenter
@@ -16,18 +18,23 @@ class CreatePresenter extends \ShoPHP\Admin\BasePresenter
 	/** @var ProductService */
 	private $productService;
 
+	/** @var ProductImageService */
+	private $productImageService;
+
 	/** @var CategoryService */
 	private $categoryService;
 
 	public function __construct(
 		ProductFormControlFactory $productFormControlFactory,
 		ProductService $productService,
+		ProductImageService $productImageService,
 		CategoryService $categoryService
 	)
 	{
 		parent::__construct();
 		$this->productFormControlFactory = $productFormControlFactory;
 		$this->productService = $productService;
+		$this->productImageService = $productImageService;
 		$this->categoryService = $categoryService;
 	}
 
@@ -56,6 +63,10 @@ class CreatePresenter extends \ShoPHP\Admin\BasePresenter
 			$product->setNominalDiscount($values->nominalDiscount);
 		}
 		$product->setCategories($this->categoryService->getByIds($values->categories));
+		/** @var FileUpload $fileUpload */
+		foreach ($values->imagesUpload as $fileUpload) {
+			$this->productImageService->create($product, $fileUpload);
+		}
 
 		try {
 			if (!$form->hasErrors()) {

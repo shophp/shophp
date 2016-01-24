@@ -15,6 +15,9 @@ class ProductFormControl extends \ShoPHP\BaseControl
 	/** @var ProductFormFactory */
 	private $productFormFactory;
 
+	/** @var string */
+	private $imagesDir;
+
 	/** @var Product|null */
 	private $editedProduct;
 
@@ -22,12 +25,14 @@ class ProductFormControl extends \ShoPHP\BaseControl
 		CategoryService $categoryService,
 		ProductFormFactory $productFormFactory,
 		ITranslator $translator,
+		$imagesDir,
 		Product $editedProduct = null
 	)
 	{
 		parent::__construct($translator);
 		$this->categoryService = $categoryService;
 		$this->productFormFactory = $productFormFactory;
+		$this->imagesDir = $imagesDir;
 		$this->editedProduct = $editedProduct;
 	}
 
@@ -46,9 +51,11 @@ class ProductFormControl extends \ShoPHP\BaseControl
 
 	public function render()
 	{
+		$this->template->product = $this->editedProduct;
 		$this->template->categories = $this->categoryService->getRoot();
 		$this->template->formDiscountPercentKey = ProductForm::DISCOUNT_PERCENT;
 		$this->template->formDiscountNominalKey = ProductForm::DISCOUNT_NOMINAL;
+		$this->template->imagesDir = $this->imagesDir;
 		$this->template->setFile(__DIR__ . '/ProductFormControl.latte');
 		$this->template->render();
 	}

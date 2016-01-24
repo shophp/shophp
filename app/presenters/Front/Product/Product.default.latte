@@ -4,6 +4,14 @@
 
 <h1>{$currentProduct->name}</h1>
 
+<ul n:if="$currentProduct->hasImages()">
+	<li n:foreach="$currentProduct->images as $image">
+		<a href="{$basePath}/{$imagesDir}/{$image->path}" target="_blank">
+			<img src="{$basePath}/{$imagesDir}/{$image->path}" title="{$image->description}" style="width: 25%;">
+		</a>
+	</li>
+</ul>
+
 <div class="product-description">
 	{$currentProduct->description}
 </div>

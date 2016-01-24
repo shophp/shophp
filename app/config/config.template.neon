@@ -25,5 +25,10 @@ parameters:
 		symbol: $
 		writtenAfter: Yes
 
+	product:
+		images:
+			dir: %appDir%/../public/images/products
+			publicPath: images/products
+
 	session:
 		expiration: 14 days

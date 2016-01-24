@@ -50,6 +50,11 @@ services:
 		class: ShoPHP\Product\ProductService
 
 	-
+		class: ShoPHP\Product\ProductImageService
+		arguments:
+			imagesDir: %product.images.dir%
+
+	-
 		class: ShoPHP\Shipment\ShipmentService
 
 	-
@@ -83,6 +88,8 @@ services:
 
 	-
 		implement: ShoPHP\Admin\Product\ProductFormControlFactory
+		arguments:
+			imagesDir: %product.images.publicPath%
 
 	-
 		implement: ShoPHP\Admin\Category\CategoriesFormFactory

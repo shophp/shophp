@@ -1,0 +1,6 @@
+services:
+
+	-
+		class: ShoPHP\Front\Product\ProductPresenter
+		arguments:
+			imagesDir: %product.images.publicPath%

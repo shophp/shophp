@@ -2,6 +2,7 @@
 
 namespace ShoPHP\Product;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Nette\Utils\Strings;
 use ShoPHP\EntityInvalidArgumentException;
 
@@ -42,6 +43,12 @@ class Product extends \Nette\Object
 	protected $categories;
 
 	/**
+	 * @OneToMany(targetEntity="\ShoPHP\Product\ProductImage", mappedBy="product")
+	 * @var ProductImage[]
+	 */
+	protected $images;
+
+	/**
 	 * @param string $name
 	 * @param float $price
 	 */
@@ -50,6 +57,7 @@ class Product extends \Nette\Object
 		$this->setName($name);
 		$this->setOriginalPrice($price);
 		$this->categories = new Categories();
+		$this->images = new ArrayCollection();
 	}
 
 	public function getId()
@@ -217,5 +225,30 @@ class Product extends \Nette\Object
 			$idsAdded[$category->getId()] = true;
 		}
 	}
-}
 
+	public function hasImages()
+	{
+		return count($this->images) > 0;
+	}
+
+	public function getImages()
+	{
+		static $sorted = false;
+		if (!$sorted) {
+			$images = $this->images->toArray();
+			usort($images, function(ProductImage $imageA, ProductImage $imageB) {
+				return $imageA->getOrder() === $imageB->getOrder() ? 0 : ($imageA->getOrder() > $imageB->getOrder() ? 1 : -1);
+			});
+			$this->images = new ArrayCollection($images);
+			$sorted = true;
+		}
+
+		return $this->images;
+	}
+
+	public function addImage(ProductImage $image)
+	{
+		$this->images[] = $image;
+	}
+
+}

@@ -27,11 +27,15 @@ class ProductPresenter extends \ShoPHP\Front\BasePresenter
 	/** @var BuyFormFactory */
 	private $buyFormFactory;
 
+	/** @var string */
+	private $imagesDir;
+
 	public function __construct(
 		ProductService $productService,
 		CategoryService $categoryService,
 		CurrentCartService $currentCartService,
-		BuyFormFactory $buyFormFactory
+		BuyFormFactory $buyFormFactory,
+		$imagesDir
 	)
 	{
 		parent::__construct();
@@ -39,6 +43,7 @@ class ProductPresenter extends \ShoPHP\Front\BasePresenter
 		$this->categoryService = $categoryService;
 		$this->currentCartService = $currentCartService;
 		$this->buyFormFactory = $buyFormFactory;
+		$this->imagesDir = $imagesDir;
 	}
 
 	/**
@@ -70,6 +75,7 @@ class ProductPresenter extends \ShoPHP\Front\BasePresenter
 	public function renderDefault()
 	{
 		$this->template->currentProduct = $this->product;
+		$this->template->imagesDir = $this->imagesDir;
 	}
 
 	protected function createComponentBuyForm()

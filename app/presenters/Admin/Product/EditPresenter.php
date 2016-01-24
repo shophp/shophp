@@ -3,9 +3,12 @@
 namespace ShoPHP\Admin\Product;
 
 use Nette\Application\BadRequestException;
+use Nette\Http\FileUpload;
+use Nette\Utils\ArrayHash;
 use ShoPHP\Product\CategoryService;
 use ShoPHP\EntityDuplicateException;
 use ShoPHP\Product\Product;
+use ShoPHP\Product\ProductImageService;
 use ShoPHP\Product\ProductService;
 
 class EditPresenter extends \ShoPHP\Admin\BasePresenter
@@ -17,6 +20,9 @@ class EditPresenter extends \ShoPHP\Admin\BasePresenter
 	/** @var ProductService */
 	private $productService;
 
+	/** @var ProductImageService */
+	private $productImageService;
+
 	/** @var CategoryService */
 	private $categoryService;
 
@@ -26,12 +32,14 @@ class EditPresenter extends \ShoPHP\Admin\BasePresenter
 	public function __construct(
 		ProductFormControlFactory $productFormControlFactory,
 		ProductService $productService,
+		ProductImageService $productImageService,
 		CategoryService $categoryService
 	)
 	{
 		parent::__construct();
 		$this->productFormControlFactory = $productFormControlFactory;
 		$this->productService = $productService;
+		$this->productImageService = $productImageService;
 		$this->categoryService = $categoryService;
 	}
 
@@ -76,6 +84,25 @@ class EditPresenter extends \ShoPHP\Admin\BasePresenter
 		}
 		$this->product->setCategories($this->categoryService->getByIds($values->categories));
 
+		if ($this->product->hasImages()) {
+			$fixedOrders = $this->fixOrders($values->images);
+			foreach ($values->images as $imageId => $imageData) {
+				$imageId = (int)$imageId;
+				$image = $this->productImageService->getById($imageId);
+				if ((bool)$imageData->remove) {
+					$this->productImageService->delete($image);
+				} else {
+					$image->setDescription($imageData->description === '' ? null : $imageData->description);
+					$image->setOrder($fixedOrders[$imageId]);
+				}
+			}
+		}
+
+		/** @var FileUpload $fileUpload */
+		foreach ($values->imagesUpload as $fileUpload) {
+			$this->productImageService->create($this->product, $fileUpload);
+		}
+
 		try {
 			if (!$form->hasErrors()) {
 				$this->productService->update($this->product);
@@ -86,6 +113,37 @@ class EditPresenter extends \ShoPHP\Admin\BasePresenter
 		} catch (EntityDuplicateException $e) {
 			$form->addError(sprintf('Product with name %s already exists.', $this->product->getName()));
 		}
+	}
+
+	private function fixOrders(ArrayHash $imagesData)
+	{
+		$fixedOrders = iterator_to_array($imagesData);
+		uasort($fixedOrders, function ($imageDataA, $imageDataB) {
+			$removeA = (bool) $imageDataA->remove;
+			$removeB = (bool) $imageDataB->remove;
+			if ($removeA && $removeB) {
+				return 0;
+			}
+			if ($removeA) {
+				return 1;
+			}
+			if ($removeB) {
+				return -1;
+			}
+			$orderA = (int) $imageDataA->order;
+			$orderB = (int) $imageDataB->order;
+			return $orderA === $orderB ? 1 : ($orderA > $orderB ? 1 : -1);
+		});
+
+		$sequence = 1;
+		foreach ($fixedOrders as & $order) {
+			if ((bool) $order->remove) {
+				break;
+			}
+			$order = $sequence++;
+		}
+
+		return $fixedOrders;
 	}
 
 }

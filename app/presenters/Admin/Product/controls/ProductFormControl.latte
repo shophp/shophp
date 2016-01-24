@@ -28,6 +28,86 @@
 			<th>{label description /}</th>
 			<td>{input description}</td>
 		</tr>
+
+		{if $product !== null && $product->hasImages()}
+			{formContainer images}
+				{capture $removeConfirm}{_'Really remove the image?'}{/capture}
+				<script>
+					$(function () {
+						var correctNavigation = function () {
+							var blocks = $('.js-image-block:visible');
+							blocks.find('.js-image-move-ahead').show();
+							blocks.find('.js-image-move-behind').show();
+							blocks.first().find('.js-image-move-behind').hide();
+							blocks.last().find('.js-image-move-ahead').hide();
+						};
+
+						var moveImage = function (block, ahead) {
+							var siblingBlock = ahead ? block.nextAll('.js-image-block:visible:first') : block.prevAll('.js-image-block:visible:first');
+							if (siblingBlock.length == 0) {
+								return;
+							}
+							var orderInput = block.find('.js-image-order');
+							var siblingOrderInput = siblingBlock.find('.js-image-order');
+							var order = orderInput.val();
+							orderInput.val(siblingOrderInput.val());
+							siblingOrderInput.val(order);
+							ahead ? siblingBlock.after(block) : siblingBlock.before(block);
+							correctNavigation();
+						}
+
+						$('.js-image-move-ahead').on('click', function(event) {
+							event.preventDefault();
+							moveImage($(this).closest('.js-image-block'), true);
+						});
+						$('.js-image-move-behind').on('click', function(event) {
+							event.preventDefault();
+							moveImage($(this).closest('.js-image-block'), false);
+						});
+
+						$('.js-image-remove').on('click', function(event) {
+							event.preventDefault();
+							if (!confirm({$removeConfirm})) {
+								return;
+							}
+							var block = $(this).closest('.js-image-block');
+							block.find('.js-image-remove-switch').val(1);
+							block.hide();
+							correctNavigation();
+						});
+
+						correctNavigation();
+					});
+				</script>
+
+				<tr>
+					<td colspan="2">
+						<ul>
+							<li n:foreach="$product->images as $image" class="js-image-block" data-image-id="{$image->id}">
+								{formContainer $image->id}
+									<a href="{$basePath}/{$imagesDir}/{$image->path}" target="_blank">
+										<img src="{$basePath}/{$imagesDir}/{$image->path}" title="{$image->description}" style="width: 10%;">
+									</a>
+									<a href="#" class="js-image-remove">x</a>
+									<br>
+									{label description}{input description}{/label}
+									<br>
+									<a href="#" class="js-image-move-behind">&lt;</a>
+									<a href="#" class="js-image-move-ahead">&gt;</a>
+									{input order, class => "js-image-order"}
+									{input remove, class => "js-image-remove-switch"}
+								{/formContainer}
+							</li>
+						</ul>
+					</td>
+				</tr>
+			{/formContainer}
+		{/if}
+
+		<tr>
+			<th>{label imagesUpload /}</th>
+			<td>{input imagesUpload}</td>
+		</tr>
 		<tr>
 			<th>{label price /}</th>
 			<td>{input price}</td>

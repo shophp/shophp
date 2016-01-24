@@ -35,6 +35,7 @@ class ProductForm extends \Nette\Application\UI\Form
 		$priceControl = $this->addOriginalPriceControl();
 		$this->addDiscountControls($priceControl);
 		$this->addCategoriesControl();
+		$this->addImageControl();
 		$this->addSubmit('send', $this->editedProduct !== null ? 'Update' : 'Create');
 	}
 
@@ -130,6 +131,26 @@ class ProductForm extends \Nette\Application\UI\Form
 				return $category->getId();
 			}, $checkedIds);
 			$control->setDefaultValue($checkedIds);
+		}
+	}
+
+	private function addImageControl()
+	{
+		$this->addUpload('imagesUpload', 'Image', true)
+			->addRule(self::IMAGE, 'File must be an image.');
+
+		if ($this->editedProduct !== null && $this->editedProduct->hasImages()) {
+			$container = $this->addContainer('images');
+			foreach ($this->editedProduct->getImages() as $image) {
+				$imageContainer = $container->addContainer($image->getId());
+
+				$imageContainer->addText('description', 'Image description')
+					->setDefaultValue($image->getDescription());
+
+				$imageContainer->addHidden('order', $image->getOrder());
+
+				$imageContainer->addHidden('remove', false);
+			}
 		}
 	}
 
