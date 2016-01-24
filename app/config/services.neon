@@ -15,6 +15,7 @@ services:
 		arguments:
 			paths: %doctrine.paths%
 			isDevMode: %debugMode%
+			proxyDir: %doctrine.proxyDir%
 
 	-
 		class: ShoPHP\TemplateFilters

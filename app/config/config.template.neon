@@ -9,6 +9,7 @@ parameters:
 	doctrine:
 		paths:
 			- %appDir%/../vendor/shophp/shophp/app/model
+		proxyDir: %appDir%/../temp
 		connection:
 			driver: pdo_mysql
 			charset: utf8
