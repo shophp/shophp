@@ -4,6 +4,7 @@ namespace ShoPHP\Order;
 
 use Doctrine\Common\Persistence\ObjectRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\Tools\Pagination\Paginator;
 use Nette\Http\Session;
 use Nette\Http\SessionSection;
 use Nette\Utils\Random;
@@ -14,6 +15,9 @@ class OrderService extends \ShoPHP\EntityService
 	/** @var ObjectRepository */
 	private $repository;
 
+	/** @var EntityManagerInterface */
+	private $entityManager;
+
 	/** @var SessionSection */
 	private $orderSession;
 
@@ -21,6 +25,7 @@ class OrderService extends \ShoPHP\EntityService
 	{
 		parent::__construct($entityManager);
 		$this->repository = $entityManager->getRepository(Order::class);
+		$this->entityManager = $entityManager;
 		$orderSession = $session->getSection('order');
 		$orderSession->setExpiration('+ 30 minutes');
 		$this->orderSession = $orderSession;
@@ -47,6 +52,22 @@ class OrderService extends \ShoPHP\EntityService
 		$this->createEntity($order);
 		$this->orderSession->orderId = $order->getId();
 		return $order;
+	}
+
+	/**
+	 * @return Order[]|\Traversable
+	 */
+	public function getAll($limit, $offset)
+	{
+		$query = $this->entityManager->createQuery(sprintf(
+			'SELECT o FROM %s o',
+			Order::class
+		));
+
+		$query->setFirstResult($offset)
+			->setMaxResults($limit);
+
+		return new Paginator($query);
 	}
 
 	private function existsOrderWithNumber($number)

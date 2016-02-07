@@ -1,0 +1,64 @@
+{block pageTitle}Orders{/block}
+
+{block content}
+
+<h1>{include pageTitle}</h1>
+
+{if count($orders) > 0}
+	<table>
+		<thead>
+			<tr>
+				<th>{_'Order no.'}</th>
+				<th>{_'Customer'}</th>
+				<th>{_'Items'}</th>
+				<th>{_'Shipment'}</th>
+				<th>{_'Total price'}</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr n:foreach="$orders as $order">
+				<td>{$order->number}</td>
+				<td>
+					{if $order->cart->hasUser()}
+						{$order->cart->user->email}
+						{if $order->cart->user->hasName()}({$order->cart->user->name}){/if}
+					{else}
+						-
+					{/if}
+				</td>
+				<td>
+					<ul>
+						<li n:foreach="$order->cart->items as $item">
+							<span class="order-item-amount">
+								{$item->amount}x
+							</span>
+							<strong>
+								<a n:href=":Front:Product:Product: path => $item->product->path">
+									{$item->product->name}
+								</a>
+							</strong>
+							<span class="order-item-price">
+								{$item->price|formatPrice}
+							</span>
+						</li>
+					</ul>
+				</td>
+				<td>
+					{if $order->cart->hasShipment()}
+						{$order->cart->shipment->shipmentOption|formatShipmentOption}
+					{else}
+						-
+					{/if}
+				</td>
+				<td>
+					{$order->cart->price|formatPrice}
+				</td>
+			</tr>
+		</tbody>
+	</table>
+
+	{control paginator}
+
+{else}
+	No orders...
+{/if}

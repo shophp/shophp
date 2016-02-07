@@ -67,6 +67,9 @@ services:
 			permanentLoginExpiration: %session.expiration%
 
 	-
+		implement: ShoPHP\PaginatorControlFactory
+
+	-
 		implement: ShoPHP\LogoutFormFactory
 
 	-

@@ -96,15 +96,14 @@ class Product extends \Nette\Object
 			));
 
 		} elseif ($fromCategory === null) {
-			foreach ($this->getCategories() as $category) {
-				if ($category === $fromCategory) {
-					$fromCategory = $category;
-					break;
-				}
-			}
+			$fromCategory = $this->getMainCategory();
 		}
 
-		return sprintf('%s/%s', $fromCategory->getPath(), $this->path);
+		if ($fromCategory === null) {
+			return $this->path;
+		} else {
+			return sprintf('%s/%s', $fromCategory->getPath(), $this->path);
+		}
 	}
 
 	public function getDescription()
@@ -192,6 +191,11 @@ class Product extends \Nette\Object
 			$this->categories = new Categories(iterator_to_array($this->categories));
 		}
 		return $this->categories;
+	}
+
+	public function getMainCategory()
+	{
+		return count($this->categories) > 0 ? $this->categories[0] : null;
 	}
 
 	public function belongsIntoCategory(Category $category)

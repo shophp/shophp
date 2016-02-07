@@ -1,0 +1,37 @@
+<ul class="paginator">
+	{if $startingPage !== 1}
+		<li>
+			<a href="{plink this, $pageParameter => 1}">1</a>
+		</li>
+		{if $startingPage !== 2}
+			<li class="paginator-ellipsis">...</li>
+		{/if}
+	{/if}
+
+	{if $paginator->pageCount > 1}
+		{var $page = $startingPage}
+		{while $page <= $closingPage}
+			<li>
+				<a href="{plink this, $pageParameter => $page}" n:tag-if="$page !== $paginator->page">{$page}</a>
+			</li>
+			{var $page = $page + 1}
+		{/while}
+	{/if}
+
+	{if $closingPage !== $paginator->pageCount}
+		{if $closingPage !== $paginator->pageCount - 1}
+			<li class="paginator-ellipsis">...</li>
+		{/if}
+		<li>
+			<a href="{plink this, $pageParameter => $paginator->pageCount}">{$paginator->pageCount}</a>
+		</li>
+	{/if}
+	{if $hasUndisclosed}
+		<li class="paginator-info">
+			{var $offsetSince = $paginator->offset + 1}
+			{var $offsetTo = $paginator->offset + $paginator->itemsPerPage}
+			{var $offsetTo = $offsetTo > $paginator->itemCount ? $paginator->itemCount : $offsetTo}
+			({$offsetSince} - {$offsetTo} / {$paginator->itemCount})
+		</li>
+	{/if}
+</ul>
