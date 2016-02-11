@@ -48,13 +48,13 @@ class CreatePresenter extends \ShoPHP\Admin\BasePresenter
 		switch ($type->getValue()) {
 			case ShipmentType::PERSONAL:
 				$shipmentOption = new ShipmentPersonalPoint(
-					$values->name !== '' ? $values->name : null,
-					$values->street,
-					$values->city,
-					$values->zip
+					$values->address->name !== '' ? $values->address->name : null,
+					$values->address->street,
+					$values->address->city,
+					$values->address->zip
 				);
-				if ($values->longitude !== '') {
-					$shipmentOption->setGps($values->longitude, $values->latitude);
+				if ($values->address->longitude !== '') {
+					$shipmentOption->setGps($values->address->longitude, $values->address->latitude);
 				}
 				break;
 			case ShipmentType::BY_TRANSPORT_COMPANY:
@@ -65,14 +65,14 @@ class CreatePresenter extends \ShoPHP\Admin\BasePresenter
 				break;
 			case ShipmentType::TO_COLLECTION_POINT:
 				$shipmentOption = new ShipmentCollectionPoint(
-					$values->name !== '' ? $values->name : null,
-					$values->street,
-					$values->city,
-					$values->zip,
+					$values->address->name !== '' ? $values->address->name : null,
+					$values->address->street,
+					$values->address->city,
+					$values->address->zip,
 					$values->price
 				);
-				if ($values->longitude !== '') {
-					$shipmentOption->setGps($values->longitude, $values->latitude);
+				if ($values->address->longitude !== '') {
+					$shipmentOption->setGps($values->address->longitude, $values->address->latitude);
 				}
 				if ($values->enableFreeFromCertainOrderPrice) {
 					$shipmentOption->setMinimumOrderPriceToBeFree($values->minimumOrderPriceToBeFree);

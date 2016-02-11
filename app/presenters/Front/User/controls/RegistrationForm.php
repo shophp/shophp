@@ -2,12 +2,11 @@
 
 namespace ShoPHP\Front\User;
 
+use ShoPHP\AddressFormContainer;
 use ShoPHP\User\User;
 
 class RegistrationForm extends \Nette\Application\UI\Form
 {
-
-	use \ShoPHP\AddressForm;
 
 	public function __construct()
 	{
@@ -41,10 +40,12 @@ class RegistrationForm extends \Nette\Application\UI\Form
 
 	private function addAddressControls()
 	{
-		$this->addNameControl('name', null, false);
-		$this->addStreetControl('street', null, false);
-		$this->addCityControl('city', null, false);
-		$this->addZipControl('zip', null, false);
+		$addressContainer = new AddressFormContainer();
+		$this->addComponent($addressContainer, 'address');
+		$addressContainer->addNameControl('name', null, false);
+		$addressContainer->addStreetControl('street', null, false);
+		$addressContainer->addCityControl('city', null, false);
+		$addressContainer->addZipControl('zip', null, false);
 	}
 
 }

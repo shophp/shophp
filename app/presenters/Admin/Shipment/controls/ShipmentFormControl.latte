@@ -18,31 +18,33 @@
 		</tr>
 	</table>
 
-	<table n:ifset="$_form[name]" id="shipment-address">
-		<tr>
-			<th>{label name /}</th>
-			<td>{input name}</td>
-		</tr>
-		<tr>
-			<th>{label street /}</th>
-			<td>{input street}</td>
-		</tr>
-		<tr>
-			<th>{label city /}</th>
-			<td>{input city}</td>
-		</tr>
-		<tr>
-			<th>{label zip /}</th>
-			<td>{input zip}</td>
-		</tr>
-		<tr>
-			<th>{label longitude /}</th>
-			<td>{input longitude}</td>
-		</tr>
-		<tr>
-			<th>{label latitude /}</th>
-			<td>{input latitude}</td>
-		</tr>
+	<table n:ifset="$_form[address]" id="shipment-address">
+		{formContainer address}
+			<tr>
+				<th>{label name /}</th>
+				<td>{input name}</td>
+			</tr>
+			<tr>
+				<th>{label street /}</th>
+				<td>{input street}</td>
+			</tr>
+			<tr>
+				<th>{label city /}</th>
+				<td>{input city}</td>
+			</tr>
+			<tr>
+				<th>{label zip /}</th>
+				<td>{input zip}</td>
+			</tr>
+			<tr>
+				<th>{label longitude /}</th>
+				<td>{input longitude}</td>
+			</tr>
+			<tr>
+				<th>{label latitude /}</th>
+				<td>{input latitude}</td>
+			</tr>
+		{/formContainer}
 	</table>
 
 	<table n:ifset="$_form[price]" id="shipment-price">

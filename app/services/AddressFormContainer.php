@@ -2,19 +2,19 @@
 
 namespace ShoPHP;
 
+use Nette\Forms\Container;
 use Nette\Forms\Controls\TextInput;
+use Nette\Forms\Form;
 
-trait AddressForm
+class AddressFormContainer extends Container
 {
 
 	use RequiredFormFieldResolution;
 
-	abstract protected function addText($name, $label = null, $cols = null, $maxLength = null);
-
 	/**
 	 * @param bool|callable $required
 	 */
-	protected function addNameControl($name, $defaultValue = null, $required = false)
+	public function addNameControl($name, $defaultValue = null, $required = false)
 	{
 		/** @var TextInput $control */
 		$control = $this->addText($name, 'Your name');
@@ -26,7 +26,7 @@ trait AddressForm
 	/**
 	 * @param bool|callable $required
 	 */
-	protected function addStreetControl($name, $defaultValue = null, $required = false)
+	public function addStreetControl($name, $defaultValue = null, $required = false)
 	{
 		/** @var TextInput $control */
 		$control = $this->addText($name, 'Street and house number');
@@ -38,7 +38,7 @@ trait AddressForm
 	/**
 	 * @param bool|callable $required
 	 */
-	protected function addCityControl($name, $defaultValue = null, $required = false)
+	public function addCityControl($name, $defaultValue = null, $required = false)
 	{
 		/** @var TextInput $control */
 		$control = $this->addText($name, 'City');
@@ -50,7 +50,7 @@ trait AddressForm
 	/**
 	 * @param bool|callable $required
 	 */
-	protected function addZipControl($name, $defaultValue = null, $required = false)
+	public function addZipControl($name, $defaultValue = null, $required = false)
 	{
 		/** @var TextInput $control */
 		$control = $this->addText($name, 'Zip');
@@ -62,7 +62,7 @@ trait AddressForm
 	/**
 	 * @return TextInput[]
 	 */
-	protected function addGpsControls($longitudeName, $latitudeName, $defaultLongitude = null, $defaultLatitude = null, $required = false)
+	public function addGpsControls($longitudeName, $latitudeName, $defaultLongitude = null, $defaultLatitude = null, $required = false)
 	{
 		/** @var TextInput $longitudeControl */
 		$errorMessage = 'Longitude must be number from -180 to 180.';
@@ -70,9 +70,9 @@ trait AddressForm
 		$longitudeControl->setType('number')
 			->setAttribute('step', 'any')
 			->setDefaultValue($defaultLongitude)
-			->addCondition(self::FILLED)
-				->addRule(self::FLOAT, $errorMessage)
-				->addRule(self::RANGE, $errorMessage, [-180, 180]);
+			->addCondition(Form::FILLED)
+			->addRule(Form::FLOAT, $errorMessage)
+			->addRule(Form::RANGE, $errorMessage, [-180, 180]);
 
 		$this->resolveRequiring($longitudeControl, 'Please fill longitude.', $required);
 
@@ -82,17 +82,17 @@ trait AddressForm
 		$latitudeControl->setType('number')
 			->setAttribute('step', 'any')
 			->setDefaultValue($defaultLatitude)
-			->addCondition(self::FILLED)
-				->addRule(self::FLOAT, $errorMessage)
-				->addRule(self::RANGE, $errorMessage, [-90, 90]);
+			->addCondition(Form::FILLED)
+			->addRule(Form::FLOAT, $errorMessage)
+			->addRule(Form::RANGE, $errorMessage, [-90, 90]);
 
 		$this->resolveRequiring($latitudeControl, 'Please fill latitude.', $required);
 
 		$errorMessage = 'Please fill both longitude and latitude.';
-		$longitudeControl->addConditionOn($latitudeControl, self::FILLED)
-			->addRule(self::FILLED, $errorMessage);
-		$latitudeControl->addConditionOn($longitudeControl, self::FILLED)
-			->addRule(self::FILLED, $errorMessage);
+		$longitudeControl->addConditionOn($latitudeControl, Form::FILLED)
+			->addRule(Form::FILLED, $errorMessage);
+		$latitudeControl->addConditionOn($longitudeControl, Form::FILLED)
+			->addRule(Form::FILLED, $errorMessage);
 
 		return [$longitudeControl, $latitudeControl];
 	}

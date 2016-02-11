@@ -4,6 +4,7 @@ namespace ShoPHP\Front\Order;
 
 use Nette\Forms\Controls\RadioList;
 use Nette\Forms\Controls\TextInput;
+use ShoPHP\AddressFormContainer;
 use ShoPHP\Order\Shipment;
 use ShoPHP\Order\ShipmentByTransportCompany;
 use ShoPHP\Shipment\ShipmentHelper;
@@ -13,8 +14,6 @@ use ShoPHP\User\User;
 
 class ShipmentForm extends \Nette\Application\UI\Form
 {
-
-	use \ShoPHP\AddressForm;
 
 	/** @var ShipmentService */
 	private $shipmentService;
@@ -71,10 +70,12 @@ class ShipmentForm extends \Nette\Application\UI\Form
 
 		$transportCompanies = $this->shipmentService->getTransportCompanies();
 		$transportCompanyKeys = [];
+		$hasTransportCompany = false;
 		foreach ($transportCompanies as $transportCompany) {
 			$key = sprintf('%d-%d', ShipmentType::BY_TRANSPORT_COMPANY, $transportCompany->getId());
 			$shipmentOptions[$key] = $this->shipmentHelper->formatShipmentOption($transportCompany);
 			$transportCompanyKeys[] = $key;
+			$hasTransportCompany = true;
 		}
 
 		$shipmentControl = $this->addRadioList('shipment', 'Shipment', $shipmentOptions)
@@ -104,16 +105,21 @@ class ShipmentForm extends \Nette\Application\UI\Form
 			$defaultCity = $this->user->getCity();
 			$defaultZip = $this->user->getZip();
 		}
-		$requiring = function (TextInput $control) use ($shipmentControl, $transportCompanyKeys) {
-			return $control->addConditionOn($shipmentControl, self::IS_IN, $transportCompanyKeys);
-		};
-		$this->addNameControl('name', $defaultName, $requiring);
-		$this->addStreetControl('street', $defaultStreet, $requiring);
-		$this->addCityControl('city', $defaultCity, $requiring);
-		$this->addZipControl('zip', $defaultZip, $requiring);
 
-		$shipmentControl->addCondition(self::IS_IN, $transportCompanyKeys)
-			->toggle('order-shipment-address');
+		if ($hasTransportCompany) {
+			$requiring = function (TextInput $control) use ($shipmentControl, $transportCompanyKeys) {
+				return $control->addConditionOn($shipmentControl, self::IS_IN, $transportCompanyKeys);
+			};
+			$addressContainer = new AddressFormContainer();
+			$this->addComponent($addressContainer, 'address');
+			$addressContainer->addNameControl('name', $defaultName, $requiring);
+			$addressContainer->addStreetControl('street', $defaultStreet, $requiring);
+			$addressContainer->addCityControl('city', $defaultCity, $requiring);
+			$addressContainer->addZipControl('zip', $defaultZip, $requiring);
+
+			$shipmentControl->addCondition(self::IS_IN, $transportCompanyKeys)
+				->toggle('order-shipment-address');
+		}
 
 		$this->addSubmit('next', 'Next');
 	}

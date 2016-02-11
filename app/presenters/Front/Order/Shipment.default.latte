@@ -17,23 +17,25 @@
 		</tr>
 	</table>
 
-	<table id="order-shipment-address">
-		<tr>
-			<th>{label name /}</th>
-			<td>{input name}</td>
-		</tr>
-		<tr>
-			<th>{label street /}</th>
-			<td>{input street}</td>
-		</tr>
-		<tr>
-			<th>{label city /}</th>
-			<td>{input city}</td>
-		</tr>
-		<tr>
-			<th>{label zip /}</th>
-			<td>{input zip}</td>
-		</tr>
+	<table n:ifset="$_form[address]" id="order-shipment-address">
+		{formContainer address}
+			<tr>
+				<th>{label name /}</th>
+				<td>{input name}</td>
+			</tr>
+			<tr>
+				<th>{label street /}</th>
+				<td>{input street}</td>
+			</tr>
+			<tr>
+				<th>{label city /}</th>
+				<td>{input city}</td>
+			</tr>
+			<tr>
+				<th>{label zip /}</th>
+				<td>{input zip}</td>
+			</tr>
+		{/formContainer}
 	</table>
 
 	<table>

@@ -66,13 +66,13 @@ class EditPresenter extends \ShoPHP\Admin\BasePresenter
 
 		if ($this->shipment instanceof ShipmentPersonalPoint || $this->shipment instanceof ShipmentCollectionPoint) {
 			$this->shipment->setAddress(
-				$values->name !== '' ? $values->name : null,
-				$values->street,
-				$values->city,
-				$values->zip
+				$values->address->name !== '' ? $values->address->name : null,
+				$values->address->street,
+				$values->address->city,
+				$values->address->zip
 			);
-			if ($values->longitude !== '') {
-				$this->shipment->setGps($values->longitude, $values->latitude);
+			if ($values->address->longitude !== '') {
+				$this->shipment->setGps($values->address->longitude, $values->address->latitude);
 			} else {
 				$this->shipment->removeGps();
 			}

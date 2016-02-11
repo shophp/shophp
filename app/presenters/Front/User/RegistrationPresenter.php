@@ -58,10 +58,10 @@ class RegistrationPresenter extends \ShoPHP\Front\BasePresenter
 	{
 		$values = $form->getValues();
 		$user = new User($values->email, $values->password);
-		$user->setName($values->name);
-		$user->setStreet($values->street);
-		$user->setCity($values->city);
-		$user->setZip($values->zip);
+		$user->setName($values->address->name);
+		$user->setStreet($values->address->street);
+		$user->setCity($values->address->city);
+		$user->setZip($values->address->zip);
 
 		try {
 			if (!$form->hasErrors()) {

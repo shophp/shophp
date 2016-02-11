@@ -36,7 +36,7 @@ class AddressPresenter extends \ShoPHP\Front\Order\BasePresenter
 	private function updateAddress(AddressForm $form)
 	{
 		$values = $form->getValues();
-		$this->currentCartService->getCurrentCart()->setAddress($values->name, $values->street, $values->city, $values->zip);
+		$this->currentCartService->getCurrentCart()->setAddress($values->address->name, $values->address->street, $values->address->city, $values->address->zip);
 
 		if (!$form->hasErrors()) {
 			$this->currentCartService->saveCurrentCart();

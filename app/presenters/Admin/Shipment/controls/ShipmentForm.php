@@ -4,7 +4,7 @@ namespace ShoPHP\Admin\Shipment;
 
 use Nette\Forms\Controls\ChoiceControl;
 use Nette\Forms\Controls\TextInput;
-use ShoPHP\AddressForm;
+use ShoPHP\AddressFormContainer;
 use ShoPHP\Shipment\ShipmentOption;
 use ShoPHP\Shipment\ShipmentPersonalPoint;
 use ShoPHP\Shipment\ShipmentCollectionPoint;
@@ -13,8 +13,6 @@ use ShoPHP\Shipment\ShipmentType;
 
 class ShipmentForm extends \Nette\Application\UI\Form
 {
-
-	use AddressForm;
 
 	/** @var ShipmentOption|null */
 	private $editedShipment;
@@ -64,6 +62,9 @@ class ShipmentForm extends \Nette\Application\UI\Form
 	 */
 	private function addAddressControls(ShipmentOption $shipment = null, ChoiceControl $typeControl = null)
 	{
+		$addressContainer = new AddressFormContainer();
+		$this->addComponent($addressContainer, 'address');
+
 		$defaultName = null;
 		$defaultStreet = null;
 		$defaultCity = null;
@@ -79,7 +80,7 @@ class ShipmentForm extends \Nette\Application\UI\Form
 			$defaultLatitude = $shipment->getLatitude();
 		}
 
-		$this->addText('name', 'Name')
+		$addressContainer->addText('name', 'Name')
 			->setDefaultValue($defaultName);
 
 		$requiring = true;
@@ -92,10 +93,10 @@ class ShipmentForm extends \Nette\Application\UI\Form
 				->toggle('shipment-address');
 		}
 
-		$this->addStreetControl('street', $defaultStreet, $requiring);
-		$this->addCityControl('city', $defaultCity, $requiring);
-		$this->addZipControl('zip', $defaultZip, $requiring);
-		$this->addGpsControls('longitude', 'latitude', $defaultLongitude, $defaultLatitude);
+		$addressContainer->addStreetControl('street', $defaultStreet, $requiring);
+		$addressContainer->addCityControl('city', $defaultCity, $requiring);
+		$addressContainer->addZipControl('zip', $defaultZip, $requiring);
+		$addressContainer->addGpsControls('longitude', 'latitude', $defaultLongitude, $defaultLatitude);
 	}
 
 	private function addCompanyNameControl(ShipmentTransportCompany $shipment = null, ChoiceControl $typeControl = null)

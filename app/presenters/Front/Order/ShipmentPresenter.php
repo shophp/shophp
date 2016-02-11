@@ -64,14 +64,22 @@ class ShipmentPresenter extends \ShoPHP\Front\Order\BasePresenter
 	{
 		$values = $form->getValues();
 		$shipmentOption = $form->getChosenShipment();
-		$this->cartService->createShipmentForCart(
-			$this->currentCartService->getCurrentCart(),
-			$shipmentOption,
-			$values->name,
-			$values->street,
-			$values->city,
-			$values->zip
-		);
+
+		if (isset($values->address)) {
+			$this->cartService->createShipmentForCart(
+				$this->currentCartService->getCurrentCart(),
+				$shipmentOption,
+				$values->address->name,
+				$values->address->street,
+				$values->address->city,
+				$values->address->zip
+			);
+		} else {
+			$this->cartService->createShipmentForCart(
+				$this->currentCartService->getCurrentCart(),
+				$shipmentOption
+			);
+		}
 
 		$this->currentCartService->saveCurrentCart();
 		$this->redirect(':Front:Order:Payment:');
