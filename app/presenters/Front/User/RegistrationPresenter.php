@@ -3,6 +3,7 @@
 namespace ShoPHP\Front\User;
 
 use ShoPHP\EntityDuplicateException;
+use ShoPHP\Order\CurrentCartService;
 use ShoPHP\User\User;
 use ShoPHP\User\UserService;
 
@@ -15,6 +16,9 @@ class RegistrationPresenter extends \ShoPHP\Front\BasePresenter
 	/** @var RegistrationFormFactory */
 	private $registrationFormFactory;
 
+	/** @var CurrentCartService */
+	private $currentCartService;
+
 	/** @var \Nette\Security\User */
 	private $user;
 
@@ -24,12 +28,14 @@ class RegistrationPresenter extends \ShoPHP\Front\BasePresenter
 	public function __construct(
 		UserService $userService,
 		RegistrationFormFactory $registrationFormFactory,
+		CurrentCartService $currentCartService,
 		\Nette\Security\User $user
 	)
 	{
 		parent::__construct();
 		$this->userService = $userService;
 		$this->registrationFormFactory = $registrationFormFactory;
+		$this->currentCartService = $currentCartService;
 		$this->user = $user;
 	}
 
@@ -68,6 +74,7 @@ class RegistrationPresenter extends \ShoPHP\Front\BasePresenter
 				$this->userService->create($user);
 				$this->flashMessage('Account has been created.');
 				$this->user->login($user->getEmail(), $values->password);
+				$this->currentCartService->consolidateCurrentCartWithCurrentUser();
 				$this->restoreRequest($this->backlink);
 				$this->redirect(':Front:Home:Homepage:');
 			}

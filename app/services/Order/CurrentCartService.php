@@ -4,6 +4,7 @@ namespace ShoPHP\Order;
 
 use Nette\Http\Session;
 use Nette\Http\SessionSection;
+use ShoPHP\User\User;
 
 class CurrentCartService extends \Nette\Object
 {
@@ -17,10 +18,14 @@ class CurrentCartService extends \Nette\Object
 	/** @var Cart */
 	private $currentCart;
 
-	public function __construct(CartService $cartService, Session $session)
+	/** @var \Nette\Security\User */
+	private $user;
+
+	public function __construct(CartService $cartService, Session $session, \Nette\Security\User $user)
 	{
 		$this->cartService = $cartService;
 		$this->cartSession = $session->getSection('cart');
+		$this->user = $user;
 	}
 
 	public function getCurrentCart()
@@ -31,7 +36,9 @@ class CurrentCartService extends \Nette\Object
 				$currentCart = $this->cartService->getById($this->cartSession->cartId);
 			}
 			if ($currentCart === null) {
-				$currentCart = new Cart();
+				/** @var User|null $identity */
+				$identity = $this->user->getIdentity();
+				$currentCart = new Cart($identity);
 			}
 
 			$this->currentCart = $currentCart;
@@ -49,7 +56,7 @@ class CurrentCartService extends \Nette\Object
 	public function saveCurrentCart()
 	{
 		$cart = $this->getCurrentCart();
-		if (count($cart->getItems()) > 0) {
+		if ($cart->hasItems()) {
 			if ($cart->getId() === null) {
 				$this->cartService->create($cart);
 				$this->cartSession->cartId = $cart->getId();
@@ -59,7 +66,22 @@ class CurrentCartService extends \Nette\Object
 		}
 	}
 
-	public function setCurrentCart(Cart $cart)
+	public function consolidateCurrentCartWithCurrentUser()
+	{
+		if ($this->user->isLoggedIn()) {
+			/** @var User $identity */
+			$identity = $this->user->getIdentity();
+			if ($this->getCurrentCart()->hasItems()) {
+				$this->getCurrentCart()->setUser($identity);
+				$this->saveCurrentCart();
+
+			} elseif ($identity->hasAnyCart()) {
+				$this->setCurrentCart($identity->getLastCart());
+			}
+		}
+	}
+
+	private function setCurrentCart(Cart $cart)
 	{
 		$this->currentCart = $cart;
 		$this->cartSession->cartId = $cart->getId();

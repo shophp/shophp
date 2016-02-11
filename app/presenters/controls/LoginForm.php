@@ -4,7 +4,6 @@ namespace ShoPHP;
 
 use Nette\Security\AuthenticationException;
 use ShoPHP\Order\CurrentCartService;
-use ShoPHP\User\User;
 
 class LoginForm extends \Nette\Application\UI\Form
 {
@@ -65,16 +64,7 @@ class LoginForm extends \Nette\Application\UI\Form
 			$values = $this->getValues();
 			try {
 				$this->user->login($values->email, $values->password);
-				$currentCart = $this->currentCartService->getCurrentCart();
-				/** @var User $identity */
-				$identity = $this->user->getIdentity();
-				if ($currentCart->hasItems()) {
-					$this->currentCartService->getCurrentCart()->setUser($identity);
-					$this->currentCartService->saveCurrentCart();
-				} elseif ($identity->hasAnyCart()) {
-					$this->currentCartService->setCurrentCart($identity->getLastCart());
-				}
-
+				$this->currentCartService->consolidateCurrentCartWithCurrentUser();
 			} catch (AuthenticationException $e) {
 				$this->addError('Invalid credentials.');
 			}

@@ -56,9 +56,13 @@ class Cart extends \Nette\Object
 	 */
 	protected $user;
 
-	public function __construct()
+	public function __construct(User $user = null)
 	{
 		$this->items = new ArrayCollection();
+
+		if ($user !== null) {
+			$this->setUser($user);
+		}
 	}
 
 	public function getId()

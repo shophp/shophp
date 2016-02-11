@@ -21,6 +21,14 @@ class UserService extends \ShoPHP\EntityService
 	/**
 	 * @return User
 	 */
+	public function getById($id)
+	{
+		return $this->repository->find($id);
+	}
+
+	/**
+	 * @return User
+	 */
 	public function getByEmail($email)
 	{
 		return $this->repository->findOneBy([

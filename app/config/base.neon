@@ -11,3 +11,4 @@ session:
 
 services:
 	authenticator: ShoPHP\Authenticator
+	security.user: ShoPHP\User\IdentityService
