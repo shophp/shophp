@@ -12,6 +12,7 @@
 				<th>{_'Customer'}</th>
 				<th>{_'Items'}</th>
 				<th>{_'Shipment'}</th>
+				<th>{_'Payment'}</th>
 				<th>{_'Total price'}</th>
 			</tr>
 		</thead>
@@ -49,6 +50,9 @@
 					{else}
 						-
 					{/if}
+				</td>
+				<td>
+					{$order->paymentType->getLabel()}
 				</td>
 				<td>
 					{$order->cart->price|formatPrice}

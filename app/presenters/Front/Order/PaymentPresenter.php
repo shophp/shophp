@@ -3,29 +3,34 @@
 namespace ShoPHP\Front\Order;
 
 use ShoPHP\Order\CurrentCartService;
-use ShoPHP\Order\Order;
 use ShoPHP\Order\OrderService;
+use ShoPHP\Payment\PaymentType;
 use ShoPHP\Shipment\ShipmentService;
 
 class PaymentPresenter extends \ShoPHP\Front\Order\BasePresenter
 {
 
-	/** @var OrderService */
-	private $orderService;
-
 	/** @var CurrentCartService */
 	private $currentCartService;
+
+	/** @var OrderService */
+	private $orderService;
 
 	/** @var ShipmentService */
 	private $shipmentService;
 
+	/** @var PaymentFormFactory */
+	private $paymentFormFactory;
+
 	public function __construct(
-		OrderService $orderService,
 		CurrentCartService $currentCartService,
-		ShipmentService $shipmentService
+		OrderService $orderService,
+		ShipmentService $shipmentService,
+		PaymentFormFactory $paymentFormFactory
 	)
 	{
 		parent::__construct();
+		$this->paymentFormFactory = $paymentFormFactory;
 		$this->orderService = $orderService;
 		$this->currentCartService = $currentCartService;
 		$this->shipmentService = $shipmentService;
@@ -40,21 +45,23 @@ class PaymentPresenter extends \ShoPHP\Front\Order\BasePresenter
 		$this->template->offersShipment = $this->shipmentService->existsAnyShipmentOption();
 	}
 
-	protected function createComponentOrderForm()
+	protected function createComponentPaymentForm()
 	{
-		$form = new \Nette\Application\UI\Form();
-		$form->addSubmit('order', 'Order');
-		$form->onSuccess[] = function (\Nette\Application\UI\Form $form) {
+		$form = $this->paymentFormFactory->create();
+		$form->onSuccess[] = function (PaymentForm $form) {
 			$this->createOrder($form);
 		};
 		return $form;
 	}
 
-	private function createOrder(\Nette\Application\UI\Form $form)
+	private function createOrder(PaymentForm $form)
 	{
-		$order = $this->orderService->createFromCart($this->currentCartService->getCurrentCart());
+		$values = $form->getValues();
+		$this->orderService->createFromCart(
+			$this->currentCartService->getCurrentCart(),
+			PaymentType::createFromValue($values->paymentType)
+		);
 		$this->currentCartService->resetCurrentCart();
-		$this->flashMessage('Ordered !');
 		$this->redirect(':Front:Order:Order:');
 	}
 

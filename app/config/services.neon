@@ -46,6 +46,10 @@ services:
 
 	-
 		class: ShoPHP\Order\OrderService
+		arguments:
+			cashPaymentAvailable: %payment.cash%
+			bankPaymentAvailable: %payment.bank%
+			cardPaymentAvailable: %payment.card%
 
 	-
 		class: ShoPHP\Product\ProductService
@@ -83,6 +87,9 @@ services:
 
 	-
 		implement: ShoPHP\Front\Order\ShipmentFormFactory
+
+	-
+		implement: ShoPHP\Front\Order\PaymentFormFactory
 
 	-
 		implement: ShoPHP\Front\Order\AddressFormFactory

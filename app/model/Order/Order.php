@@ -4,6 +4,7 @@ namespace ShoPHP\Order;
 
 use ShoPHP\EntityInvalidArgumentException;
 use ShoPHP\InvalidEnumException;
+use ShoPHP\Payment\PaymentType;
 
 /**
  * @Entity
@@ -20,6 +21,9 @@ class Order extends \Nette\Object
 	/** @Column(type="string") */
 	protected $number;
 
+	/** @Column(type="integer") */
+	protected $paymentType;
+
 	/**
 	 * @OneToOne(targetEntity="\ShoPHP\Order\Cart", inversedBy="order")
 	 * @JoinColumn(nullable=false)
@@ -27,7 +31,7 @@ class Order extends \Nette\Object
 	 */
 	private $cart;
 
-	public function __construct(Cart $cart, $number)
+	public function __construct(Cart $cart, $number, PaymentType $paymentType)
 	{
 		if (count($cart->getItems()) === 0) {
 			throw new InvalidEnumException('Cannot create order from empty cart.');
@@ -37,6 +41,7 @@ class Order extends \Nette\Object
 		}
 
 		$this->number = $number;
+		$this->paymentType = $paymentType->getValue();
 		$cart->setOrder($this);
 		$this->cart = $cart;
 	}
@@ -49,6 +54,11 @@ class Order extends \Nette\Object
 	public function getNumber()
 	{
 		return $this->number;
+	}
+
+	public function getPaymentType()
+	{
+		return PaymentType::createFromValue($this->paymentType);
 	}
 
 	public function getCart()

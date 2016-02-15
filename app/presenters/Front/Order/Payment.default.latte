@@ -4,7 +4,7 @@
 
 <h1>{_'Payment'}</h1>
 
-{control orderForm}
+{control paymentForm}
 
 <div n:if="!$user->loggedIn">
 	<a n:href=":Front:User:Registration: backlink => $presenter->storeRequest()">{_'Register'}</a>

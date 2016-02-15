@@ -11,5 +11,9 @@
 </div>
 
 <div>
+	{_'Payment'}: {$order->paymentType->getLabel()}
+</div>
+
+<div>
 	{_'Total'}: {$order->cart->price|formatPrice}
 </div>

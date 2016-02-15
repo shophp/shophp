@@ -28,7 +28,12 @@ abstract class Enum implements LabeledEnum
 
 	public function getLabel()
 	{
-		return self::getLabels()[$this->value];
+		return static::getLabels()[$this->value];
+	}
+
+	public static function getValues()
+	{
+		return array_values(self::getConstants());
 	}
 
 	public static function __callStatic($name, $args)

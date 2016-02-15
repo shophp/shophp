@@ -31,5 +31,10 @@ parameters:
 			dir: %appDir%/../public/images/products
 			publicPath: images/products
 
+	payment:
+		cash: yes
+		bank: yes
+		card: no
+
 	session:
 		expiration: 14 days
