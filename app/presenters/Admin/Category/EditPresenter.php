@@ -66,7 +66,7 @@ class EditPresenter extends \ShoPHP\Admin\BasePresenter
 			if (!$form->hasErrors()) {
 				$this->categoryService->update($this->category);
 				$this->flashMessage(sprintf('Category %s has been updated.', $this->category->getName()));
-				$this->redirect('this');
+				$this->redirect(':Admin:Category:List:');
 			}
 		} catch (EntityDuplicateException $e) {
 			$form->addError(sprintf('Category with name %s already exists.', $this->category->getName()));

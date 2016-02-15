@@ -8,9 +8,15 @@
 </head>
 <body>
 	<header>
-		<h1>{$projectName} Administration</h1>
+		<h1>
+			<a n:href=":Admin:Home:Dashboard:">{$projectName} Administration</a>
+		</h1>
 		<nav>
-
+			<ul>
+				<li>
+					<a n:href=":Admin:Category:List:" {ifCurrent :Admin:Category:List:}class="selected"{/ifCurrent}>Categories</a>
+				</li>
+			</ul>
 		</nav>
 	</header>
 

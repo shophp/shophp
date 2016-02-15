@@ -44,5 +44,6 @@ parameters:
 
 		"/admin/<presenter>/<action>[/<id [0-9]+>]":
 			defaults:
+				presenter: "Home:Dashboard"
 				module: Admin
 				action: default

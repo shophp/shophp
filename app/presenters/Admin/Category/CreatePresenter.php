@@ -49,7 +49,7 @@ class CreatePresenter extends \ShoPHP\Admin\BasePresenter
 			if (!$form->hasErrors()) {
 				$this->categoryService->create($category);
 				$this->flashMessage(sprintf('Category %s has been created.', $category->getName()));
-				$this->redirect('this');
+				$this->redirect(':Admin:Category:List:');
 			}
 		} catch (EntityDuplicateException $e) {
 			$form->addError(sprintf('Category with name %s already exists.', $category->getName()));
