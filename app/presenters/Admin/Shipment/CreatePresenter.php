@@ -86,7 +86,7 @@ class CreatePresenter extends \ShoPHP\Admin\BasePresenter
 			if (!$form->hasErrors()) {
 				$this->shipmentService->create($shipmentOption);
 				$this->flashMessage('Shipment has been created.');
-				$this->redirect('Edit:', ['type' => $type->getValue(), 'id' => $shipmentOption->getId()]);
+				$this->redirect(':Admin:Shipment:List:');
 			}
 		} catch (EntityDuplicateException $e) {
 			$form->addError(sprintf('Shipment company with name %s already exists.', $shipmentOption->getName()));

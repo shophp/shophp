@@ -1,0 +1,32 @@
+{block content}
+
+<p>
+	<a n:href=":Admin:Shipment:Create:">+ New shipment</a>
+</p>
+
+{if count($personalPoints) > 0}
+	<h2>Personal points</h2>
+	<ul>
+		<li n:foreach="$personalPoints as $personalPoint">
+			<a n:href=":Admin:Shipment:Edit: id => $personalPoint->id, type => $personalPoint->type->getValue()">{$personalPoint|formatShipmentOption}</a>
+		</li>
+	</ul>
+{/if}
+
+{if count($transportCompanies) > 0}
+	<h2>Transport companies</h2>
+	<ul>
+		<li n:foreach="$transportCompanies as $transportCompany">
+			<a n:href=":Admin:Shipment:Edit: id => $transportCompany->id, type => $transportCompany->type->getValue()">{$transportCompany|formatShipmentOption}</a>
+		</li>
+	</ul>
+{/if}
+
+{if count($collectionPoints) > 0}
+	<h2>Collection points</h2>
+	<ul>
+		<li n:foreach="$collectionPoints as $collectionPoint">
+			<a n:href=":Admin:Shipment:Edit: id => $collectionPoint->id, type => $collectionPoint->type->getValue()">{$collectionPoint|formatShipmentOption}</a>
+		</li>
+	</ul>
+{/if}

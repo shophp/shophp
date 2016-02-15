@@ -95,10 +95,10 @@ class EditPresenter extends \ShoPHP\Admin\BasePresenter
 			if (!$form->hasErrors()) {
 				$this->shipmentService->update($this->shipment);
 				$this->flashMessage('Shipment has been updated.');
-				$this->redirect('this');
+				$this->redirect(':Admin:Shipment:List:');
 			}
 		} catch (EntityDuplicateException $e) {
-			$form->addError(sprintf('Shipment company with name %s already exists.', $this->shipment));
+			$form->addError(sprintf('Shipment company with name %s already exists.', $this->shipment->getName()));
 		}
 	}
 
