@@ -4,11 +4,19 @@
 	<a n:href=":Admin:Category:Create:">+ New category</a>
 </p>
 
-<ul n:block="category">
-	<li n:foreach="$categories as $category">
-		<a n:href=":Admin:Category:Edit: id => $category->id">{_$category->name}</a>
-		{if $category->hasSubcategories()}
-			{include #category categories => $category->subcategories}
-		{/if}
-	</li>
-</ul>
+{form manageCategoriesForm}
+	<ul n:block="category">
+		<li n:foreach="$categories as $category">
+			<a n:href=":Admin:Category:Edit: id => $category->id">{$category->name}</a>
+
+			{ifset $form[delete][$category->id]}
+				{capture $removeConfirm}{_'Really remove %s.', $category->name}{/capture}
+				{input $form[delete][$category->id], onclick => 'return confirm("' . $removeConfirm . '");'}
+			{/ifset}
+
+			{if $category->hasSubcategories()}
+				{include #category categories => $category->subcategories}
+			{/if}
+		</li>
+	</ul>
+{/form}

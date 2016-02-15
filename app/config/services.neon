@@ -109,6 +109,9 @@ services:
 		implement: ShoPHP\Admin\Category\CategoriesFormControlFactory
 
 	-
+		implement: ShoPHP\Admin\Category\ManageCategoriesFormFactory
+
+	-
 		implement: ShoPHP\Admin\Shipment\ShipmentFormFactory
 
 	-

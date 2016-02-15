@@ -4,6 +4,7 @@ namespace ShoPHP\Product;
 
 use Doctrine\Common\Persistence\ObjectRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use ShoPHP\EntityCannotBeDeletedException;
 use ShoPHP\EntityDuplicateException;
 
 class CategoryService extends \ShoPHP\EntityService
@@ -28,6 +29,17 @@ class CategoryService extends \ShoPHP\EntityService
 	{
 		$this->checkDuplicity($category);
 		$this->updateEntity($category);
+	}
+
+	public function remove(Category $category)
+	{
+		if ($category->hasProducts()) {
+			throw new EntityCannotBeDeletedException('Category has products.');
+		}
+		foreach ($category->getSubcategories() as $subcategory) {
+			$this->remove($subcategory);
+		}
+		$this->removeEntity($category);
 	}
 
 	/**
