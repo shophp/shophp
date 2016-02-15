@@ -108,7 +108,7 @@ class EditPresenter extends \ShoPHP\Admin\BasePresenter
 				$this->productService->update($this->product);
 
 				$this->flashMessage(sprintf('Product %s has been updated.', $this->product->getName()));
-				$this->redirect('this');
+				$this->redirect(':Admin:Product:List:');
 			}
 		} catch (EntityDuplicateException $e) {
 			$form->addError(sprintf('Product with name %s already exists.', $this->product->getName()));

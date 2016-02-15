@@ -72,7 +72,7 @@ class CreatePresenter extends \ShoPHP\Admin\BasePresenter
 			if (!$form->hasErrors()) {
 				$this->productService->create($product);
 				$this->flashMessage(sprintf('Product %s has been created.', $product->getName()));
-				$this->redirect('Edit:', ['id' => $product->getId()]);
+				$this->redirect(':Admin:Product:List:');
 			}
 		} catch (EntityDuplicateException $e) {
 			$form->addError(sprintf('Product with name %s already exists.', $product->getName()));

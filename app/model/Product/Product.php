@@ -208,6 +208,16 @@ class Product extends \Nette\Object
 		return false;
 	}
 
+	public function isDirectlyInCategory(Category $category)
+	{
+		foreach ($category->getSubcategories() as $subcategory) {
+			if ($this->belongsIntoCategory($subcategory)) {
+				return false;
+			}
+		}
+		return true;
+	}
+
 	/**
 	 * @param Categories|Category[] $categories
 	 */

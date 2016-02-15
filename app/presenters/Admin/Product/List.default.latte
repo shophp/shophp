@@ -1,0 +1,19 @@
+{block content}
+
+<p>
+	<a n:href=":Admin:Product:Create:">+ New product</a>
+</p>
+
+<ul n:block="category">
+	<li n:foreach="$categories as $category" n:if="$category->hasProducts()">
+		{$category->name}
+		{if $category->hasSubcategories()}
+			{include #category categories => $category->subcategories}
+		{/if}
+		<ul>
+			<li n:foreach="$category->products as $product" n:if="$product->isDirectlyInCategory($category)">
+				<a n:href=":Admin:Product:Edit: id => $product->id">{$product->name}</a>
+			</li>
+		</ul>
+	</li>
+</ul>
