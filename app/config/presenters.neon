@@ -4,3 +4,8 @@ services:
 		class: ShoPHP\Front\Product\ProductPresenter
 		arguments:
 			imagesDir: %product.images.publicPath%
+
+	-
+		class: ShoPHP\Front\Product\CategoryPresenter
+		arguments:
+			imagesDir: %product.images.publicPath%

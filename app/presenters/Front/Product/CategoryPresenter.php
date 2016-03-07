@@ -11,10 +11,14 @@ class CategoryPresenter extends \ShoPHP\Front\BasePresenter
 	/** @var CategoryService */
 	private $categoryService;
 
-	public function __construct(CategoryService $categoryService)
+	/** @var string */
+	private $imagesDir;
+
+	public function __construct(CategoryService $categoryService, $imagesDir)
 	{
 		parent::__construct();
 		$this->categoryService = $categoryService;
+		$this->imagesDir = $imagesDir;
 	}
 
 	/**
@@ -29,6 +33,11 @@ class CategoryPresenter extends \ShoPHP\Front\BasePresenter
 		}
 
 		$this->setCurrentCategory($category);
+	}
+
+	public function renderDefault()
+	{
+		$this->template->imagesDir = $this->imagesDir;
 	}
 
 }

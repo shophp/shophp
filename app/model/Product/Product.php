@@ -260,6 +260,15 @@ class Product extends \Nette\Object
 		return $this->images;
 	}
 
+	public function getMainImage()
+	{
+		if ($this->hasImages()) {
+			$images = $this->getImages();
+			return $images[0];
+		}
+		return null;
+	}
+
 	public function addImage(ProductImage $image)
 	{
 		$this->images[] = $image;
